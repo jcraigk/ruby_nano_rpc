@@ -1,0 +1,13 @@
+AllCops:
+  TargetRubyVersion: 2.5.0
+  Exclude:
+    - 'bin/*'
+  DisplayCopNames: true
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
+Style/EmptyMethod:
+  EnforcedStyle: expanded
+Layout/EmptyLineAfterMagicComment:
+  Enabled: false
+Documentation:
+  Enabled: false
