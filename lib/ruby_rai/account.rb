@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 class RubyRai::Account
-  include RubyRai::MethodHelper
-
   attr_accessor :public_key
 
   def initialize(public_key)
+    unless public_key.is_a?(String) || public_key.is_a?(Symbol)
+      raise RubyRai::MissingInitArguments,
+            'Missing required init argument: public_key (str)'
+    end
+
     @public_key = public_key
   end
 
@@ -18,34 +21,34 @@ class RubyRai::Account
     }
   end
 
-  def self.prefixed_methods
+  def self.model_methods
     {
-      balance: nil,
-      block_count: nil,
-      info: nil,
-      create: { required: %i[wallet] },
-      history: { required: %i[count] },
-      list: nil,
-      move: { required: %i[wallet source accounts] },
-      key: nil,
-      remove: { required: %i[wallet] },
-      representative: nil,
-      representative_set: { required: %i[wallet representative] },
-      weight: nil
+      prefixed: {
+        balance: nil,
+        block_count: nil,
+        info: nil,
+        create: { required: %i[wallet] },
+        history: { required: %i[count] },
+        list: nil,
+        move: { required: %i[wallet source accounts] },
+        key: nil,
+        remove: { required: %i[wallet] },
+        representative: nil,
+        representative_set: { required: %i[wallet representative] },
+        weight: nil
+      },
+      raw: {
+        delegators: nil,
+        delegators_count: nil,
+        frontiers: { required: %i[count] },
+        frontier_count: nil,
+        ledger: { required: %i[count] },
+        validate_account_number: nil,
+        pending: { required: %i[count], optional: %i[threshold exists] }
+      }
     }
   end
 
-  def self.raw_methods
-    {
-      delegators: nil,
-      delegators_count: nil,
-      frontiers: { required: %i[count] },
-      frontier_count: nil,
-      ledger: { required: %i[count] },
-      validate_account_number: nil,
-      pending: { required: %i[count], optional: %i[threshold exists] }
-    }
-  end
-
+  include RubyRai::MethodHelper
   instantiate_methods
 end

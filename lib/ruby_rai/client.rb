@@ -18,18 +18,28 @@ class RubyRai::Client
   private
 
   def post(params)
-    resp = RestClient.post(url, params.to_json)
-    raise RubyRai::BadRequest.new('Error response from node') unless resp.code == 200
-    data = RubyRai::Response.new(JSON[resp.body])
-    raise RubyRai::InvalidRequest.new("Invalid request: #{data['error']}") if data['error']
-    # puts data
+    response = RestClient.post(url, params.to_json)
+    ensure_status_success!(response)
+
+    data = RubyRai::Response.new(JSON[response.body])
+    ensure_valid_response!(data)
+
     data
   end
 
   def url
-    # raise 'RubyRai::Client.host not configured!' unless self.class.host
-    self.class.host = 'localhost'
-    self.class.port = 7076
+    self.class.host ||= 'localhost'
+    self.class.port ||= 7076
     "http://#{self.class.host}:#{self.class.port}"
+  end
+
+  def ensure_status_success!(response)
+    return if response.code == 200
+    raise RubyRai::BadRequest, "Error response from node: #{JSON[response.body]}"
+  end
+
+  def ensure_valid_response!(data)
+    return unless data['error']
+    raise RubyRai::InvalidRequest, "Invalid request: #{data['error']}"
   end
 end

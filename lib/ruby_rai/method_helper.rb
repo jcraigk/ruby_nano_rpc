@@ -1,16 +1,20 @@
 # frozen_string_literal: true
 module RubyRai::MethodHelper
-  def self.included base
+  def self.included(base)
     base.extend ClassMethods
   end
 
   module ClassMethods
     def instantiate_methods
-      prefixed_methods.each do |method_name, param_signature|
-        define_rpc_method(method_name, param_signature, model_params, prefix: method_prefix)
-      end
-      raw_methods.each do |method_name, param_signature|
-        define_rpc_method(method_name, param_signature, model_params)
+      model_methods.each do |type, method_signatures|
+        method_signatures.each do |method_name, param_signature|
+          define_rpc_method(
+            method_name,
+            param_signature,
+            model_params,
+            prefix: (type == :prefixed ? method_prefix : nil)
+          )
+        end
       end
     end
 
