@@ -1,10 +1,10 @@
 # frozen_string_literal: true
-class RubyRai::Accounts
+class RaiRpc::Accounts
   attr_accessor :public_keys
 
   def initialize(public_keys)
     unless public_keys.is_a?(Array)
-      raise RubyRai::MissingInitArguments,
+      raise RaiRpc::MissingInitArguments,
             'Missing required init argument: public_keys (array)'
     end
 
@@ -32,6 +32,6 @@ class RubyRai::Accounts
     }
   end
 
-  include RubyRai::MethodHelper
+  include RaiRpc::MethodHelper
   instantiate_methods
 end

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'ruby_rai/version'
+require 'rai_rpc/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'ruby_rai'
-  spec.version       = RubyRai::VERSION
+  spec.name          = 'rai_rpc'
+  spec.version       = RaiRpc::VERSION
   spec.authors       = ['Justin Craig-Kuhn']
   spec.email         = ['jcraigk@gmail.com']
 

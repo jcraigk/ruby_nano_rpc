@@ -1,4 +1,4 @@
 # frozen_string_literal: true
-module RubyRai
+module RaiRpc
   VERSION = '0.1.0'
 end

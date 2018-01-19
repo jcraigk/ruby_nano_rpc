@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'bundler/setup'
-require 'ruby_rai'
+require 'rai_rpc'
 
 require 'irb'
 IRB.start(__FILE__)

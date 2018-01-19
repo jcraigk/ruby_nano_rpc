@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module RubyRai::MethodHelper
+module RaiRpc::MethodHelper
   def self.included(base)
     base.extend ClassMethods
   end
@@ -25,10 +25,10 @@ module RubyRai::MethodHelper
         end
         if param_signature.is_a?(Hash)
           missing_params = param_signature[:required] - options.keys.map(&:to_sym)
-          raise RubyRai::MissingParameters.new("Missing required parameter(s): #{missing_params.join(', ')}") if missing_params.any?
+          raise RaiRpc::MissingParameters.new("Missing required parameter(s): #{missing_params.join(', ')}") if missing_params.any?
         end
         action = prefix ? "#{prefix}_#{method_name}" : method_name
-        RubyRai::Client.instance.query(action, options)
+        RaiRpc::Client.instance.query(action, options)
       end
     end
   end

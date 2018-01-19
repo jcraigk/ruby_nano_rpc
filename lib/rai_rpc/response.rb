@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'hashie'
 
-class RubyRai::Response < Hash
+class RaiRpc::Response < Hash
   include ::Hashie::Extensions::MergeInitializer
   include ::Hashie::Extensions::IndifferentAccess
   include ::Hashie::Extensions::MethodAccess

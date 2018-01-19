@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require 'bundler/setup'
-require 'ruby_rai'
+require 'rai_rpc'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

@@ -7,7 +7,7 @@ An RPC wrapper for RaiBlocks written in Ruby.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'ruby_rai'
+gem 'rai_rpc'
 ```
 
 And then execute:
@@ -16,7 +16,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install ruby_rai
+    $ gem install rai_rpc
 
 ## Usage
 

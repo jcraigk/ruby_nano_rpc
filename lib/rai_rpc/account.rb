@@ -1,10 +1,10 @@
 # frozen_string_literal: true
-class RubyRai::Account
+class RaiRpc::Account
   attr_accessor :public_key
 
   def initialize(public_key)
     unless public_key.is_a?(String) || public_key.is_a?(Symbol)
-      raise RubyRai::MissingInitArguments,
+      raise RaiRpc::MissingInitArguments,
             'Missing required init argument: public_key (str)'
     end
 
@@ -49,6 +49,6 @@ class RubyRai::Account
     }
   end
 
-  include RubyRai::MethodHelper
+  include RaiRpc::MethodHelper
   instantiate_methods
 end
