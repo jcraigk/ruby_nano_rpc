@@ -22,7 +22,8 @@ class RubyRai::Client
     raise RubyRai::BadRequest.new('Error response from node') unless resp.code == 200
     data = RubyRai::Response.new(JSON[resp.body])
     raise RubyRai::InvalidRequest.new("Invalid request: #{data['error']}") if data['error']
-    puts data
+    # puts data
+    data
   end
 
   def url
