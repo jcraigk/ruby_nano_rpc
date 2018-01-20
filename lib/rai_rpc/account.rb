@@ -12,7 +12,7 @@ class RaiRpc::Account
   end
 
   def self.method_prefix
-    :account
+    'account_'
   end
 
   def self.model_params
@@ -23,29 +23,25 @@ class RaiRpc::Account
 
   def self.model_methods
     {
-      prefixed: {
-        balance: nil,
-        block_count: nil,
-        info: nil,
-        create: { required: %i[wallet] },
-        history: { required: %i[count] },
-        list: nil,
-        move: { required: %i[wallet source accounts] },
-        key: nil,
-        remove: { required: %i[wallet] },
-        representative: nil,
-        representative_set: { required: %i[wallet representative] },
-        weight: nil
-      },
-      raw: {
-        delegators: nil,
-        delegators_count: nil,
-        frontiers: { required: %i[count] },
-        frontier_count: nil,
-        ledger: { required: %i[count] },
-        validate_account_number: nil,
-        pending: { required: %i[count], optional: %i[threshold exists] }
-      }
+      account_balance: nil,
+      account_block_count: nil,
+      account_info: nil,
+      account_create: { required: %i[wallet] },
+      account_history: { required: %i[count] },
+      account_list: nil,
+      account_move: { required: %i[wallet source accounts] },
+      account_key: nil,
+      account_remove: { required: %i[wallet] },
+      account_representative: nil,
+      account_representative_set: { required: %i[wallet representative] },
+      account_weight: nil,
+      delegators: nil,
+      delegators_count: nil,
+      frontiers: { required: %i[count] },
+      frontier_count: nil,
+      ledger: { required: %i[count] },
+      validate_account_number: nil,
+      pending: { required: %i[count], optional: %i[threshold exists] }
     }
   end
 

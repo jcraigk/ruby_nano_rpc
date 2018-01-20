@@ -12,7 +12,7 @@ class RaiRpc::Accounts
   end
 
   def self.method_prefix
-    :accounts
+    'accounts_'
   end
 
   def self.model_params
@@ -23,12 +23,10 @@ class RaiRpc::Accounts
 
   def self.model_methods
     {
-      prefixed: {
-        balances: nil,
-        create: { required: %i[wallet count], optional: %i[work] },
-        frontiers: nil,
-        pending: { required: %i[count], optional: %i[threshold source] }
-      }
+      balances: nil,
+      create: { required: %i[wallet count], optional: %i[work] },
+      frontiers: nil,
+      pending: { required: %i[count], optional: %i[threshold source] }
     }
   end
 

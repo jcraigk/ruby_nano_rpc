@@ -12,7 +12,7 @@ class RaiRpc::Wallet
   end
 
   def self.method_prefix
-    :wallet
+    'wallet_'
   end
 
   def self.model_params
@@ -23,33 +23,25 @@ class RaiRpc::Wallet
 
   def self.model_methods
     {
-      prefixed: {
-        # representative: nil,
-        # representative_set: nil,
-        # add: nil,
-        # balance_total: nil,
-        balances: nil,
-        change_seed: { required: %i[seed] },
-        contains: { required: %i[account] }
-        create: nil,
-        destroy: nil,
-        export: nil,
-        frontiers: nil,
-        pending: { required: %i[count], optional: %i[threshold source] }
-        republish: { required: %i[count] },
-        work_get: nil,
-        locked: nil
-      }
-      raw: {
-        # search_pending: nil,
-        # search_pending_all: nil,
-        # send: nil,
-        password_change: { required: %i[password] },
-        password_enter: { required: %i[password] },
-        password_valid: nil,
-        work_get: nil,
-        work_set: nil
-      }
+      wallet_balances: nil,
+      wallet_change_seed: { required: %i[seed] },
+      wallet_contains: { required: %i[account] },
+      wallet_create: nil,
+      wallet_destroy: nil,
+      wallet_export: nil,
+      wallet_frontiers: nil,
+      wallet_pending: { required: %i[count], optional: %i[threshold source] },
+      wallet_republish: { required: %i[count] },
+      wallet_work_get: nil,
+      wallet_locked: nil,
+      # search_pending: nil,
+      # search_pending_all: nil,
+      # send: nil,
+      password_change: { required: %i[password] },
+      password_enter: { required: %i[password] },
+      password_valid: nil,
+      work_get: nil,
+      work_set: nil
     }
   end
 
