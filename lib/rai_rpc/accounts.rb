@@ -4,8 +4,7 @@ class RaiRpc::Accounts
 
   def initialize(addresses)
     unless addresses.is_a?(Array)
-      raise RaiRpc::MissingInitArguments,
-            'Missing required argument: addresses (str[])'
+      raise RaiRpc::MissingArguments, 'Missing argument: addresses (str[])'
     end
 
     @addresses = addresses

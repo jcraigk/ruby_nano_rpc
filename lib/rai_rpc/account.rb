@@ -1,27 +1,30 @@
 # frozen_string_literal: true
 class RaiRpc::Account
+  include RaiRpc::MethodHelper
+
   attr_accessor :address
 
   def initialize(address)
-    unless address.is_a?(String) || address.is_a?(Symbol)
-      raise RaiRpc::MissingInitArguments,
-            'Missing required argument: address (str)'
+    unless address
+      raise RaiRpc::MissingArguments, 'Missing argument: address (str)'
     end
 
     @address = address
+
+    instantiate_methods
   end
 
-  def self.method_prefix
+  def method_prefix
     'account_'
   end
 
-  def self.model_params
+  def model_params
     {
       account: :address
     }
   end
 
-  def self.model_methods
+  def model_methods
     {
       account_balance: nil,
       account_block_count: nil,
@@ -44,7 +47,4 @@ class RaiRpc::Account
       pending: { required: %i[count], optional: %i[threshold exists] }
     }
   end
-
-  include RaiRpc::MethodHelper
-  instantiate_methods
 end

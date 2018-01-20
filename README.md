@@ -59,7 +59,7 @@ Each namespace in the RaiBlocks RPC API is provided as a Ruby class with built-i
 
 For example, you can instantiate a new `RaiRpc::Account` by passing in the account's public key.  You can then make calls on this object without needing to pass in the key for subsequent calls.
 
-Methods with a common model prefix, such as `account_`, are shortened to remove the redundant prefix, so the method for the action `account_balance` becomes simply `balance`. Methods that lack the prefix are provided as-is.
+Methods with a common model prefix, such as `account_`, also have an abbreviated version so instead of calling `account_balance`, you can call simply `balance`.
 
 
 ```ruby
