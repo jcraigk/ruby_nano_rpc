@@ -8,8 +8,6 @@ class RaiRpc::Account < RaiRpc::Proxy
     end
 
     @address = address
-
-    super
   end
 
   def model_params

@@ -11,7 +11,7 @@ class RaiRpc::Client
     attr_accessor :host, :port
   end
 
-  def query(action, params = {})
+  def call(action, params = {})
     post({ action: action }.merge(params))
   end
 
