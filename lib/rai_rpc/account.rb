@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 class RaiRpc::Account
-  attr_accessor :public_key
+  attr_accessor :address
 
-  def initialize(public_key)
-    unless public_key.is_a?(String) || public_key.is_a?(Symbol)
+  def initialize(address)
+    unless address.is_a?(String) || address.is_a?(Symbol)
       raise RaiRpc::MissingInitArguments,
-            'Missing required init argument: public_key (str)'
+            'Missing required argument: address (str)'
     end
 
-    @public_key = public_key
+    @address = address
   end
 
   def self.method_prefix
@@ -17,7 +17,7 @@ class RaiRpc::Account
 
   def self.model_params
     {
-      account: :public_key
+      account: :address
     }
   end
 
