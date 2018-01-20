@@ -1,7 +1,5 @@
 # frozen_string_literal: true
-class RaiRpc::Account
-  include RaiRpc::MethodHelper
-
+class RaiRpc::Account < RaiRpc::Proxy
   attr_accessor :address
 
   def initialize(address)
@@ -11,17 +9,11 @@ class RaiRpc::Account
 
     @address = address
 
-    instantiate_methods
-  end
-
-  def method_prefix
-    'account_'
+    super
   end
 
   def model_params
-    {
-      account: :address
-    }
+    { account: :address }
   end
 
   def model_methods

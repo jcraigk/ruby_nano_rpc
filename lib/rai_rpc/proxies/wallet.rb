@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class RaiRpc::Wallet
+class RaiRpc::Wallet < RaiRpc::Proxy
   attr_accessor :seed
 
   def initialize(wallet_seed)
@@ -8,31 +8,29 @@ class RaiRpc::Wallet
     end
 
     @seed = wallet_seed
+
+    super
   end
 
-  def self.method_prefix
-    'wallet_'
+  def model_params
+    { wallet: :seed }
   end
 
-  def self.model_params
-    {
-      wallet: :seed
-    }
-  end
-
-  def self.model_methods
+  def model_methods
     {
       wallet_balances: nil,
+      wallet_add: { required: %i[key], optional: %i[work] },
+      password_change: { required: %i[password] },
       wallet_change_seed: { required: %i[seed] },
       wallet_contains: { required: %i[account] },
       wallet_create: nil,
+
       wallet_destroy: nil,
       wallet_export: nil,
       wallet_frontiers: nil,
       wallet_pending: { required: %i[count], optional: %i[threshold source] },
       wallet_republish: { required: %i[count] },
       wallet_work_get: nil,
-      password_change: { required: %i[password] },
       password_enter: { required: %i[password] },
       password_valid: nil,
       wallet_locked: nil,
@@ -42,7 +40,4 @@ class RaiRpc::Wallet
 
     }
   end
-
-  include RaiRpc::MethodHelper
-  instantiate_methods
 end
