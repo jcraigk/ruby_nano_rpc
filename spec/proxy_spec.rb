@@ -2,29 +2,20 @@
 RSpec.describe RaiblocksRpc::Proxy do
   subject { described_class.new }
 
-  it 'requires child to implement `model_params`' do
-    expect { subject.send(:model_params) }.to(
+  it 'requires child to implement `proxy_methods`' do
+    expect { subject.send(:proxy_methods) }.to(
       raise_error(
         RuntimeError,
-        'Child class must override `model_params` method'
+        'Child class must override `proxy_methods` method'
       )
     )
   end
 
-  it 'requires child to implement `model_methods`' do
-    expect { subject.send(:model_methods) }.to(
-      raise_error(
-        RuntimeError,
-        'Child class must override `model_methods` method'
-      )
-    )
-  end
-
-  context 'when #model_params and #model_methods are provided' do
-    let(:model_params) do
+  context 'when #proxy_params and #proxy_methods are provided' do
+    let(:proxy_params) do
       { thing: :address }
     end
-    let(:model_methods) do
+    let(:proxy_methods) do
       {
         some_action: {
           required: %i[param1 param2],
@@ -36,8 +27,8 @@ RSpec.describe RaiblocksRpc::Proxy do
     let(:address) { 'xrb_someaddress12345' }
 
     before do
-      allow(subject).to receive(:model_params).and_return(model_params)
-      allow(subject).to receive(:model_methods).and_return(model_methods)
+      allow(subject).to receive(:proxy_params).and_return(proxy_params)
+      allow(subject).to receive(:proxy_methods).and_return(proxy_methods)
 
       # TODO actually test #action_prefix's behavior of using self.class.name
       allow(subject).to receive(:action_prefix).and_return('thing_')

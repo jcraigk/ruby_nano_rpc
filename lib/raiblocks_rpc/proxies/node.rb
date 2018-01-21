@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 class RaiblocksRpc::Node < RaiblocksRpc::Proxy
-  def model_params
-    {}
-  end
-
-  def model_methods
+  def proxy_methods
     {
       bootstrap: { required: %i[address port] },
       bootstrap_any: nil,

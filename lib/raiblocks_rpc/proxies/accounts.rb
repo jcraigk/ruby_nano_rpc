@@ -11,11 +11,11 @@ class RaiblocksRpc::Accounts < RaiblocksRpc::Proxy
     self.addresses = addresses
   end
 
-  def model_params
+  def proxy_params
     { accounts: :addresses }
   end
 
-  def model_methods
+  def proxy_methods
     {
       accounts_balances: nil,
       accounts_create: { required: %i[wallet count], optional: %i[work] },

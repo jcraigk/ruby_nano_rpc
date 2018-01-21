@@ -4,17 +4,17 @@ class RaiblocksRpc::Proxy
 
   private
 
-  def model_params
-    raise 'Child class must override `model_params` method'
+  def proxy_methods
+    raise 'Child class must override `proxy_methods` method'
   end
 
-  def model_methods
-    raise 'Child class must override `model_methods` method'
+  def proxy_params
+    {}
   end
 
-  # Define proxy methods based on #model_methods
+  # Define proxy methods based on #proxy_methods
   def method_missing(m, *args, &_block)
-    self.m = m
+    set_accessors(m)
     if valid_proxy_method?
       define_proxy_method(m)
       return send(m, args.first)
@@ -24,7 +24,7 @@ class RaiblocksRpc::Proxy
   end
 
   def respond_to_missing?(m, include_private = false)
-    self.m = m
+    set_accessors(m)
     valid_proxy_method? || super
   end
 
@@ -43,29 +43,29 @@ class RaiblocksRpc::Proxy
   end
 
   def rpc_action?
-    model_method_names.include?(m)
+    proxy_method_names.include?(m)
   end
 
   def rpc_action_abbrev?
-    model_method_names.each do |model_method_name|
-      model_method_name = model_method_name.to_s
-      next unless model_method_name.start_with?(action_prefix)
-      return true if m.to_s == action_abbrev(model_method_name)
+    proxy_method_names.each do |proxy_m|
+      proxy_m = proxy_m.to_s
+      next unless proxy_m.start_with?(action_prefix)
+      return true if m.to_s == action_abbrev(proxy_m)
     end
 
     false
   end
 
-  def action_abbrev(model_method_name)
-    model_method_name.to_s[action_prefix.size..-1]
+  def action_abbrev(proxy_m)
+    proxy_m.to_s[action_prefix.size..-1]
   end
 
   def method_expansion
     "#{action_prefix}#{m}"
   end
 
-  def model_method_names
-    @model_method_names ||= model_methods.keys
+  def proxy_method_names
+    @proxy_method_names ||= proxy_methods.keys
   end
 
   def action_prefix
@@ -74,16 +74,20 @@ class RaiblocksRpc::Proxy
 
   def define_proxy_method(m)
     self.class.send(:define_method, m) do |opts = {}|
-      self.param_signature = model_methods[m.to_sym]
-      self.params = validate_opts!(opts)
-
+      set_accessors(m, opts)
       populate_and_validate_params!
       RaiblocksRpc::Client.instance.call(rpc_action, params)
     end
   end
 
+  def set_accessors(m, opts = nil)
+    self.m = m
+    self.param_signature = proxy_methods[m.to_sym]
+    self.params = validate_opts!(opts)
+  end
+
   def populate_and_validate_params!
-    model_params.each { |k, v| self.params[k] ||= send(v) }
+    proxy_params.each { |k, v| self.params[k] ||= send(v) }
     validate_params!
   end
 
@@ -94,9 +98,9 @@ class RaiblocksRpc::Proxy
   end
 
   def allowed_params
-    model_params.keys +
-    param_signature[:required] +
-    param_signature[:optional]
+    proxy_params.keys +
+      (param_signature[:required] || []) +
+      (param_signature[:optional] || [])
   end
 
   def validate_opts!(opts)
@@ -106,15 +110,19 @@ class RaiblocksRpc::Proxy
           'You must pass a hash to an action method'
   end
 
+  def params_keys
+    params.keys.map(&:to_sym)
+  end
+
   def ensure_required_params!
-    missing_params = param_signature[:required] - params.keys.map(&:to_sym)
+    missing_params = param_signature[:required] - params_keys
     return unless missing_params.any?
     raise RaiblocksRpc::MissingParameters,
           "Missing required parameter(s): #{missing_params.join(', ')}"
   end
 
   def ensure_no_forbidden_params!
-    forbidden_params = params.keys.map(&:to_sym) - allowed_params
+    forbidden_params = params_keys - allowed_params
     return unless forbidden_params.any?
     raise RaiblocksRpc::ForbiddenParameter,
           "Forbidden parameter(s) passed: #{forbidden_params.join(', ')}"

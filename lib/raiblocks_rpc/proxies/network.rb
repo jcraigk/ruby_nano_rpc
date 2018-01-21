@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 class RaiblocksRpc::Network < RaiblocksRpc::Proxy
-  def model_params
-    {}
-  end
-
-  def model_methods
+  def proxy_methods
     {
       available_supply: nil,
       block: { required: %i[hash] },

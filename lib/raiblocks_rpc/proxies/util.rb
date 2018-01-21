@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 class RaiblocksRpc::Util < RaiblocksRpc::Proxy
-  def model_params
-    {}
-  end
-
-  def model_methods
+  def proxy_methods
     {
       mrai_from_raw: { required: %i[amount] },
       mrai_to_raw: { required: %i[amount] },

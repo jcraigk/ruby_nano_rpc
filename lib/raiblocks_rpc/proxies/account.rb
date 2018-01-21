@@ -11,11 +11,11 @@ class RaiblocksRpc::Account < RaiblocksRpc::Proxy
     self.address = address
   end
 
-  def model_params
+  def proxy_params
     { account: :address }
   end
 
-  def model_methods
+  def proxy_methods
     {
       account_balance: nil,
       account_block_count: nil,

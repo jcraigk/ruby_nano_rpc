@@ -11,11 +11,11 @@ class RaiblocksRpc::Wallet < RaiblocksRpc::Proxy
     self.seed = wallet_seed
   end
 
-  def model_params
+  def proxy_params
     { wallet: :seed }
   end
 
-  def model_methods
+  def proxy_methods
     {
       wallet_balances: nil,
       wallet_add: { required: %i[key], optional: %i[work] },

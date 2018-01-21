@@ -34,11 +34,13 @@ class RaiblocksRpc::Client
 
   def ensure_status_success!(response)
     return if response.code == 200
-    raise RaiblocksRpc::BadRequest, "Error response from node: #{JSON[response.body]}"
+    raise RaiblocksRpc::BadRequest,
+          "Error response from node: #{JSON[response.body]}"
   end
 
   def ensure_valid_response!(data)
     return unless data['error']
-    raise RaiblocksRpc::InvalidRequest, "Invalid request: #{data['error']}"
+    raise RaiblocksRpc::InvalidRequest,
+          "Invalid request: #{data['error']}"
   end
 end
