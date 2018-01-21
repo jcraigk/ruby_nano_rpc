@@ -10,9 +10,9 @@ class RaiblocksRpc::Proxy
     raise 'Child class must override `model_methods` method'
   end
 
-  def method_missing(m, *_args, &_block)
+  def method_missing(m, *args, &_block)
     if valid_proxy_method?(m)
-      define_proxy_method(m, model_methods[m.to_sym])
+      define_proxy_method(m, model_methods[m.to_sym], args)
       send(m)
     else
       super
@@ -62,10 +62,13 @@ class RaiblocksRpc::Proxy
     @action_prefix ||= self.class.name.split('::').last.downcase + '_'
   end
 
-  def define_proxy_method(m, param_signature)
+  def define_proxy_method(m, param_signature, args)
     self.class.send(:define_method, m) do |options = {}|
-      validate_parameters!(param_signature, options)
+      ensure_options_hash!(options)
+
       model_params.each { |k, v| options[k] ||= send(v) }
+      options.merge!(args.first)
+      validate_parameters!(options, param_signature)
       RaiblocksRpc::Client.instance.call(rpc_action(m), options)
     end
   end
@@ -75,16 +78,37 @@ class RaiblocksRpc::Proxy
     m
   end
 
-  def validate_parameters!(param_signature, options)
-    return unless param_signature.is_a?(Hash)
-    missing_params = param_signature[:required] -
-                     options.keys.map(&:to_sym)
-    ensure_required_parameters!(missing_params)
+  def validate_parameters!(options, param_signature)
+    return unless param_signature
+    ensure_required_parameters!(options, param_signature)
+    ensure_no_forbidden_parameters!(options, param_signature)
   end
 
-  def ensure_required_parameters!(missing_params)
+  def allowed_parameters(param_signature)
+    @allowed_parameters ||=
+      model_params.keys +
+      param_signature[:required] +
+      param_signature[:optional]
+  end
+
+  def ensure_options_hash!(options)
+    return if options.is_a?(Hash)
+    raise RaiblocksRpc::InvalidParameterType,
+          'You must pass a hash to an action method'
+  end
+
+  def ensure_required_parameters!(options, param_signature)
+    missing_params = param_signature[:required] - options.keys.map(&:to_sym)
     return unless missing_params.any?
     raise RaiblocksRpc::MissingParameters,
           "Missing required parameter(s): #{missing_params.join(', ')}"
+  end
+
+  def ensure_no_forbidden_parameters!(options, param_signature)
+    forbidden_params = options.keys.map(&:to_sym) -
+                       allowed_parameters(param_signature)
+    return unless forbidden_params.any?
+    raise RaiblocksRpc::ForbiddenParameter,
+          "Forbidden parameter(s) passed: #{forbidden_params.join(', ')}"
   end
 end
