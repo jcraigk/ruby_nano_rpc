@@ -20,7 +20,7 @@ RSpec.describe RaiblocksRpc::Proxy do
     )
   end
 
-  context 'when `model_params` and `model_methods` are provided' do
+  context 'when #model_params and #model_methods are provided' do
     let(:model_params) do
       { thing: :address }
     end
@@ -45,6 +45,13 @@ RSpec.describe RaiblocksRpc::Proxy do
       allow(RaiblocksRpc::Client.instance).to receive(:call).and_return(true)
     end
 
+    it 'invokes the client with expected parameters' do
+      expect(RaiblocksRpc::Client.instance).to receive(:call).with(
+        'thing_another_action', thing: address
+      )
+      subject.another_action
+    end
+
     it 'does not persist parameters across method calls' do
       subject.some_action(param1: 'true', param2: 'true')
       expect { subject.some_action(param1: 'true') }.to(
@@ -58,13 +65,6 @@ RSpec.describe RaiblocksRpc::Proxy do
       end.not_to raise_error
       expect { subject.thing_another_action }.not_to raise_error
       expect { subject.another_action }.not_to raise_error
-    end
-
-    it 'invokes the client when convenience method is called' do
-      expect(RaiblocksRpc::Client.instance).to receive(:call).with(
-        'thing_another_action', thing: address
-      )
-      subject.another_action
     end
 
     it 'provides respond_to? on magic methods' do
