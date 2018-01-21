@@ -10,3 +10,6 @@ require 'raiblocks_rpc/proxies/network'
 require 'raiblocks_rpc/proxies/node'
 require 'raiblocks_rpc/proxies/util'
 require 'raiblocks_rpc/proxies/wallet'
+
+module RaiblocksRpc
+end
