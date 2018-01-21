@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class RaiblocksRpc::Proxy
-  attr_accessor :params, :param_signature
+  attr_accessor :params, :param_signature, :m
 
   private
 
@@ -12,17 +12,20 @@ class RaiblocksRpc::Proxy
     raise 'Child class must override `model_methods` method'
   end
 
+  # Define proxy methods based on #model_methods
   def method_missing(m, *args, &_block)
-    if valid_proxy_method?(m)
+    self.m = m
+    if valid_proxy_method?
       define_proxy_method(m)
-      send(m, args.first)
-    else
-      super
+      return send(m, args.first)
     end
+
+    super
   end
 
   def respond_to_missing?(m, include_private = false)
-    valid_proxy_method?(m) || super
+    self.m = m
+    valid_proxy_method? || super
   end
 
   # Valid proxy methods are:
@@ -30,15 +33,20 @@ class RaiblocksRpc::Proxy
   #     (e.g. `account_balance`)
   # (2) An abbreviation of an `action` such as `balance` from `account_balance`
   #     where `account` is the lowercase name of the encapsulating class.
-  def valid_proxy_method?(m)
-    rpc_action?(m) || rpc_action_abbrev?(m)
+  def valid_proxy_method?
+    rpc_action? || rpc_action_abbrev?
   end
 
-  def rpc_action?(m)
+  def rpc_action
+    return method_expansion if rpc_action_abbrev?
+    m
+  end
+
+  def rpc_action?
     model_method_names.include?(m)
   end
 
-  def rpc_action_abbrev?(m)
+  def rpc_action_abbrev?
     model_method_names.each do |model_method_name|
       model_method_name = model_method_name.to_s
       next unless model_method_name.start_with?(action_prefix)
@@ -48,11 +56,11 @@ class RaiblocksRpc::Proxy
     false
   end
 
-  def action_abbrev(m)
-    m.to_s[action_prefix.size..-1]
+  def action_abbrev(model_method_name)
+    model_method_name.to_s[action_prefix.size..-1]
   end
 
-  def method_expansion(m)
+  def method_expansion
     "#{action_prefix}#{m}"
   end
 
@@ -69,20 +77,14 @@ class RaiblocksRpc::Proxy
       self.param_signature = model_methods[m.to_sym]
       self.params = validate_opts!(opts)
 
-      handle_params!
-
-      RaiblocksRpc::Client.instance.call(rpc_action(m), params)
+      populate_and_validate_params!
+      RaiblocksRpc::Client.instance.call(rpc_action, params)
     end
   end
 
-  def handle_params!
+  def populate_and_validate_params!
     model_params.each { |k, v| self.params[k] ||= send(v) }
     validate_params!
-  end
-
-  def rpc_action(m)
-    return method_expansion(m) if rpc_action_abbrev?(m)
-    m
   end
 
   def validate_params!
