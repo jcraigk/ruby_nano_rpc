@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Justin Craig-Kuhn (JCK)']
   spec.email         = ['jcraigk@gmail.com']
 
-  spec.summary       = 'An RPC wrapper for Raiblocks written in Ruby'
-  spec.description   = 'An RPC wrapper for Raiblocks written in Ruby'
+  spec.summary       = 'An RPC wrapper for RaiBlocks written in Ruby'
+  spec.description   = 'An RPC wrapper for RaiBlocks written in Ruby'
   spec.homepage      = 'https://raiblocks.net'
   spec.license       = 'MIT'
 

@@ -1,6 +1,6 @@
-# RaiblocksRpc
+# RaiBlocksRpc
 
-An RPC wrapper for RaiBlocks written in Ruby.  It provides a client you can call explicitly as well as proxy objects that make working with a Raiblocks node easier.
+An RPC wrapper for RaiBlocks written in Ruby.  It provides a client you can call explicitly as well as proxy objects that make working with a RaiBlocks node easier.
 
 ## Installation
 
@@ -31,31 +31,31 @@ In either case, the client should first be configured to connect to a RaiBlocks 
 
 ### Raw RPC Calls
 
-You can use the RPC client to make raw RPC calls to a RaiBlocks node according to the documentation at [RaiBlocks RPC Docs](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).
+You can use the RPC client to make raw RPC calls to a RaiBlocks node according to the documentation at [RaiBlocks docs](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).
 
 Every call requires an `action`, which is passed as the first argument to `call`.  Depending on the action, there may be additional required or optional parameters that are passed as an options hash.
 
 ```ruby
   RaiblocksRpc::Client.instance.call(:account_balance, account: 'xrb_someaddress1234')
-  # => {"balance"=>0, "pending"=>0}
+  # => {"balance"=>100, "pending"=>0}
 ````
 
-Response data are provided as `Hashie` objects with integer coercion, indifferent access, and method access included.  Therefore you have several options for accessing values.
+Response data are provided as `Hashie` objects with integer coercion, indifferent access, and method access included so you have several options for accessing values.
 
 ```ruby
   data = RaiblocksRpc::Client.instance.call(:account_balance, account: 'xrb_someaddress1234')
-  # => {"balance"=>0, "pending"=>0}
+  # => {"balance"=>100, "pending"=>0}
   data.balance
-  # => 0
+  # => 100
   data[:balance]
-  # => 0
+  # => 100
   data['balance']
-  # => 0
+  # => 100
 ````
 
 ### Proxy Objects
 
-A few proxy objects are provided as a means to logically group RPC calls. Here we do not strictly follow the grouping as expressed on the [RaiBlocks RPC Docs](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).  Instead, the following objects are provided:
+A few proxy objects are provided as a means to logically group RPC calls. Here we do not strictly follow the grouping as expressed on the [RaiBlocks docs](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).  Instead, the following objects are provided:
 
 ```ruby
   RaiblocksRpc::Account # { account: 'xrb_address12345' }
@@ -68,23 +68,18 @@ A few proxy objects are provided as a means to logically group RPC calls. Here w
 
 `Account`, `Accounts`, and `Wallet` each require parameters to be passed during initialization.  You can then make calls on these objects without needing to pass in the params for subsequent calls.
 
-Methods whose prefix matches the class name, such as in `account_`, also have an abbreviated version so instead of calling `account_balance`, you can call simply `balance`.
+Methods whose prefix matches the class name, such as `account_balance`, also have an abbreviated version, in this case `balance`.
 
 
 ```ruby
   account = RaiblocksRpc::Account.new('xrb_someaddress1234')
 
+  account.account_balance
+  # => {"balance"=>100, "pending"=>0}
   data = account.balance
-  # => {"balance"=>0, "pending"=>0}
+  # => {"balance"=>100, "pending"=>0}
   data.balance
-  # => 0
-  data.pending
-  # => 0
-
-  data = account.weight
-  # => {"weight"=>13552245528000000000000000000000000}
-  data.weight
-  # => 13552245528000000000000000000000000
+  # => 100
 ```
 
 Some methods appear on multiple objects for convenience.
