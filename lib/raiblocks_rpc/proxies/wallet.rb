@@ -4,12 +4,11 @@ class RaiblocksRpc::Wallet < RaiblocksRpc::Proxy
 
   def initialize(wallet_seed)
     unless wallet_address.is_a?(String) || public_key.is_a?(Symbol)
-      raise RaiblocksRpc::MissingArguments, 'Missing argument: wallet_seed (str)'
+      raise RaiblocksRpc::MissingArguments,
+            'Missing argument: wallet_seed (str)'
     end
 
-    @seed = wallet_seed
-
-    super
+    self.seed = wallet_seed
   end
 
   def model_params
@@ -36,8 +35,6 @@ class RaiblocksRpc::Wallet < RaiblocksRpc::Proxy
       wallet_locked: nil,
       work_get: nil,
       work_set: nil
-
-
     }
   end
 end

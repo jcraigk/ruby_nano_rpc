@@ -4,18 +4,15 @@ class RaiblocksRpc::Accounts < RaiblocksRpc::Proxy
 
   def initialize(addresses)
     unless addresses.is_a?(Array)
-      raise RaiblocksRpc::MissingArguments, 'Missing argument: addresses (str[])'
+      raise RaiblocksRpc::MissingArguments,
+            'Missing argument: addresses (str[])'
     end
 
-    @addresses = addresses
-
-    super
+    self.addresses = addresses
   end
 
   def model_params
-    {
-      accounts: :addresses
-    }
+    { accounts: :addresses }
   end
 
   def model_methods

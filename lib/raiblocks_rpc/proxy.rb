@@ -23,10 +23,11 @@ class RaiblocksRpc::Proxy
     valid_proxy_method?(m) || super
   end
 
-  # Valid proxy methods are either:
-  # (1) The name of an `action` as passed to the RPC server
-  # (2) An abbreviation of an `action` such as `account_balance` => `account`
-  #     where `account` is the lowercase name of the encapsulating class
+  # Valid proxy methods are:
+  # (1) The raw name of an `action` as passed to the RPC server
+  #     (e.g. `account_balance`)
+  # (2) An abbreviation of an `action` such as `balance` from `account_balance`
+  #     where `account` is the lowercase name of the encapsulating class.
   def valid_proxy_method?(m)
     rpc_action?(m) || rpc_action_abbrev?(m)
   end

@@ -4,10 +4,11 @@ class RaiblocksRpc::Account < RaiblocksRpc::Proxy
 
   def initialize(address)
     unless address
-      raise RaiblocksRpc::MissingArguments, 'Missing argument: address (str)'
+      raise RaiblocksRpc::MissingArguments,
+            'Missing argument: address (str)'
     end
 
-    @address = address
+    self.address = address
   end
 
   def model_params
