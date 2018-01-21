@@ -1,10 +1,10 @@
 # frozen_string_literal: true
-class RaiRpc::Accounts < RaiRpc::Proxy
+class RaiblocksRpc::Accounts < RaiblocksRpc::Proxy
   attr_accessor :addresses
 
   def initialize(addresses)
     unless addresses.is_a?(Array)
-      raise RaiRpc::MissingArguments, 'Missing argument: addresses (str[])'
+      raise RaiblocksRpc::MissingArguments, 'Missing argument: addresses (str[])'
     end
 
     @addresses = addresses

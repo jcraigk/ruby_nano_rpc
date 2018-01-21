@@ -1,10 +1,10 @@
 # frozen_string_literal: true
-class RaiRpc::Wallet < RaiRpc::Proxy
+class RaiblocksRpc::Wallet < RaiblocksRpc::Proxy
   attr_accessor :seed
 
   def initialize(wallet_seed)
     unless wallet_address.is_a?(String) || public_key.is_a?(Symbol)
-      raise RaiRpc::MissingArguments, 'Missing argument: wallet_seed (str)'
+      raise RaiblocksRpc::MissingArguments, 'Missing argument: wallet_seed (str)'
     end
 
     @seed = wallet_seed

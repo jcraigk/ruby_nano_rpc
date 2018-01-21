@@ -4,7 +4,7 @@ require 'rest-client'
 require 'json'
 require 'pry' # TODO remove
 
-class RaiRpc::Client
+class RaiblocksRpc::Client
   include Singleton
 
   class << self
@@ -21,7 +21,7 @@ class RaiRpc::Client
     response = RestClient.post(url, params.to_json)
     ensure_status_success!(response)
 
-    data = RaiRpc::Response.new(JSON[response.body])
+    data = RaiblocksRpc::Response.new(JSON[response.body])
     ensure_valid_response!(data)
 
     data
@@ -35,11 +35,11 @@ class RaiRpc::Client
 
   def ensure_status_success!(response)
     return if response.code == 200
-    raise RaiRpc::BadRequest, "Error response from node: #{JSON[response.body]}"
+    raise RaiblocksRpc::BadRequest, "Error response from node: #{JSON[response.body]}"
   end
 
   def ensure_valid_response!(data)
     return unless data['error']
-    raise RaiRpc::InvalidRequest, "Invalid request: #{data['error']}"
+    raise RaiblocksRpc::InvalidRequest, "Invalid request: #{data['error']}"
   end
 end

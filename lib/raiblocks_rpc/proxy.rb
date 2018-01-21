@@ -1,9 +1,5 @@
 # frozen_string_literal: true
-class RaiRpc::Proxy
-  # def initialize(*_args)
-  #   define_proxy_methods
-  # end
-
+class RaiblocksRpc::Proxy
   private
 
   def model_params
@@ -14,47 +10,47 @@ class RaiRpc::Proxy
     raise 'Child class must override `model_methods` method'
   end
 
-  def method_missing(method_name, *_args, &_block)
-    if valid_proxy_method?(method_name)
-      define_proxy_method(method_name, model_methods[method_name.to_sym])
-      send(method_name)
+  def method_missing(m, *_args, &_block)
+    if valid_proxy_method?(m)
+      define_proxy_method(m, model_methods[m.to_sym])
+      send(m)
     else
       super
     end
   end
 
-  def respond_to_missing?(method_name, include_private = false)
-    valid_proxy_method?(method_name) || super
+  def respond_to_missing?(m, include_private = false)
+    valid_proxy_method?(m) || super
   end
 
   # Valid proxy methods are either:
   # (1) The name of an `action` as passed to the RPC server
   # (2) An abbreviation of an `action` such as `account_balance` => `account`
   #     where `account` is the lowercase name of the encapsulating class
-  def valid_proxy_method?(method_name)
-    rpc_action?(method_name) || rpc_action_abbrev?(method_name)
+  def valid_proxy_method?(m)
+    rpc_action?(m) || rpc_action_abbrev?(m)
   end
 
-  def rpc_action?(method_name)
-    model_method_names.include?(method_name)
+  def rpc_action?(m)
+    model_method_names.include?(m)
   end
 
-  def rpc_action_abbrev?(method_name)
+  def rpc_action_abbrev?(m)
     model_method_names.each do |model_method_name|
       model_method_name = model_method_name.to_s
       next unless model_method_name.start_with?(action_prefix)
-      return true if method_name.to_s == action_abbrev(model_method_name)
+      return true if m.to_s == action_abbrev(model_method_name)
     end
 
     false
   end
 
-  def action_abbrev(method_name)
-    method_name.to_s[action_prefix.size..-1]
+  def action_abbrev(m)
+    m.to_s[action_prefix.size..-1]
   end
 
-  def method_expansion(method_name)
-    "#{action_prefix}#{method_name}"
+  def method_expansion(m)
+    "#{action_prefix}#{m}"
   end
 
   def model_method_names
@@ -65,17 +61,17 @@ class RaiRpc::Proxy
     @action_prefix ||= self.class.name.split('::').last.downcase + '_'
   end
 
-  def define_proxy_method(method_name, param_signature)
-    self.class.send(:define_method, method_name) do |options = {}|
+  def define_proxy_method(m, param_signature)
+    self.class.send(:define_method, m) do |options = {}|
       validate_parameters!(param_signature, options)
       model_params.each { |k, v| options[k] ||= send(v) }
-      RaiRpc::Client.instance.call(rpc_action(method_name), options)
+      RaiblocksRpc::Client.instance.call(rpc_action(m), options)
     end
   end
 
-  def rpc_action(method_name)
-    return method_expansion(method_name) if rpc_action_abbrev?(method_name)
-    method_name
+  def rpc_action(m)
+    return method_expansion(m) if rpc_action_abbrev?(m)
+    m
   end
 
   def validate_parameters!(param_signature, options)
@@ -87,7 +83,7 @@ class RaiRpc::Proxy
 
   def ensure_required_parameters!(missing_params)
     return unless missing_params.any?
-    raise RaiRpc::MissingParameters,
+    raise RaiblocksRpc::MissingParameters,
           "Missing required parameter(s): #{missing_params.join(', ')}"
   end
 end
