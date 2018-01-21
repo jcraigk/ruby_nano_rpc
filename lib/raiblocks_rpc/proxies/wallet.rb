@@ -23,18 +23,26 @@ class RaiblocksRpc::Wallet < RaiblocksRpc::Proxy
       wallet_change_seed: { required: %i[seed] },
       wallet_contains: { required: %i[account] },
       wallet_create: nil,
-
       wallet_destroy: nil,
       wallet_export: nil,
       wallet_frontiers: nil,
+      wallet_locked: nil,
+      password_enter: { required: %i[password] },
       wallet_pending: { required: %i[count], optional: %i[threshold source] },
       wallet_republish: { required: %i[count] },
-      wallet_work_get: nil,
-      password_enter: { required: %i[password] },
+      wallet_balance_total: nil,
       password_valid: nil,
-      wallet_locked: nil,
+      wallet_work_get: nil,
+      send: { required: %[wallet source destination amount] },
       work_get: nil,
-      work_set: nil
+      work_set: nil,
+      search_pending: nil,
+      wallet_representative: nil,
+      wallet_representative_set: %i[representative],
+      payment_begin: nil,
+      payment_init: nil,
+      payment_end: { required: %i[account] },
+      receive: { required: %i[account block] }
     }
   end
 end

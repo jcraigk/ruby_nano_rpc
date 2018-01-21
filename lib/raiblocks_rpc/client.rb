@@ -2,7 +2,6 @@
 require 'singleton'
 require 'rest-client'
 require 'json'
-require 'pry' # TODO remove
 
 class RaiblocksRpc::Client
   include Singleton

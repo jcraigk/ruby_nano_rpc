@@ -23,4 +23,10 @@ class RaiblocksRpc::Accounts < RaiblocksRpc::Proxy
       accounts_pending: { required: %i[count], optional: %i[threshold source] }
     }
   end
+
+  # TODO implement ability to instantiate Account instances like
+  # accounts = Accounts.new(['abc', 'def'])
+  # accounts.first
+  # => RaiblocksRpc::Account address='abc'
+  # [], each (more iterators?)
 end

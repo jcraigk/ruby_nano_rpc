@@ -35,7 +35,16 @@ class RaiblocksRpc::Account < RaiblocksRpc::Proxy
       frontier_count: nil,
       ledger: { required: %i[count] },
       validate_account_number: nil,
-      pending: { required: %i[count], optional: %i[threshold exists] }
+      pending: { required: %i[count], optional: %i[threshold exists] },
+      payment_wait: { required: %i[amount timeout] },
+      accounts_balances: { required: %i[accounts] },
+      accounts_create: {
+        required: %i[accounts wallet count], optional: %i[work]
+      },
+      accounts_frontiers: { required: %i[accounts] },
+      accounts_pending: {
+        required: %i[accounts count], optional: %i[threshold source]
+      }
     }
   end
 end
