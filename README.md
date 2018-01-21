@@ -76,12 +76,10 @@ Methods whose prefix matches the class name, such as `account_balance`, also hav
 ```ruby
   account = RaiblocksRpc::Account.new('xrb_someaddress1234')
 
+  account.balance
+  # => {"balance"=>100, "pending"=>0}
   account.account_balance
   # => {"balance"=>100, "pending"=>0}
-  data = account.balance
-  # => {"balance"=>100, "pending"=>0}
-  data.balance
-  # => 100
 ```
 
 Some methods appear on multiple objects for convenience.
