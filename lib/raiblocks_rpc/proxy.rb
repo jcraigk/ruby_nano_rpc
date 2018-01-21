@@ -12,8 +12,8 @@ class RaiblocksRpc::Proxy
 
   def method_missing(m, *args, &_block)
     if valid_proxy_method?(m)
-      define_proxy_method(m, model_methods[m.to_sym], args)
-      send(m)
+      define_proxy_method(m, model_methods[m.to_sym])
+      send(m, args.first)
     else
       super
     end
@@ -62,12 +62,11 @@ class RaiblocksRpc::Proxy
     @action_prefix ||= self.class.name.split('::').last.downcase + '_'
   end
 
-  def define_proxy_method(m, param_signature, args)
+  def define_proxy_method(m, param_signature)
     self.class.send(:define_method, m) do |options = {}|
-      ensure_options_hash!(options)
+      validatie_options!(options)
+      model_params.each { |k, v| options[k] ||= send(v) } unless options.nil?
 
-      model_params.each { |k, v| options[k] ||= send(v) }
-      options.merge!(args.first)
       validate_parameters!(options, param_signature)
       RaiblocksRpc::Client.instance.call(rpc_action(m), options)
     end
@@ -91,8 +90,8 @@ class RaiblocksRpc::Proxy
       param_signature[:optional]
   end
 
-  def ensure_options_hash!(options)
-    return if options.is_a?(Hash)
+  def validatie_options!(options)
+    return if options.nil? || options.is_a?(Hash)
     raise RaiblocksRpc::InvalidParameterType,
           'You must pass a hash to an action method'
   end

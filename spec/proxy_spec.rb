@@ -33,15 +33,41 @@ RSpec.describe RaiblocksRpc::Proxy do
         thing_another_action: nil
       }
     end
+    let(:address) { 'xrb_someaddress12345' }
 
     before do
       allow(subject).to receive(:model_params).and_return(model_params)
       allow(subject).to receive(:model_methods).and_return(model_methods)
+
+      # TODO actually test #action_prefix's behavior of using self.class.name
       allow(subject).to receive(:action_prefix).and_return('thing_')
-      allow(subject).to receive(:address).and_return('xrb_someaddress12345')
+      allow(subject).to receive(:address).and_return(address)
+      allow(RaiblocksRpc::Client.instance).to receive(:call).and_return(true)
     end
 
-    it 'builds raw plus abbreviated action methods' do
+    it 'does not persist parameters across method calls' do
+      subject.some_action(param1: 'true', param2: 'true')
+      expect { subject.some_action(param1: 'true') }.to(
+        raise_error(RaiblocksRpc::MissingParameters)
+      )
+    end
+
+    it 'defines convenience methods' do
+      expect do
+        subject.some_action(param1: 'true', param2: 'true')
+      end.not_to raise_error
+      expect { subject.thing_another_action }.not_to raise_error
+      expect { subject.another_action }.not_to raise_error
+    end
+
+    it 'invokes the client when convenience method is called' do
+      expect(RaiblocksRpc::Client.instance).to receive(:call).with(
+        'thing_another_action', thing: address
+      )
+      subject.another_action
+    end
+
+    it 'provides respond_to? on magic methods' do
       expect(subject.respond_to?(:some_action)).to eq(true)
       expect(subject.respond_to?(:thing_another_action)).to eq(true)
       expect(subject.respond_to?(:another_action)).to eq(true)
@@ -57,7 +83,7 @@ RSpec.describe RaiblocksRpc::Proxy do
     end
 
     it 'raises ForbiddenParameter when unexpected parameter passed' do
-      expect {
+      expect do
         subject.some_action(
           param1: 'true',
           param2: 'true',
@@ -65,7 +91,7 @@ RSpec.describe RaiblocksRpc::Proxy do
           bad_param: 'true',
           bad_param2: 'true'
         )
-      }.to(
+      end.to(
         raise_error(
           RaiblocksRpc::ForbiddenParameter,
           'Forbidden parameter(s) passed: bad_param, bad_param2'
