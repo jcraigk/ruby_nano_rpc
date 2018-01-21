@@ -20,9 +20,9 @@ Or install it yourself as:
 
 ## Usage
 
-There are two ways to use this gem.  You can make direct calls to the RPC client or use proxy objects.
+There are two ways to use this gem.  You can make direct calls to the RPC client or use the provided proxy objects.
 
-In either case, the client must first be configured to talk to your RaiBlocks node.  If you do not specify host or port before using the client, then `localhost:7076` will be used by default.
+In either case, the client should first be configured to connect to a RaiBlocks node.  If you do not specify host or port before using the client, then `localhost:7076` will be used by default.
 
 ```ruby
   RaiblocksRpc::Client.host = 'localhost'
@@ -55,29 +55,47 @@ Response data are provided as `Hashie` objects with integer coercion, indifferen
 
 ### Proxy Objects
 
-Each namespace in the RaiBlocks RPC API is provided as a Ruby class with built-in helper methods.
+A few proxy objects are provided as a means to logically group RPC calls. Here we do not strictly follow the grouping as expressed on the [RaiBlocks RPC Docs](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).  Instead, the following objects are provided:
 
-For example, you can instantiate a new `RaiblocksRpc::Account` by passing in the account's public key.  You can then make calls on this object without needing to pass in the key for subsequent calls.
+```ruby
+  RaiblocksRpc::Account # { account: 'xrb_address12345' }
+  RaiblocksRpc::Accounts # { accounts: ['xrb_address12345', 'xrb_address67890] }
+  RaiblocksRpc::Wallet # { wallet: 'F3093AB' }
+  RaiblocksRpc::Network
+  RaiblocksRpc::Node
+  RaiblocksRpc::Util
+```
 
-Methods with a common model prefix, such as `account_`, also have an abbreviated version so instead of calling `account_balance`, you can call simply `balance`.
+`Account`, `Accounts`, and `Wallet` each require parameters to be passed during initialization.  You can then make calls on these objects without needing to pass in the params for subsequent calls.
+
+Methods whose prefix matches the class name, such as in `account_`, also have an abbreviated version so instead of calling `account_balance`, you can call simply `balance`.
 
 
 ```ruby
   account = RaiblocksRpc::Account.new('xrb_someaddress1234')
 
   data = account.balance
-  => {"balance"=>0, "pending"=>0}
+  # => {"balance"=>0, "pending"=>0}
   data.balance
-  => 0
+  # => 0
   data.pending
-  => 0
+  # => 0
 
   data = account.weight
-  => {"weight"=>13552245528000000000000000000000000}
+  # => {"weight"=>13552245528000000000000000000000000}
   data.weight
-  => 13552245528000000000000000000000000
+  # => 13552245528000000000000000000000000
 ```
 
+Some methods appear on multiple objects for convenience.
+
+```ruby
+  RaiblocksRpc::Node.new.block_count
+  # => {"count"=>314848, "unchecked"=>4793586}
+
+  RaiblocksRpc::Network.new.block_count
+  # => {"count"=>314848, "unchecked"=>4793642}
+```
 
 ## License
 
