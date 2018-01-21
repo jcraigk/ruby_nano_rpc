@@ -9,9 +9,13 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Justin Craig-Kuhn (JCK)']
   spec.email         = ['jcraigk@gmail.com']
 
-  spec.summary       = 'An RPC wrapper for RaiBlocks written in Ruby'
-  spec.description   = 'An RPC wrapper for RaiBlocks written in Ruby'
-  spec.homepage      = 'https://raiblocks.net'
+  spec.summary       = 'RPC wrapper for RaiBlocks nodes written in Ruby'
+  spec.description   = 'An RPC wrapper for RaiBlocks nodes written in Ruby.' \
+                       'It connects to an individual node that you control. ' \
+                       "There's a client object you can use to make explicit " \
+                       'RPC calls as well as proxy objects with logically ' \
+                       'grouped methods.'
+  spec.homepage      = 'https://github.com/jcraigk/ruby_raiblocks_rpc'
   spec.license       = 'MIT'
 
   if spec.respond_to?(:metadata)
@@ -35,6 +39,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov', '~> 0.15.1'
   spec.add_development_dependency 'rubocop', '~> 0.52.1'
 
-  spec.add_runtime_dependency 'hashie', '~> 3.5.7'
-  spec.add_runtime_dependency 'rest-client', '~> 2.0.2'
+  spec.add_runtime_dependency 'hashie', '~> 3.5', '>= 3.5.7'
+  spec.add_runtime_dependency 'rest-client', '~> 2.0', '>= 2.0.2'
 end
