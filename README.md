@@ -1,6 +1,6 @@
 # RaiBlocksRpc
 
-An RPC wrapper for RaiBlocks written in Ruby.  It connects to an individual node that you control and makes calls using HTTP.  There's a client object you can use to make explicit RPC calls as well as proxy objects with logically grouped methods.
+An RPC wrapper for RaiBlocks written in Ruby.  It connects to an individual node that you control.  There's a client object you can use to make explicit RPC calls as well as proxy objects with logically grouped methods.
 
 To run a RaiBlocks node locally, see [Docker documentation](https://github.com/clemahieu/raiblocks/wiki/Docker-node).
 
