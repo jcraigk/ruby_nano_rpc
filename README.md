@@ -1,6 +1,8 @@
 # RaiBlocksRpc
 
-An RPC wrapper for RaiBlocks written in Ruby.  It provides a client you can call explicitly as well as proxy objects that make working with a RaiBlocks node easier.
+An RPC wrapper for RaiBlocks written in Ruby.  It connects to an individual node that you control and makes calls using HTTP.  There's a client object you can use to make explicit RPC calls as well as proxy objects with logically grouped methods.
+
+To run a RaiBlocks node locally, see [Docker documentation](https://github.com/clemahieu/raiblocks/wiki/Docker-node).
 
 ## Installation
 
@@ -31,7 +33,7 @@ In either case, the client should first be configured to connect to a RaiBlocks 
 
 ### Raw RPC Calls
 
-You can use the RPC client to make raw RPC calls to a RaiBlocks node according to the documentation at [RaiBlocks docs](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).
+You can use the RPC client to make raw RPC calls to a RaiBlocks node according to the [documentation](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).
 
 Every call requires an `action`, which is passed as the first argument to `call`.  Depending on the action, there may be additional required or optional parameters that are passed as an options hash.
 
@@ -55,7 +57,7 @@ Response data are provided as `Hashie` objects with integer coercion, indifferen
 
 ### Proxy Objects
 
-A few proxy objects are provided as a means to logically group RPC calls. Here we do not strictly follow the grouping as expressed on the [RaiBlocks docs](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).  Instead, the following objects are provided:
+A few proxy objects are provided as a means to logically group RPC calls. Here we do not strictly follow the grouping as expressed in the [RaiBlocks RPC documentation](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).  Instead, the following objects are provided:
 
 ```ruby
   RaiblocksRpc::Account # { account: 'xrb_address12345' }
