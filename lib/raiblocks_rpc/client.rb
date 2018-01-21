@@ -4,8 +4,6 @@ require 'rest-client'
 require 'json'
 
 class RaiblocksRpc::Client
-  include Singleton
-
   class << self
     attr_accessor :host, :port
   end

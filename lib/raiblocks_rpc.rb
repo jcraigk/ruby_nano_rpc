@@ -12,4 +12,7 @@ require 'raiblocks_rpc/proxies/util'
 require 'raiblocks_rpc/proxies/wallet'
 
 module RaiblocksRpc
+  def self.client
+    @client ||= Client.new
+  end
 end

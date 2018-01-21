@@ -38,14 +38,14 @@ You can use the RPC client to make raw RPC calls to a RaiBlocks node according t
 Every call requires an `action`, which is passed as the first argument to `call`.  Depending on the action, there may be additional required or optional parameters that are passed as an options hash.
 
 ```ruby
-  RaiblocksRpc::Client.instance.call(:account_balance, account: 'xrb_someaddress1234')
+  RaiblocksRpc::Client.new.call(:account_balance, account: 'xrb_someaddress1234')
   # => {"balance"=>100, "pending"=>0}
 ````
 
 Response data are provided as `Hashie` objects with integer coercion, indifferent access, and method access included so you have several options for accessing values.
 
 ```ruby
-  data = RaiblocksRpc::Client.instance.call(:account_balance, account: 'xrb_someaddress1234')
+  data = RaiblocksRpc::Client.new.call(:account_balance, account: 'xrb_someaddress1234')
   # => {"balance"=>100, "pending"=>0}
   data.balance
   # => 100

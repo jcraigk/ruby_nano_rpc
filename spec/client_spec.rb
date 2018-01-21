@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe RaiblocksRpc::Client do
   subject { described_class }
-  let(:client) { subject.instance }
+  let(:client) { subject.new }
   let(:action) { 'account_balance' }
   let(:params) { { account: 'xrb_someaddress12345' } }
   let(:valid_response_json) do
@@ -12,7 +12,7 @@ RSpec.describe RaiblocksRpc::Client do
   end
   let(:error_msg) { 'Bad account number' }
 
-  it 'provides singleton instance' do
+  it 'provides a client instance' do
     expect(client).to be
   end
 

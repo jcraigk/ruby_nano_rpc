@@ -76,7 +76,7 @@ class RaiblocksRpc::Proxy
     self.class.send(:define_method, m) do |opts = {}|
       set_accessors(m, opts)
       populate_and_validate_params!
-      RaiblocksRpc::Client.instance.call(rpc_action, params)
+      RaiblocksRpc.client.call(rpc_action, params)
     end
   end
 

@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 RSpec.describe RaiblocksRpc::Proxy do
   subject { described_class.new }
+  let(:client) { spy('RaiblocksRpc::Client') }
+
+  before do
+    allow(RaiblocksRpc).to receive(:client).and_return client
+  end
 
   it 'requires child to implement `proxy_methods`' do
     expect { subject.send(:proxy_methods) }.to(
@@ -33,11 +38,11 @@ RSpec.describe RaiblocksRpc::Proxy do
       # TODO actually test #action_prefix's behavior of using self.class.name
       allow(subject).to receive(:action_prefix).and_return('thing_')
       allow(subject).to receive(:address).and_return(address)
-      allow(RaiblocksRpc::Client.instance).to receive(:call).and_return(true)
+      allow(client).to receive(:call).and_return(true)
     end
 
     it 'invokes the client with expected parameters' do
-      expect(RaiblocksRpc::Client.instance).to receive(:call).with(
+      expect(client).to receive(:call).with(
         'thing_another_action', thing: address
       )
       subject.another_action
