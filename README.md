@@ -24,11 +24,16 @@ Or install it yourself as:
 
 There are two ways to use this gem.  You can make direct calls to the RPC client or use the provided proxy objects.
 
-In either case, the client should first be configured to connect to a RaiBlocks node.  If you do not specify host or port before using the client, then `localhost:7076` will be used by default.
+In either case, the client should first be configured to connect to a RaiBlocks node and instantiated.  If you do not specify host or port, then `localhost:7076` will be used by default.
 
 ```ruby
-  RaiblocksRpc::Client.host = 'localhost'
-  RaiblocksRpc::Client.port = 7076
+  client = RaiblocksRpc::Client.new(host: 'myraiblocksnode', port: 1234)
+````
+
+If you're just using the default configuration, you can use the shorter
+
+```ruby
+  client = RaiblocksRpc.Client
 ````
 
 ### Raw RPC Calls
@@ -38,14 +43,14 @@ You can use the RPC client to make raw RPC calls to a RaiBlocks node according t
 Every call requires an `action`, which is passed as the first argument to `call`.  Depending on the action, there may be additional required or optional parameters that are passed as an options hash.
 
 ```ruby
-  RaiblocksRpc::Client.new.call(:account_balance, account: 'xrb_someaddress1234')
+  client.call(:account_balance, account: 'xrb_someaddress1234')
   # => {"balance"=>100, "pending"=>0}
 ````
 
 Response data are provided as `Hashie` objects with integer coercion, indifferent access, and method access included so you have several options for accessing values.
 
 ```ruby
-  data = RaiblocksRpc::Client.new.call(:account_balance, account: 'xrb_someaddress1234')
+  data = client.call(:account_balance, account: 'xrb_someaddress1234')
   # => {"balance"=>100, "pending"=>0}
   data.balance
   # => 100

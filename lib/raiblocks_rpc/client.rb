@@ -4,8 +4,11 @@ require 'rest-client'
 require 'json'
 
 class RaiblocksRpc::Client
-  class << self
-    attr_accessor :host, :port
+  attr_accessor :host, :port
+
+  def initialize(host: 'localhost', port: 7076)
+    @host = host
+    @port = port
   end
 
   def call(action, params = {})
@@ -25,9 +28,7 @@ class RaiblocksRpc::Client
   end
 
   def url
-    self.class.host ||= 'localhost'
-    self.class.port ||= 7076
-    "http://#{self.class.host}:#{self.class.port}"
+    "http://#{host}:#{port}"
   end
 
   def ensure_status_success!(response)

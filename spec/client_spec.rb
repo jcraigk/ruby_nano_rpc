@@ -2,6 +2,7 @@
 RSpec.describe RaiblocksRpc::Client do
   subject { described_class }
   let(:client) { subject.new }
+  let(:client_with_config) { subject.new(host: '127.0.0.1', port: 7077) }
   let(:action) { 'account_balance' }
   let(:params) { { account: 'xrb_someaddress12345' } }
   let(:valid_response_json) do
@@ -16,11 +17,14 @@ RSpec.describe RaiblocksRpc::Client do
     expect(client).to be
   end
 
+  it 'provides default configuration' do
+    expect(client.host).to eq('localhost')
+    expect(client.port).to eq(7076)
+  end
+
   it 'allows host configuration' do
-    subject.host = '127.0.0.1'
-    expect(subject.host).to eq('127.0.0.1')
-    subject.port = 7077
-    expect(subject.port).to eq(7077)
+    expect(client_with_config.host).to eq('127.0.0.1')
+    expect(client_with_config.port).to eq(7077)
   end
 
   it 'implements #call' do
