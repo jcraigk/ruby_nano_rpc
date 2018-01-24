@@ -1,8 +1,8 @@
-# RaiBlocksRpc
+# Raiblocks RPC
 
-An RPC wrapper for RaiBlocks written in Ruby.  It connects to an individual node that you control.  There's a client object you can use to make explicit RPC calls as well as proxy objects with logically grouped methods.
+An RPC wrapper for RaiBlocks written in Ruby.  It connects to an individual node that you control.  There's a client object you can use to make explicit RPC calls as well as proxy objects with logically grouped convenience methods.
 
-To run a RaiBlocks node locally, see [Docker documentation](https://github.com/clemahieu/raiblocks/wiki/Docker-node).
+To run a RaiBlocks node locally, see [RaiBlocks Docker Docs](https://github.com/clemahieu/raiblocks/wiki/Docker-node).
 
 ## Installation
 
@@ -22,32 +22,32 @@ Or install it yourself as:
 
 ## Usage
 
-There are two ways to use this gem.  You can make direct calls to the RPC client or use the provided proxy objects.
-
-In either case, the client should first be configured to connect to a RaiBlocks node and instantiated.  If you do not specify host or port, then `localhost:7076` will be used by default.
-
-```ruby
-  client = RaiblocksRpc::Client.new(host: 'myraiblocksnode', port: 1234)
-````
-
-If you're just using the default configuration, you can use the shorter
-
-```ruby
-  client = RaiblocksRpc.Client
-````
+There are two ways to use this gem.  You can make direct calls to the RPC client using Ruby hashes or you can use proxy objects that provide helper methods for terser code.
 
 ### Raw RPC Calls
 
-You can use the RPC client to make raw RPC calls to a RaiBlocks node according to the [documentation](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).
+The RCP client exposes raw Remote Procedure Call methods according to the [RaiBlocks RPC Docs](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).
 
-Every call requires an `action`, which is passed as the first argument to `call`.  Depending on the action, there may be additional required or optional parameters that are passed as an options hash.
+Every method requires an `action`, which is passed as the first argument to `call`.  Depending on the action, there may be additional required or optional parameters that are passed as an options hash.
+
+First setup the client:
+
+```ruby
+# Connect to localhost:7076
+client = Raiblocks.client
+
+# Connect to custom host
+client = Raiblocks::Client.new(host: 'myraiblocksnode', port: 1234)
+```
+
+Then make a `call`, passing the the action and the data:
 
 ```ruby
   client.call(:account_balance, account: 'xrb_someaddress1234')
   # => {"balance"=>100, "pending"=>0}
 ````
 
-Response data are provided as `Hashie` objects with integer coercion, indifferent access, and method access included so you have several options for accessing values.
+Response data are provided as `Hashie` objects with integer coercion, indifferent access, and method access so you have several options for accessing returned values.
 
 ```ruby
   data = client.call(:account_balance, account: 'xrb_someaddress1234')
@@ -62,40 +62,70 @@ Response data are provided as `Hashie` objects with integer coercion, indifferen
 
 ### Proxy Objects
 
-A few proxy objects are provided as a means to logically group RPC calls. Here we do not strictly follow the grouping as expressed in the [RaiBlocks RPC documentation](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).  Instead, the following objects are provided:
+Proxy objects are provided to ease interaction with the API by providing logically grouped helper methods. Here we do not strictly follow the grouping as expressed in the [RaiBlocks RPC Docs](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).  Instead, the following objects are provided:
 
 ```ruby
-  RaiblocksRpc::Account # { account: 'xrb_address12345' }
-  RaiblocksRpc::Accounts # { accounts: ['xrb_address12345', 'xrb_address67890] }
-  RaiblocksRpc::Wallet # { wallet: 'F3093AB' }
-  RaiblocksRpc::Network
-  RaiblocksRpc::Node
-  RaiblocksRpc::Util
+  Raiblocks::Account # { account: 'xrb_address12345' }
+  Raiblocks::Accounts # { accounts: %w[xrb_address12345 xrb_address67890] }
+  Raiblocks::Node
+  Raiblocks::Wallet # { wallet: 'F3093AB' }
 ```
 
-`Account`, `Accounts`, and `Wallet` each require parameters to be passed during initialization.  You can then make calls on these objects without needing to pass in the params for subsequent calls.
-
-Methods whose prefix matches the class name, such as `account_balance`, also have an abbreviated version, in this case `balance`.
-
+`Account`, `Accounts`, and `Wallet` each require a single parameter to be passed during initialization.  You can then make calls on these objects without needing to pass in the param for subsequent calls.  All RPC methods are provided directly as methods.
 
 ```ruby
-  account = RaiblocksRpc::Account.new('xrb_someaddress1234')
+  account = Raiblocks::Account.new('xrb_someaddress1234')
 
-  account.balance
-  # => {"balance"=>100, "pending"=>0}
   account.account_balance
   # => {"balance"=>100, "pending"=>0}
+  account.account_balance.balance
+  # 100
+  account.balance # Fastest to use #balance helper method
+  # 100
 ```
 
-Some methods appear on multiple objects for convenience.
+You can ask an object what raw RPC methods it provides using `proxy_methods`:
 
 ```ruby
-  RaiblocksRpc::Node.new.block_count
-  # => {"count"=>314848, "unchecked"=>4793586}
-
-  RaiblocksRpc::Network.new.block_count
-  # => {"count"=>314848, "unchecked"=>4793642}
+  account.proxy_methods
+  # => [:account_balance, :account_block_count, :account_create, :account_history, :account_info, :account_key, :account_list, :account_move, :account_remove, :account_representative, :account_representative_set, :account_weight, :accounts_balances, :accounts_create, :accounts_frontiers, :accounts_pending, :delegators, :delegators_count, :frontier_count, :frontiers, :ledger, :payment_wait, :pending, :validate_account_number]
 ```
+
+Helper methods are provided for frequently used calls:
+
+```ruby
+  Raiblocks::Account.helper_methods
+  # => [:balance]
+
+  Raiblocks::Account.new('xrb_someaddress1234').balance
+  # => 250
+```
+
+`Node` methods are provided at both the instance and class levels:
+
+```ruby
+  Raiblocks::Node.version
+  # => {"rpc_version"=>1, "store_version"=>10, "node_vendor"=>"RaiBlocks 9.0"}
+
+  node = Raiblocks::Node.new
+  version.rpc_version
+  # => 1
+  node.peers
+  # => {"peers"=>{"[::ffff:2.80.5.202]:64317"=>"5", "[::ffff:2.249.74.58]:7075"=>"5", "[::ffff:5.9.31.82]:7077"=>"4", ... }
+  node.available_supply
+  # => {"available"=>132596127030666124778600855847014518457}
+  node.block_count.unchecked
+  # => 4868605
+```
+
+To connect to a custom node, instantiate a client and pass it into the proxy object as `client`:
+
+```ruby
+  client = Raiblocks::Client.new(host: 'myraiblocksnode', port: 1234)
+  account = Raiblocks::Account.new('xrb_someaddress1234', client: client)
+```
+
+For a more comprehensive guide, see the [Wiki](https://github.com/jcraigk/ruby_raiblocks_rpc/wiki).
 
 ## License
 

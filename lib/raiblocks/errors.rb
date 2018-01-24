@@ -1,7 +1,8 @@
 # frozen_string_literal: true
-module RaiblocksRpc
+module Raiblocks
   class Error < StandardError; end
 
+  class NodeConnectionFailure < Error; end
   class BadRequest < Error; end
   class InvalidRequest < Error; end
   class InvalidParameterType < Error; end

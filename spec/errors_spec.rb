@@ -1,31 +1,32 @@
+# frozen_string_literal: true
 require 'spec_helper'
 
-RSpec.describe 'RaiblocksRpc errors' do
-  describe RaiblocksRpc::Error do
+RSpec.describe 'Raiblocks errors' do
+  describe Raiblocks::Error do
     it 'is a StandardError' do
       expect(subject).to be_a StandardError
     end
   end
 
   shared_examples 'child error' do
-    it 'is a RaiblocksRpc::Error' do
-      expect(subject).to be_a RaiblocksRpc::Error
+    it 'is a Raiblocks::Error' do
+      expect(subject).to be_a Raiblocks::Error
     end
   end
 
-  describe RaiblocksRpc::BadRequest do
+  describe Raiblocks::BadRequest do
     include_examples 'child error'
   end
-  describe RaiblocksRpc::InvalidRequest do
+  describe Raiblocks::InvalidRequest do
     include_examples 'child error'
   end
-  describe RaiblocksRpc::InvalidParameterType do
+  describe Raiblocks::InvalidParameterType do
     include_examples 'child error'
   end
-  describe RaiblocksRpc::ForbiddenParameter do
+  describe Raiblocks::ForbiddenParameter do
     include_examples 'child error'
   end
-  describe RaiblocksRpc::MissingParameters do
+  describe Raiblocks::MissingParameters do
     include_examples 'child error'
   end
 end
