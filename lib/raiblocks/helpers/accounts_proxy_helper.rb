@@ -1,12 +1,5 @@
 # frozen_string_literal: true
 module Raiblocks::AccountsProxyHelper
-  helper_method_list %i[
-    balances
-    create
-    frontiers
-    pending
-  ]
-
   def balances
     accounts_balances.balances
   end
