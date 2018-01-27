@@ -22,7 +22,7 @@ Or install it yourself as:
 
 ## Usage
 
-There are two ways to use this gem.  You can make direct calls to the RPC client using Ruby hashes or you can use proxy objects that provide helper methods for terser code.
+There are two ways to use this gem.  You can make direct calls to the RPC client using Ruby hashes or you can use proxy objects for terser code.
 
 ### Raw RPC Calls
 
@@ -40,14 +40,14 @@ client = Raiblocks.client
 client = Raiblocks::Client.new(host: 'myraiblocksnode', port: 1234)
 ```
 
-Then make a `call`, passing the the action and the data:
+Then make a `call`, passing the action and data:
 
 ```ruby
   client.call(:account_balance, account: 'xrb_someaddress1234')
   # => {"balance"=>100, "pending"=>0}
 ````
 
-Response data are provided as `Hashie` objects with integer coercion, indifferent access, and method access so you have several options for accessing returned values.
+Response data are provided as [Hashie](https://github.com/intridea/hashie) objects with integer coercion, indifferent access, and method access.
 
 ```ruby
   data = client.call(:account_balance, account: 'xrb_someaddress1234')
@@ -71,7 +71,7 @@ Proxy objects are provided to ease interaction with the API by providing logical
   Raiblocks::Wallet # { wallet: 'F3093AB' }
 ```
 
-`Account`, `Accounts`, and `Wallet` each require a single parameter to be passed during initialization.  You can then make calls on these objects without needing to pass in the param for subsequent calls.  All RPC methods are provided directly as methods.
+`Account`, `Accounts`, and `Wallet` each require a single parameter to be passed during initialization.  This parameter is persisted for subsequent calls.  All RPC methods are provided directly as methods.
 
 ```ruby
   account = Raiblocks::Account.new('xrb_someaddress1234')
@@ -80,25 +80,30 @@ Proxy objects are provided to ease interaction with the API by providing logical
   # => {"balance"=>100, "pending"=>0}
   account.account_balance.balance
   # 100
-  account.balance # Fastest to use #balance helper method
-  # 100
 ```
 
 You can ask an object what raw RPC methods it provides using `proxy_methods`:
 
 ```ruby
   account.proxy_methods
-  # => [:account_balance, :account_block_count, :account_create, :account_history, :account_info, :account_key, :account_list, :account_move, :account_remove, :account_representative, :account_representative_set, :account_weight, :accounts_balances, :accounts_create, :accounts_frontiers, :accounts_pending, :delegators, :delegators_count, :frontier_count, :frontiers, :ledger, :payment_wait, :pending, :validate_account_number]
+  # => [:account_balance, :account_block_count, :account_create, ...]
 ```
 
-Helper methods are provided for frequently used calls:
+There are also helper methods for terser code:
 
 ```ruby
-  Raiblocks::Account.helper_methods
-  # => [:balance]
+  account = Raiblocks::Account.new('xrb_someaddress1234')
+  account.balance
+  # 100
+  account.pending_balance
+  # 0
+```
 
-  Raiblocks::Account.new('xrb_someaddress1234').balance
-  # => 250
+You can ask an object what helper methods it provides using `helper_methods` (coming soon):
+
+```ruby
+  account.helper_methods
+  # => [:balance, :pending_balance, ...]
 ```
 
 `Node` methods are provided at both the instance and class levels:
