@@ -17,6 +17,15 @@ class Raiblocks::Wallet
 
   proxy_params wallet: :seed
 
+  proxy_method :password_change, required: %i[password]
+  proxy_method :password_enter, required: %i[password]
+  proxy_method :password_valid
+  proxy_method :payment_begin
+  proxy_method :payment_init
+  proxy_method :payment_end, required: %i[account]
+  proxy_method :receive, required: %i[account block]
+  proxy_method :send, required: %i[wallet source destination amount]
+  proxy_method :search_pending
   proxy_method :wallet_add, required: %i[key], optional: %i[work]
   proxy_method :wallet_balance_total
   proxy_method :wallet_balances, optional: %i[threshold]
@@ -35,13 +44,4 @@ class Raiblocks::Wallet
   proxy_method :wallet_work_get
   proxy_method :work_get
   proxy_method :work_set
-  proxy_method :password_change, required: %i[password]
-  proxy_method :password_enter, required: %i[password]
-  proxy_method :password_valid
-  proxy_method :payment_begin
-  proxy_method :payment_init
-  proxy_method :payment_end, required: %i[account]
-  proxy_method :receive, required: %i[account block]
-  proxy_method :send, required: %i[wallet source destination amount]
-  proxy_method :search_pending
 end

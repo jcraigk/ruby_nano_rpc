@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 module Raiblocks::AccountsProxyHelper
-  def frontiers
-    accounts_frontiers.frontiers
-  end
+  helper_method_list %i[
+    balances
+    create
+    frontiers
+    pending
+  ]
 
   def balances
     accounts_balances.balances
@@ -10,6 +13,10 @@ module Raiblocks::AccountsProxyHelper
 
   def create(wallet:, count:, work: nil)
     accounts_create(wallet: wallet, count: count, work: work).accounts
+  end
+
+  def frontiers
+    accounts_frontiers.frontiers
   end
 
   def pending(count:, threshold: nil, source: nil)
