@@ -1,6 +1,6 @@
 # Nano RPC
 
-An RPC wrapper for Nano (the digital currency) written in Ruby.  It connects to an individual Nano node that you control.  There's a client object you can use to make explicit RPC calls as well as proxy objects with logically grouped helper methods ([Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki)).
+An RPC wrapper for Nano (the digital currency) written in Ruby.  It connects to an individual Nano node that you control.  There's a client object you can use to make explicit RPC calls as well as proxy objects with logically grouped helper methods ([Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki/Proxy-Object-Reference)).
 
 To run a Nano node locally, see [Nano Docker Docs](https://github.com/clemahieu/raiblocks/wiki/Docker-node).
 
@@ -130,7 +130,7 @@ To connect to a custom node, instantiate a client and pass it into the proxy obj
   account = Nano::Account.new('xrb_someaddress1234', client: client)
 ```
 
-For a more comprehensive guide, see the [Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki).
+For a more comprehensive guide, see the [Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki/Proxy-Object-Reference).
 
 ## License
 
