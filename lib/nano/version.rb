@@ -1,4 +1,4 @@
 # frozen_string_literal: true
-module Raiblocks
+module Nano
   VERSION = '0.4.0'
 end

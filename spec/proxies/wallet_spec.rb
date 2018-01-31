@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Raiblocks::Wallet do
+RSpec.describe Nano::Wallet do
   subject { described_class.new(seed) }
   let(:seed) { 'E929FBC3' }
   let(:expected_proxy_methods) do
@@ -41,7 +41,7 @@ RSpec.describe Raiblocks::Wallet do
 
   it 'raises MissingParameters unless initialized with string' do
     expect { described_class.new }.to raise_error(
-      Raiblocks::MissingParameters, 'Missing argument: address (str)'
+      Nano::MissingParameters, 'Missing argument: address (str)'
     )
   end
 

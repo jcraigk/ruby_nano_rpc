@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Raiblocks::Client do
+RSpec.describe Nano::Client do
   subject { described_class.new }
   let(:client_with_config) do
     described_class.new(host: '127.0.0.1', port: 7077)
@@ -15,7 +15,7 @@ RSpec.describe Raiblocks::Client do
   let(:error_msg) { 'Bad account number' }
 
   it 'provides a client instance on namespace' do
-    expect(Raiblocks.client.class).to eq(described_class)
+    expect(Nano.client.class).to eq(described_class)
   end
 
   it 'provides default configuration' do
@@ -43,7 +43,7 @@ RSpec.describe Raiblocks::Client do
     it 'raises NodeConnectionFailure and provides error message' do
       expect { subject.call(action, params) }.to(
         raise_error(
-          Raiblocks::NodeConnectionFailure,
+          Nano::NodeConnectionFailure,
           'Node connection failure at http://localhost:7076'
         )
       )
@@ -66,9 +66,9 @@ RSpec.describe Raiblocks::Client do
       context 'with success response from node' do
         let(:response_json) { valid_response_json }
 
-        it 'converts to Raiblocks::Response' do
+        it 'converts to Nano::Response' do
           response = client_call
-          expect(response.class).to eq(Raiblocks::Response)
+          expect(response.class).to eq(Nano::Response)
           expect(response['balance']).to eq(1000)
         end
       end
@@ -79,7 +79,7 @@ RSpec.describe Raiblocks::Client do
         it 'raises InvalidRequest and provides error message' do
           expect { client_call }.to(
             raise_error(
-              Raiblocks::InvalidRequest,
+              Nano::InvalidRequest,
               "Invalid request: #{error_msg}"
             )
           )
@@ -98,7 +98,7 @@ RSpec.describe Raiblocks::Client do
       it 'raises BadReques and provides body as string in error message' do
         expect { client_call }.to(
           raise_error(
-            Raiblocks::BadRequest,
+            Nano::BadRequest,
             "Error response from node: #{JSON[response_body]}"
           )
         )

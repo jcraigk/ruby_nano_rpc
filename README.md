@@ -1,6 +1,6 @@
-# Raiblocks RPC
+# Nano RPC
 
-An RPC wrapper for RaiBlocks written in Ruby.  It connects to an individual node that you control.  There's a client object you can use to make explicit RPC calls as well as proxy objects with logically grouped convenience methods.
+An RPC wrapper for RaiBlocks written in Ruby.  It connects to an individual node that you control.  There's a client object you can use to make explicit RPC calls as well as proxy objects with logically grouped helper methods ([Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki)).
 
 To run a RaiBlocks node locally, see [RaiBlocks Docker Docs](https://github.com/clemahieu/raiblocks/wiki/Docker-node).
 
@@ -9,7 +9,7 @@ To run a RaiBlocks node locally, see [RaiBlocks Docker Docs](https://github.com/
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'raiblocks_rpc'
+gem 'nano_rpc'
 ```
 
 And then execute:
@@ -18,7 +18,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install raiblocks_rpc
+    $ gem install nano_rpc
 
 ## Usage
 
@@ -34,10 +34,10 @@ First setup the client:
 
 ```ruby
 # Connect to localhost:7076
-client = Raiblocks.client
+client = Nano.client
 
 # Connect to custom host
-client = Raiblocks::Client.new(host: 'myraiblocksnode', port: 1234)
+client = Nano::Client.new(host: 'mynanonode', port: 1234)
 ```
 
 Then make a `call`, passing the action and data:
@@ -65,16 +65,16 @@ Response data are provided as [Hashie](https://github.com/intridea/hashie) objec
 Proxy objects are provided to ease interaction with the API by providing logically grouped helper methods. Here we do not strictly follow the grouping as expressed in the [RaiBlocks RPC Docs](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).  Instead, the following objects are provided:
 
 ```ruby
-  Raiblocks::Account # { account: 'xrb_address12345' }
-  Raiblocks::Accounts # { accounts: %w[xrb_address12345 xrb_address67890] }
-  Raiblocks::Node
-  Raiblocks::Wallet # { wallet: 'F3093AB' }
+  Nano::Account # { account: 'xrb_address12345' }
+  Nano::Accounts # { accounts: %w[xrb_address12345 xrb_address67890] }
+  Nano::Node
+  Nano::Wallet # { wallet: 'F3093AB' }
 ```
 
 `Account`, `Accounts`, and `Wallet` each require a single parameter to be passed during initialization.  This parameter is persisted for subsequent calls.  All RPC methods are provided directly as methods.
 
 ```ruby
-  account = Raiblocks::Account.new('xrb_someaddress1234')
+  account = Nano::Account.new('xrb_someaddress1234')
 
   account.account_balance
   # => {"balance"=>100, "pending"=>0}
@@ -92,7 +92,7 @@ You can ask an object what raw RPC methods it provides using `proxy_methods`:
 There are also helper methods for terser code:
 
 ```ruby
-  account = Raiblocks::Account.new('xrb_someaddress1234')
+  account = Nano::Account.new('xrb_someaddress1234')
   account.balance
   # 100
   account.pending_balance
@@ -109,10 +109,10 @@ You can ask an object what helper methods it provides using `helper_methods` (co
 `Node` methods are provided at both the instance and class levels:
 
 ```ruby
-  Raiblocks::Node.version
+  Nano::Node.version
   # => {"rpc_version"=>1, "store_version"=>10, "node_vendor"=>"RaiBlocks 9.0"}
 
-  node = Raiblocks::Node.new
+  node = Nano::Node.new
   version.rpc_version
   # => 1
   node.peers
@@ -126,11 +126,11 @@ You can ask an object what helper methods it provides using `helper_methods` (co
 To connect to a custom node, instantiate a client and pass it into the proxy object as `client`:
 
 ```ruby
-  client = Raiblocks::Client.new(host: 'myraiblocksnode', port: 1234)
-  account = Raiblocks::Account.new('xrb_someaddress1234', client: client)
+  client = Nano::Client.new(host: 'mynanonode', port: 1234)
+  account = Nano::Account.new('xrb_someaddress1234', client: client)
 ```
 
-For a more comprehensive guide, see the [Wiki](https://github.com/jcraigk/ruby_raiblocks_rpc/wiki).
+For a more comprehensive guide, see the [Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki).
 
 ## License
 

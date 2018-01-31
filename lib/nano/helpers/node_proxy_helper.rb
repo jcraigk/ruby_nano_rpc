@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module Raiblocks::NodeProxyHelper
+module Nano::NodeProxyHelper
   def account_containing_block(hash)
     block_account(hash: hash).account
   end

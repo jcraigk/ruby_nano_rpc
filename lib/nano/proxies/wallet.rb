@@ -1,18 +1,18 @@
 # frozen_string_literal: true
-class Raiblocks::Wallet
-  include Raiblocks::Proxy
-  include Raiblocks::WalletProxyHelper
+class Nano::Wallet
+  include Nano::Proxy
+  include Nano::WalletProxyHelper
 
   attr_accessor :seed
 
   def initialize(wallet_seed = nil, opts = {})
     unless wallet_seed.is_a?(String)
-      raise Raiblocks::MissingParameters,
+      raise Nano::MissingParameters,
             'Missing argument: address (str)'
     end
 
     @seed = wallet_seed
-    @client = opts[:client] || Raiblocks.client
+    @client = opts[:client] || Nano.client
   end
 
   proxy_params wallet: :seed

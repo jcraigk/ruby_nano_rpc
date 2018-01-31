@@ -1,18 +1,18 @@
 # frozen_string_literal: true
-class Raiblocks::Account
-  include Raiblocks::Proxy
-  include Raiblocks::AccountProxyHelper
+class Nano::Account
+  include Nano::Proxy
+  include Nano::AccountProxyHelper
 
   attr_accessor :address
 
   def initialize(address = nil, opts = {})
     unless address.is_a?(String)
-      raise Raiblocks::MissingParameters,
+      raise Nano::MissingParameters,
             'Missing argument: address (str)'
     end
 
     @address = address
-    @client = opts[:client] || Raiblocks.client
+    @client = opts[:client] || Nano.client
   end
 
   proxy_params account: :address

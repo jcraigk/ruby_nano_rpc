@@ -1,4 +1,4 @@
 #!/usr/bin/env ruby
 
 require 'bundler/setup'
-require 'raiblocks_rpc'
+require 'nano_rpc'

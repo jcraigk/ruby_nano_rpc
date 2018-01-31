@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module Raiblocks::WalletProxyHelper
+module Nano::WalletProxyHelper
   def account_work(account:)
     work_get.work(account: account).work
   end

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Raiblocks::Node do
+RSpec.describe Nano::Node do
   subject { described_class.new }
   let(:expected_proxy_methods) do
     %i[

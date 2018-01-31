@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class Proxytest
-  include Raiblocks::Proxy
+  include Nano::Proxy
 
   proxy_params account: :address
   proxy_method :some_action,
@@ -11,11 +11,11 @@ end
 RSpec.describe Proxytest do
   subject { described_class.new }
   let(:address) { 'xrb_address1' }
-  let(:client) { spy('Raiblocks::Client') }
+  let(:client) { spy('Nano::Client') }
   let(:expected_proxy_methods) { %i[proxytest_another_action some_action] }
 
   before do
-    allow(Raiblocks).to receive(:client).and_return client
+    allow(Nano).to receive(:client).and_return client
     allow(subject).to receive(:address).and_return(address)
     allow(client).to receive(:call).and_return(true)
   end
@@ -52,7 +52,7 @@ RSpec.describe Proxytest do
   it 'does not persist parameters across method calls' do
     subject.some_action(param1: 'true', param2: 'true')
     expect { subject.some_action(param1: 'true') }.to(
-      raise_error(Raiblocks::MissingParameters)
+      raise_error(Nano::MissingParameters)
     )
   end
 
@@ -99,7 +99,7 @@ RSpec.describe Proxytest do
   it 'raises MissingParameters when required parameters missing' do
     expect { subject.some_action(param1: 'true') }.to(
       raise_error(
-        Raiblocks::MissingParameters,
+        Nano::MissingParameters,
         'Missing required parameter(s): param2'
       )
     )
@@ -116,7 +116,7 @@ RSpec.describe Proxytest do
       )
     end.to(
       raise_error(
-        Raiblocks::ForbiddenParameter,
+        Nano::ForbiddenParameter,
         'Forbidden parameter(s) passed: bad_param, bad_param2'
       )
     )
@@ -125,7 +125,7 @@ RSpec.describe Proxytest do
   it 'raises InvalidParameterType when anything but hash is passed' do
     expect { subject.some_action(:bad_argument) }.to(
       raise_error(
-        Raiblocks::InvalidParameterType,
+        Nano::InvalidParameterType,
         'You must pass a hash to an action method'
       )
     )

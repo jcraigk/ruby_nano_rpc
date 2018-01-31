@@ -2,7 +2,7 @@
 require 'rest-client'
 require 'json'
 
-module Raiblocks
+module Nano
   def self.client
     @client ||= Client.new
   end
@@ -27,7 +27,7 @@ module Raiblocks
       response = rest_client_post(url, params)
       ensure_status_success!(response)
 
-      data = Raiblocks::Response.new(JSON[response.body])
+      data = Nano::Response.new(JSON[response.body])
       ensure_valid_response!(data)
 
       data
@@ -36,7 +36,7 @@ module Raiblocks
     def rest_client_post(url, params)
       RestClient.post(url, params.to_json)
     rescue Errno::ECONNREFUSED
-      raise Raiblocks::NodeConnectionFailure,
+      raise Nano::NodeConnectionFailure,
             "Node connection failure at #{url}"
     end
 
@@ -46,13 +46,13 @@ module Raiblocks
 
     def ensure_status_success!(response)
       return if response.code == 200
-      raise Raiblocks::BadRequest,
+      raise Nano::BadRequest,
             "Error response from node: #{JSON[response.body]}"
     end
 
     def ensure_valid_response!(data)
       return unless data['error']
-      raise Raiblocks::InvalidRequest,
+      raise Nano::InvalidRequest,
             "Invalid request: #{data['error']}"
     end
   end

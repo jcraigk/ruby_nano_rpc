@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module Raiblocks::AccountsProxyHelper
+module Nano::AccountsProxyHelper
   def balances
     accounts_balances.balances
   end
@@ -17,11 +17,11 @@ module Raiblocks::AccountsProxyHelper
   end
   alias pending_blocks pending
 
-  # Array-like access for Raiblocks::Account
+  # Array-like access for Nano::Account
   def [](idx)
     return unless @addresses[idx]
     @account_objects ||= []
-    @account_objects[idx] ||= Raiblocks::Account.new(@addresses[idx])
+    @account_objects[idx] ||= Nano::Account.new(@addresses[idx])
   end
 
   def <<(val)
@@ -30,7 +30,7 @@ module Raiblocks::AccountsProxyHelper
 
   def each(&_block)
     @addresses.each do |address|
-      yield Raiblocks::Account.new(address)
+      yield Nano::Account.new(address)
     end
   end
 

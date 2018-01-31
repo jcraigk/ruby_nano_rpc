@@ -1,9 +1,9 @@
 # frozen_string_literal: true
-module Raiblocks::Proxy
+module Nano::Proxy
   attr_accessor :client
 
   def initialize(opts = {})
-    @client = opts[:client] || Raiblocks.client
+    @client = opts[:client] || Nano.client
   end
 
   def self.included(base)
@@ -34,17 +34,17 @@ module Raiblocks::Proxy
         singleton ? :define_singleton_method : :define_method,
         method_alias(m)
       ) do |opts = {}|
-        params = Raiblocks::ProxyContext.new(
+        params = Nano::ProxyContext.new(
           singleton ? self : self.class, m, opts
         ).populate_params(singleton ? nil : base_params)
-        data = Raiblocks.client.call(m, params)
+        data = Nano.client.call(m, params)
         data.is_a?(Hash) && data.keys.map(&:to_s) == [m.to_s] ? data[m] : data
       end
     end
 
     private
 
-    # Raiblocks `send` action is also the method caller in Ruby ;)
+    # Nano `send` action is also the method caller in Ruby ;)
     def method_alias(m)
       m == :send ? :tx_send : m
     end
@@ -65,7 +65,7 @@ module Raiblocks::Proxy
 
     def proxy_context(m)
       @proxy_context ||= {}
-      @proxy_context[m] ||= Raiblocks::ProxyContext.new(self, m)
+      @proxy_context[m] ||= Nano::ProxyContext.new(self, m)
     end
   end
 

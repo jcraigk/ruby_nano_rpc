@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-RSpec.describe Raiblocks do
+RSpec.describe Nano do
   it 'has a version number' do
-    expect(Raiblocks::VERSION).not_to be(nil)
+    expect(Nano::VERSION).not_to be(nil)
   end
 end

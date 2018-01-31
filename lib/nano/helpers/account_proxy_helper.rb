@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module Raiblocks::AccountProxyHelper
+module Nano::AccountProxyHelper
   def balance
     account_balance.balance
   end

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Raiblocks::Account do
+RSpec.describe Nano::Account do
   subject { described_class.new(address) }
   let(:address) { 'xrb_address1' }
   let(:expected_proxy_methods) do
@@ -37,7 +37,7 @@ RSpec.describe Raiblocks::Account do
 
   it 'raises MissingParameters unless initialized with string' do
     expect { described_class.new }.to raise_error(
-      Raiblocks::MissingParameters, 'Missing argument: address (str)'
+      Nano::MissingParameters, 'Missing argument: address (str)'
     )
   end
 
@@ -50,7 +50,7 @@ RSpec.describe Raiblocks::Account do
 
     before do
       allow(subject).to receive(:account_balance).and_return(
-        Raiblocks::Response.new('balance' => balance, 'pending' => 59)
+        Nano::Response.new('balance' => balance, 'pending' => 59)
       )
     end
 

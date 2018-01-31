@@ -1,32 +1,32 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-RSpec.describe 'Raiblocks errors' do
-  describe Raiblocks::Error do
+RSpec.describe 'Nano errors' do
+  describe Nano::Error do
     it 'is a StandardError' do
       expect(subject).to be_a StandardError
     end
   end
 
   shared_examples 'child error' do
-    it 'is a Raiblocks::Error' do
-      expect(subject).to be_a Raiblocks::Error
+    it 'is a Nano::Error' do
+      expect(subject).to be_a Nano::Error
     end
   end
 
-  describe Raiblocks::BadRequest do
+  describe Nano::BadRequest do
     include_examples 'child error'
   end
-  describe Raiblocks::InvalidRequest do
+  describe Nano::InvalidRequest do
     include_examples 'child error'
   end
-  describe Raiblocks::InvalidParameterType do
+  describe Nano::InvalidParameterType do
     include_examples 'child error'
   end
-  describe Raiblocks::ForbiddenParameter do
+  describe Nano::ForbiddenParameter do
     include_examples 'child error'
   end
-  describe Raiblocks::MissingParameters do
+  describe Nano::MissingParameters do
     include_examples 'child error'
   end
 end

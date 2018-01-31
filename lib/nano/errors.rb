@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module Raiblocks
+module Nano
   class Error < StandardError; end
 
   class NodeConnectionFailure < Error; end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
-class Raiblocks::Node
-  include Raiblocks::Proxy
-  include Raiblocks::NodeProxyHelper
+class Nano::Node
+  include Nano::Proxy
+  include Nano::NodeProxyHelper
 
   proxy_method :available_supply
   proxy_method :block, required: %i[hash]

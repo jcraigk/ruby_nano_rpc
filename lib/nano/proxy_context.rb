@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class Raiblocks::ProxyContext
+class Nano::ProxyContext
   def initialize(klass, m, opts = {})
     @klass = klass
     @method_def = klass.proxy_method_def
@@ -23,7 +23,7 @@ class Raiblocks::ProxyContext
   def validate_opts!
     return @opts if @opts.is_a?(Hash)
     return {} if @opts.nil?
-    raise Raiblocks::InvalidParameterType,
+    raise Nano::InvalidParameterType,
           'You must pass a hash to an action method'
   end
 
@@ -35,14 +35,14 @@ class Raiblocks::ProxyContext
   def ensure_required_params!
     missing_params = required_params - opts_keys
     return unless missing_params.any?
-    raise Raiblocks::MissingParameters,
+    raise Nano::MissingParameters,
           "Missing required parameter(s): #{missing_params.join(', ')}"
   end
 
   def ensure_no_forbidden_params!
     forbidden_params = base_param_keys + opts_keys - allowed_params
     return unless forbidden_params.any?
-    raise Raiblocks::ForbiddenParameter,
+    raise Nano::ForbiddenParameter,
           "Forbidden parameter(s) passed: #{forbidden_params.join(', ')}"
   end
 
