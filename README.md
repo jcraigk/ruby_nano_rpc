@@ -1,8 +1,8 @@
 # Nano RPC
 
-An RPC wrapper for RaiBlocks written in Ruby.  It connects to an individual node that you control.  There's a client object you can use to make explicit RPC calls as well as proxy objects with logically grouped helper methods ([Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki)).
+An RPC wrapper for Nano (the digital currency) written in Ruby.  It connects to an individual Nano node that you control.  There's a client object you can use to make explicit RPC calls as well as proxy objects with logically grouped helper methods ([Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki)).
 
-To run a RaiBlocks node locally, see [RaiBlocks Docker Docs](https://github.com/clemahieu/raiblocks/wiki/Docker-node).
+To run a Nano node locally, see [Nano Docker Docs](https://github.com/clemahieu/raiblocks/wiki/Docker-node).
 
 ## Installation
 
@@ -26,7 +26,7 @@ There are two ways to use this gem.  You can make direct calls to the RPC client
 
 ### Raw RPC Calls
 
-The RCP client exposes raw Remote Procedure Call methods according to the [RaiBlocks RPC Docs](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).
+The RCP client exposes raw Remote Procedure Call methods according to the [Nano RPC Docs](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).
 
 Every method requires an `action`, which is passed as the first argument to `call`.  Depending on the action, there may be additional required or optional parameters that are passed as an options hash.
 
@@ -62,7 +62,7 @@ Response data are provided as [Hashie](https://github.com/intridea/hashie) objec
 
 ### Proxy Objects
 
-Proxy objects are provided to ease interaction with the API by providing logically grouped helper methods. Here we do not strictly follow the grouping as expressed in the [RaiBlocks RPC Docs](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).  Instead, the following objects are provided:
+Proxy objects are provided to ease interaction with the API by providing logically grouped helper methods. Here we do not strictly follow the grouping as expressed in the [Nano RPC Docs](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).  Instead, the following objects are provided:
 
 ```ruby
   Nano::Account # { account: 'xrb_address12345' }
