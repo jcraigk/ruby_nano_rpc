@@ -18,8 +18,14 @@ class Nano::Response < Hash
   end
 
   def to_f_or_i_or_s(v)
+    return if v.nil?
+    return v.to_i if big_integer?(v)
     (float = Float(v)) && (float % 1.0).zero? ? float.to_i : float
-  rescue ArgumentError, TypeErrror
+  rescue ArgumentError, TypeError
     v
+  end
+
+  def big_integer?(v)
+    v.respond_to?(:to_i) && v.to_i > 1_000_000_000_000_000
   end
 end

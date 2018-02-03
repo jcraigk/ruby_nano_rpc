@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require 'spec_helper'
+
 RSpec.describe Nano::Node do
   subject { described_class.new }
   let(:expected_proxy_methods) do
@@ -42,6 +44,7 @@ RSpec.describe Nano::Node do
       unchecked_get
       unchecked_keys
       version
+      wallet_create
       work_cancel
       work_generate
       work_peer_add

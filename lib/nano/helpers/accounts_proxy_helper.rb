@@ -1,19 +1,34 @@
 # frozen_string_literal: true
 module Nano::AccountsProxyHelper
   def balances
-    accounts_balances.balances
+    accounts_balances
+      .balances
+      .each_with_object({}) do |(k, v), hash|
+      hash[k] = v['balance']
+    end
   end
 
-  def create(wallet:, count:, work: nil)
-    accounts_create(wallet: wallet, count: count, work: work).accounts
+  def pending_balances
+    accounts_balances
+      .balances
+      .each_with_object({}) do |(k, v), hash|
+      hash[k] = v['pending']
+    end
   end
+  alias balances_pending pending_balances
 
   def frontiers
     accounts_frontiers.frontiers
   end
 
+  def move(from:, to:)
+    account_move(wallet: to, source: from).moved == 1
+  end
+
   def pending(count:, threshold: nil, source: nil)
-    accounts_pending(count: count, threshold: threshold, source: source).blocks
+    accounts_pending(
+      count: count, threshold: threshold, source: source
+    ).blocks
   end
   alias pending_blocks pending
 

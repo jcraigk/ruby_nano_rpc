@@ -12,7 +12,7 @@ class Nano::Account
     end
 
     @address = address
-    @client = opts[:client] || Nano.client
+    super(opts)
   end
 
   proxy_params account: :address
@@ -22,7 +22,6 @@ class Nano::Account
   proxy_method :account_info
   proxy_method :account_create, required: %i[wallet], optional: %i[work]
   proxy_method :account_history, required: %i[count]
-  proxy_method :account_list
   proxy_method :account_move, required: %i[wallet source accounts]
   proxy_method :account_key
   proxy_method :account_remove, required: %i[wallet]

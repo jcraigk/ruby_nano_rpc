@@ -30,23 +30,25 @@ module Nano::Proxy
     end
 
     def define_proxy_method(m, singleton = false)
-      send(
-        singleton ? :define_singleton_method : :define_method,
-        method_alias(m)
-      ) do |opts = {}|
+      send(method_style(singleton), method_alias(m)) do |opts = {}|
         params = Nano::ProxyContext.new(
           singleton ? self : self.class, m, opts
         ).populate_params(singleton ? nil : base_params)
-        data = Nano.client.call(m, params)
+        data = (singleton ? Nano.client : @client).call(m, params)
+        # If single-key response matches method name, expose nested data
         data.is_a?(Hash) && data.keys.map(&:to_s) == [m.to_s] ? data[m] : data
       end
     end
 
     private
 
+    def method_style(singleton)
+      singleton ? :define_singleton_method : :define_method
+    end
+
     # Nano `send` action is also the method caller in Ruby ;)
     def method_alias(m)
-      m == :send ? :tx_send : m
+      m == :send ? :send_currency : m
     end
 
     def method_missing(m, *args, &_block)
@@ -61,11 +63,6 @@ module Nano::Proxy
 
     def valid_method?(m)
       proxy_param_def.nil? && methods.include?(m)
-    end
-
-    def proxy_context(m)
-      @proxy_context ||= {}
-      @proxy_context[m] ||= Nano::ProxyContext.new(self, m)
     end
   end
 

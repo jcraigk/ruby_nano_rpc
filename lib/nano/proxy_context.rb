@@ -8,10 +8,6 @@ class Nano::ProxyContext
     @opts = opts
   end
 
-  def valid_proxy_method?
-    rpc_action?
-  end
-
   def populate_params(params)
     opts = validate_opts!
     opts.merge!(params) if params
@@ -68,13 +64,5 @@ class Nano::ProxyContext
 
   def base_param_keys
     @param_def.is_a?(Hash) ? @param_def.keys : []
-  end
-
-  def method_expansion
-    "#{action_prefix}#{@m}"
-  end
-
-  def action_prefix
-    @klass.name.split('::').last.downcase + '_'
   end
 end

@@ -46,6 +46,7 @@ class Nano::Node
   proxy_method :unchecked_get, required: %i[hash]
   proxy_method :unchecked_keys, required: %i[key count]
   proxy_method :version
+  proxy_method :wallet_create
   proxy_method :work_cancel, required: %i[hash]
   proxy_method :work_generate, required: %i[hash]
   proxy_method :work_peer_add, required: %i[address port]

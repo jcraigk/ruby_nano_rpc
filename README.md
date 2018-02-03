@@ -1,6 +1,6 @@
 # Nano RPC
 
-An RPC wrapper for Nano (the digital currency) written in Ruby.  It connects to an individual Nano node that you control.  There's a client object you can use to make explicit RPC calls as well as proxy objects with logically grouped helper methods ([Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki/Proxy-Object-Reference)).
+An RPC wrapper for Nano digitial currency nodes. Arbitrary RPC access is provided along with proxy objects that expose helper methods ([Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki/Proxy-Object-Reference)).
 
 To run a Nano node locally, see [Nano Docker Docs](https://github.com/clemahieu/raiblocks/wiki/Docker-node).
 
@@ -99,13 +99,6 @@ There are also helper methods for terser code:
   # 0
 ```
 
-You can ask an object what helper methods it provides using `helper_methods` (coming soon):
-
-```ruby
-  account.helper_methods
-  # => [:balance, :pending_balance, ...]
-```
-
 `Node` methods are provided at both the instance and class levels:
 
 ```ruby
@@ -113,17 +106,19 @@ You can ask an object what helper methods it provides using `helper_methods` (co
   # => {"rpc_version"=>1, "store_version"=>10, "node_vendor"=>"RaiBlocks 9.0"}
 
   node = Nano::Node.new
-  version.rpc_version
+  node.version.rpc_version
   # => 1
   node.peers
-  # => {"peers"=>{"[::ffff:2.80.5.202]:64317"=>"5", "[::ffff:2.249.74.58]:7075"=>"5", "[::ffff:5.9.31.82]:7077"=>"4", ... }
+  # => {"[::ffff:2.80.5.202]:64317"=>"5", "[::ffff:2.249.74.58]:7075"=>"5", "[::ffff:5.9.31.82]:7077"=>"4", ... }
   node.available_supply
   # => {"available"=>132596127030666124778600855847014518457}
+  node.available
+  # => 132596127030666124778600855847014518457
   node.block_count.unchecked
   # => 4868605
 ```
 
-To connect to a custom node, instantiate a client and pass it into the proxy object as `client`:
+You can point each proxy object at its own node by passing a custom client in:
 
 ```ruby
   client = Nano::Client.new(host: 'mynanonode', port: 1234)

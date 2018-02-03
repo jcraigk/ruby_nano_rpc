@@ -5,18 +5,19 @@ class Nano::Accounts
 
   attr_accessor :addresses
 
-  def initialize(addresses = nil, client = nil)
+  def initialize(addresses = nil, opts = {})
     unless addresses.is_a?(Array)
       raise Nano::MissingParameters,
             'Missing argument: addresses (str[])'
     end
 
     @addresses = addresses
-    @client = client || Nano.client
+    super(opts)
   end
 
   proxy_params accounts: :addresses
 
+  proxy_method :account_move, required: %i[wallet source]
   proxy_method :accounts_balances
   proxy_method :accounts_create, required: %i[wallet count], optional: %i[work]
   proxy_method :accounts_frontiers

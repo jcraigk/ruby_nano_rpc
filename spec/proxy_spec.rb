@@ -1,5 +1,9 @@
 # frozen_string_literal: true
-class Proxytest
+require 'spec_helper'
+
+# This spec covers both Nano::Proxy and Nano::ProxyContext
+
+class ProxyExample
   include Nano::Proxy
 
   proxy_params account: :address
@@ -8,16 +12,28 @@ class Proxytest
   proxy_method :proxytest_another_action
 end
 
-RSpec.describe Proxytest do
+RSpec.describe ProxyExample do
   subject { described_class.new }
-  let(:address) { 'xrb_address1' }
+  let(:addr1) { 'nano_address1' }
   let(:client) { spy('Nano::Client') }
   let(:expected_proxy_methods) { %i[proxytest_another_action some_action] }
 
   before do
-    allow(Nano).to receive(:client).and_return client
-    allow(subject).to receive(:address).and_return(address)
+    allow(Nano).to receive(:client).and_return(client)
+    allow(subject).to receive(:address).and_return(addr1)
     allow(client).to receive(:call).and_return(true)
+  end
+
+  context 'custom client' do
+    let(:custom_client) { Nano::Client.new(host: 'mynanonode', port: 1234) }
+    subject { described_class.new(client: custom_client) }
+
+    it 'uses the custom client' do
+      expect(custom_client).to receive(:call).with(
+        :proxytest_another_action, account: addr1
+      )
+      subject.proxytest_another_action
+    end
   end
 
   it 'provides sorted list of methods' do
@@ -32,7 +48,7 @@ RSpec.describe Proxytest do
 
   it 'invokes the client with expected parameters' do
     expect(client).to receive(:call).with(
-      :proxytest_another_action, account: address
+      :proxytest_another_action, account: addr1
     )
     subject.proxytest_another_action
   end
@@ -61,7 +77,6 @@ RSpec.describe Proxytest do
       subject.some_action(param1: 'true', param2: 'true')
     end.not_to raise_error
     expect { subject.proxytest_another_action }.not_to raise_error
-    # expect { subject.another_action }.not_to raise_error
   end
 
   context 'no proxy_params defined' do
@@ -71,29 +86,30 @@ RSpec.describe Proxytest do
 
     it 'defines singleton proxy methods' do
       expect do
-        described_class.some_action
-      end.not_to raise_error(NoMethodError)
-      expect { described_class.proxytest_another_action }.not_to raise_error
-      # expect { described_class.another_action }.not_to raise_error
+        described_class.some_action(param1: '', param2: '')
+      end.not_to raise_error
+      expect do
+        described_class.proxytest_another_action
+      end.not_to raise_error
     end
 
     it 'provides respond_to? on proxy methods' do
       expect(described_class.respond_to?(:some_action)).to eq(true)
       expect(described_class.respond_to?(:proxytest_another_action)).to eq(true)
-      # expect(described_class.respond_to?(:another_action)).to eq(true)
+      expect(described_class.respond_to?(:invalid_method)).to eq(false)
     end
   end
 
   it 'does not define singleton proxy methods when proxy_params provided' do
     expect { described_class.some_action }.to raise_error(
-      NoMethodError, "undefined method `some_action' for Proxytest:Class"
+      NoMethodError, "undefined method `some_action' for ProxyExample:Class"
     )
   end
 
   it 'provides respond_to? on proxy methods' do
     expect(subject.respond_to?(:some_action)).to eq(true)
     expect(subject.respond_to?(:proxytest_another_action)).to eq(true)
-    # expect(subject.respond_to?(:another_action)).to eq(true)
+    expect(subject.respond_to?(:invalid_method)).to eq(false)
   end
 
   it 'raises MissingParameters when required parameters missing' do

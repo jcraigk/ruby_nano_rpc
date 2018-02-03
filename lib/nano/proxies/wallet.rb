@@ -5,25 +5,29 @@ class Nano::Wallet
 
   attr_accessor :seed
 
-  def initialize(wallet_seed = nil, opts = {})
-    unless wallet_seed.is_a?(String)
+  def initialize(seed = nil, opts = {})
+    unless seed.is_a?(String)
       raise Nano::MissingParameters,
             'Missing argument: address (str)'
     end
 
-    @seed = wallet_seed
-    @client = opts[:client] || Nano.client
+    @seed = seed
+    super(opts)
   end
 
   proxy_params wallet: :seed
 
+  proxy_method :account_create, optional: %i[work]
+  proxy_method :accounts_create, required: %i[count], optional: %i[work]
+  proxy_method :account_list
+  proxy_method :account_remove, required: %i[account]
   proxy_method :password_change, required: %i[password]
   proxy_method :password_enter, required: %i[password]
   proxy_method :password_valid
   proxy_method :payment_begin
   proxy_method :payment_init
   proxy_method :payment_end, required: %i[account]
-  proxy_method :receive, required: %i[account block]
+  proxy_method :receive, required: %i[account block], optional: %i[work]
   proxy_method :send, required: %i[wallet source destination amount]
   proxy_method :search_pending
   proxy_method :wallet_add, required: %i[key], optional: %i[work]
@@ -31,7 +35,6 @@ class Nano::Wallet
   proxy_method :wallet_balances, optional: %i[threshold]
   proxy_method :wallet_change_seed, required: %i[seed]
   proxy_method :wallet_contains, required: %i[account]
-  proxy_method :wallet_create
   proxy_method :wallet_destroy
   proxy_method :wallet_export
   proxy_method :wallet_frontiers

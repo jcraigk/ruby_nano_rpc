@@ -1,11 +1,13 @@
 # frozen_string_literal: true
+require 'spec_helper'
+
 RSpec.describe Nano::Client do
   subject { described_class.new }
   let(:client_with_config) do
     described_class.new(host: '127.0.0.1', port: 7077)
   end
   let(:action) { 'account_balance' }
-  let(:params) { { account: 'xrb_address1' } }
+  let(:params) { { account: 'nano_address1' } }
   let(:valid_response_json) do
     { balance: 1000, pending: 1000 }.to_json
   end

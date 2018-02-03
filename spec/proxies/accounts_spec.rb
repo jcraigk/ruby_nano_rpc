@@ -1,10 +1,13 @@
 # frozen_string_literal: true
+require 'spec_helper'
+
 RSpec.describe Nano::Accounts do
   subject { described_class.new(addresses) }
-  let(:addresses) { %w[xrb_address1 xrb_address2 xrb_address3] }
+  let(:addresses) { %w[nano_address1 xrb_address2 xrb_address3] }
   let(:additional_address) { 'xrb_address4' }
   let(:expected_proxy_methods) do
     %i[
+      account_move
       accounts_balances
       accounts_create
       accounts_frontiers

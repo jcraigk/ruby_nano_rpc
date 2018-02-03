@@ -1,9 +1,15 @@
 # frozen_string_literal: true
+require 'spec_helper'
+
 RSpec.describe Nano::Wallet do
   subject { described_class.new(seed) }
   let(:seed) { 'E929FBC3' }
   let(:expected_proxy_methods) do
     %i[
+      account_create
+      account_list
+      account_remove
+      accounts_create
       password_change
       password_enter
       password_valid
@@ -18,7 +24,6 @@ RSpec.describe Nano::Wallet do
       wallet_balances
       wallet_change_seed
       wallet_contains
-      wallet_create
       wallet_destroy
       wallet_export
       wallet_frontiers
