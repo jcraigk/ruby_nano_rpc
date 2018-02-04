@@ -66,14 +66,12 @@ Response data are provided as [Hashie](https://github.com/intridea/hashie) objec
 
 Proxy objects are provided to ease interaction with the API by providing logically grouped helper methods. Here we do not strictly follow the grouping as expressed in the [Nano RPC Docs](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).  Instead, the following objects are provided:
 
-```ruby
-  Nano::Account
-  Nano::Accounts
-  Nano::Node
-  Nano::Wallet
-```
+* [Nano::Account](https://github.com/jcraigk/ruby_nano_rpc/wiki/Nano::Account)
+* [Nano::Accounts](https://github.com/jcraigk/ruby_nano_rpc/wiki/Nano::Accounts)
+* [Nano::Node](https://github.com/jcraigk/ruby_nano_rpc/wiki/Nano::Node)
+* [Nano::Wallet](https://github.com/jcraigk/ruby_nano_rpc/wiki/Nano::Wallet)
 
-`Account`, `Accounts`, and `Wallet` each require a single parameter to be passed during initialization.  This parameter is persisted for subsequent calls.  All RPC methods are provided directly as methods.
+`Account`, `Accounts`, and `Wallet` each require a single parameter to be passed during initialization (`address`, `addresses`, and `seed`, respectively).  This parameter is persisted for subsequent calls.  All RPC methods are provided directly as methods.
 
 ```ruby
   account = Nano::Account.new('xrb_someaddress1234')
@@ -93,29 +91,14 @@ There are also helper methods to bypass repetitive nested calls:
   # => 5
 ```
 
-`Node` methods are provided at both the instance and class levels:
-
-```ruby
-  Nano::Node.version
-  # => {"rpc_version"=>1, "store_version"=>10, "node_vendor"=>"RaiBlocks 9.0"}
-
-  node = Nano::Node.new
-  node.version.rpc_version
-  # => 1
-  node.peers
-  # => {"[::ffff:2.80.5.202]:64317"=>"5", "[::ffff:2.249.74.58]:7075"=>"5", "[::ffff:5.9.31.82]:7077"=>"4", ... }
-  node.block_count.unchecked
-  # => 4868605
-```
-
-You can point each proxy object at its own node by passing it a client instance:
+You can point each proxy object at its own node by passing in a client instance:
 
 ```ruby
   client = Nano::Client.new(host: 'mynanonode', port: 1234)
   account = Nano::Account.new('xrb_someaddress1234', client: client)
 ```
 
-For a more comprehensive guide, see the [Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki/Proxy-Object-Reference).
+For a comprehensive guide, see the [Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki).
 
 ## License
 
