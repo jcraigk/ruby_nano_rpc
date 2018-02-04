@@ -65,10 +65,10 @@ Response data are provided as [Hashie](https://github.com/intridea/hashie) objec
 Proxy objects are provided to ease interaction with the API by providing logically grouped helper methods. Here we do not strictly follow the grouping as expressed in the [Nano RPC Docs](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).  Instead, the following objects are provided:
 
 ```ruby
-  Nano::Account # { account: 'xrb_address12345' }
-  Nano::Accounts # { accounts: %w[xrb_address12345 xrb_address67890] }
+  Nano::Account
+  Nano::Accounts
   Nano::Node
-  Nano::Wallet # { wallet: 'F3093AB' }
+  Nano::Wallet
 ```
 
 `Account`, `Accounts`, and `Wallet` each require a single parameter to be passed during initialization.  This parameter is persisted for subsequent calls.  All RPC methods are provided directly as methods.
