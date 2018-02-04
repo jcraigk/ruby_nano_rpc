@@ -26,15 +26,15 @@ module Nano::AccountProxyHelper
 
   def move(from:, to:)
     account_move(
-      wallet: to,
-      source: from,
+      wallet: wallet_seed(to),
+      source: wallet_seed(from),
       accounts: [address]
     ).moved == 1
   end
 
   def wallet_work_set(wallet:, work:)
     work_set(
-      wallet: wallet,
+      wallet: wallet_seed(wallet),
       work: work
     ).success == ''
   end
@@ -55,7 +55,7 @@ module Nano::AccountProxyHelper
 
   def remove(opts)
     account_remove(
-      wallet: opts_pluck(opts, :wallet)
+      wallet: wallet_seed(opts_pluck(opts, :wallet))
     ).removed == 1
   end
 
@@ -65,7 +65,7 @@ module Nano::AccountProxyHelper
 
   def representative_set(wallet:, representative:)
     account_representative_set(
-      wallet: wallet,
+      wallet: wallet_seed(wallet),
       representative: representative
     ).set == 1
   end

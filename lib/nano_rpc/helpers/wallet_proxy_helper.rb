@@ -3,7 +3,13 @@ module Nano::WalletProxyHelper
   include Nano::ApplicationHelper
 
   def account_work(opts)
-    work_get(opts_account(opts)).work
+    work_get(
+      account: account_address(opts_pluck(opts, :account))
+    ).work
+  end
+
+  def accounts
+    Nano::Accounts.new(account_list.accounts)
   end
 
   def add_key(key:, work: true)
@@ -39,7 +45,9 @@ module Nano::WalletProxyHelper
   end
 
   def contains?(opts)
-    wallet_contains(opts_account(opts)).exists == 1
+    wallet_contains(
+      account: account_address(opts_pluck(opts, :account))
+    ).exists == 1
   end
 
   def create_account(work: true)
@@ -78,9 +86,9 @@ module Nano::WalletProxyHelper
 
   def move_accounts(to:, accounts:)
     account_move(
-      wallet: to,
+      wallet: wallet_seed(to),
       source: seed,
-      accounts: accounts
+      accounts: accounts_addresses(accounts)
     ).moved == 1
   end
 
@@ -114,11 +122,16 @@ module Nano::WalletProxyHelper
   alias blocks_pending pending_blocks
 
   def receive_block(account:, block:)
-    receive(account: account, block: block).block
+    receive(
+      account: account_address(account),
+      block: block
+    ).block
   end
 
   def remove_account(opts)
-    account_remove(opts_account(opts)).removed == 1
+    account_remove(
+      account: account_address(opts_pluck(opts, :account))
+    ).removed == 1
   end
 
   def representative
@@ -130,7 +143,10 @@ module Nano::WalletProxyHelper
   end
 
   def account_work_set(account:, work:)
-    work_set(account: account, work: work).success == ''
+    work_set(
+      account: account_address(account),
+      work: work
+    ).success == ''
   end
   alias set_account_work account_work_set
 
@@ -143,8 +159,8 @@ module Nano::WalletProxyHelper
 
   def send_nano(from:, to:, amount:, work: nil)
     send_currency(
-      source: from,
-      destination: to,
+      source: wallet_seed(from),
+      destination: wallet_seed(to),
       amount: amount,
       work: work
     ).block
@@ -153,11 +169,5 @@ module Nano::WalletProxyHelper
 
   def work
     wallet_work_get.works
-  end
-
-  private
-
-  def opts_account(opts)
-    { account: opts_pluck(opts, :account) }
   end
 end

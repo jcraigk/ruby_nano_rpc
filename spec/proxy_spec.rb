@@ -17,7 +17,9 @@ RSpec.describe ProxyExample do
   subject { described_class.new }
   let(:addr1) { 'nano_address1' }
   let(:client) { spy('Nano::Client') }
-  let(:expected_proxy_methods) { %i[proxytest_another_action single_param_method some_action] }
+  let(:expected_proxy_methods) do
+    %i[proxytest_another_action single_param_method some_action]
+  end
 
   before do
     allow(Nano).to receive(:client).and_return(client)
@@ -85,27 +87,6 @@ RSpec.describe ProxyExample do
       :single_param_method, account: addr1, param1: 'value'
     )
     subject.single_param_method('value')
-  end
-
-  context 'no proxy_params defined' do
-    before do
-      allow(subject.class).to receive(:proxy_param_def).and_return(nil)
-    end
-
-    it 'defines singleton proxy methods' do
-      expect do
-        described_class.some_action(param1: '', param2: '')
-      end.not_to raise_error
-      expect do
-        described_class.proxytest_another_action
-      end.not_to raise_error
-    end
-
-    it 'provides respond_to? on proxy methods' do
-      expect(described_class.respond_to?(:some_action)).to eq(true)
-      expect(described_class.respond_to?(:proxytest_another_action)).to eq(true)
-      expect(described_class.respond_to?(:invalid_method)).to eq(false)
-    end
   end
 
   it 'does not define singleton proxy methods when proxy_params provided' do

@@ -28,46 +28,6 @@ module Nano::Proxy
     def methods
       (super + proxy_methods).sort
     end
-
-    def define_proxy_method(m, singleton = false)
-      send(method_style(singleton), method_alias(m)) do |call_args = {}|
-        context = Nano::ProxyContext.new(
-          singleton ? self : self.class, m, call_args, base_params
-        )
-        context.expose_nested_data(
-          (singleton ? Nano.client : @client).call(m, context.call_args)
-        )
-      end
-    end
-
-    private
-
-    def base_params
-      nil
-    end
-
-    def method_style(singleton)
-      singleton ? :define_singleton_method : :define_method
-    end
-
-    # Nano `send` action is also the method caller in Ruby ;)
-    def method_alias(m)
-      m == :send ? :send_currency : m
-    end
-
-    def method_missing(m, *args, &_block)
-      return super unless valid_method?(m)
-      define_proxy_method(m, true)
-      send(m, args.first)
-    end
-
-    def respond_to_missing?(m, include_private = false)
-      valid_method?(m) || super
-    end
-
-    def valid_method?(m)
-      proxy_param_def.nil? && methods.include?(m)
-    end
   end
 
   def proxy_methods
@@ -80,22 +40,114 @@ module Nano::Proxy
 
   private
 
-  def base_params
-    return if self.class.proxy_param_def.nil?
-    self.class
-        .proxy_param_def
-        .each_with_object({}) do |(k, v), params|
-      params[k] ||= send(v)
-    end
-  end
-
   def method_missing(m, *args, &_block)
     return super unless methods.include?(m)
-    self.class.define_proxy_method(m)
+    define_proxy_method(m)
     send(m, args.first)
   end
 
   def respond_to_missing?(m, include_private = false)
     methods.include?(m) || super
+  end
+
+  def define_proxy_method(m)
+    self.class.send(:define_method, method_alias(m)) do |call_args = {}|
+      @m = m
+      @call_args = call_args
+
+      validate_params!
+      execute_call
+    end
+  end
+
+  def execute_call
+    expose_nested_data(@client.call(@m, @call_args))
+  end
+
+  def base_params
+    @base_params ||= begin
+      return if self.class.proxy_param_def.nil?
+      self.class
+          .proxy_param_def
+          .each_with_object({}) do |(k, v), params|
+        params[k] ||= send(v)
+      end
+    end
+  end
+
+  # Nano `send` action is also the method caller in Ruby ;)
+  def method_alias(m)
+    m == :send ? :send_currency : m
+  end
+
+  # If single-key response matches method name, expose nested data
+  def expose_nested_data(data)
+    data.is_a?(Hash) && data.keys.map(&:to_s) == [@m.to_s] ? data[@m] : data
+  end
+
+  def validate_params!
+    prepare_params
+    ensure_required_params!
+    prevent_forbidden_params!
+    drop_nil_params
+  end
+
+  def prepare_params
+    # Allow non-Hash literal argument if this method requires single param
+    # Ex `create('new')` vs `create(name: 'new')`
+    @call_args = if required_params.size == 1 && !@call_args.is_a?(Hash)
+                   { required_params.first => @call_args }
+                 else
+                   @call_args.is_a?(Hash) ? @call_args : {}
+                 end
+    @call_args.merge!(base_params) if base_params
+  end
+
+  def ensure_required_params!
+    missing_params = required_params - opts_keys
+    return unless missing_params.any?
+    raise Nano::MissingParameters,
+          "Missing required parameter(s): #{missing_params.join(', ')}"
+  end
+
+  def prevent_forbidden_params!
+    forbidden_params = base_param_keys + opts_keys - allowed_params
+    return unless forbidden_params.any?
+    raise Nano::ForbiddenParameter,
+          "Forbidden parameter(s) passed: #{forbidden_params.join(', ')}"
+  end
+
+  def drop_nil_params
+    @call_args.delete_if { |_k, v| v.nil? }
+  end
+
+  def opts_keys
+    @call_args.is_a?(Hash) ? @call_args.keys : []
+  end
+
+  def allowed_params
+    base_param_keys + required_params + optional_params
+  end
+
+  def required_params
+    return [] unless method_def && method_def[@m]
+    method_def[@m][:required] || []
+  end
+
+  def optional_params
+    return [] unless method_def && method_def[@m]
+    method_def[@m][:optional] || []
+  end
+
+  def base_param_keys
+    param_def.is_a?(Hash) ? param_def.keys : []
+  end
+
+  def method_def
+    self.class.proxy_method_def
+  end
+
+  def param_def
+    self.class.proxy_param_def
   end
 end

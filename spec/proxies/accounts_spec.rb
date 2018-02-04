@@ -40,6 +40,7 @@ RSpec.describe Nano::Accounts do
     expect(subject.second).to eq(subject[1])
     expect(subject.third).to eq(subject[2])
     expect(subject.last).to eq(subject[2])
+    expect(subject.size).to eq(addresses.size)
   end
 
   it 'provides `<<` addition of wallet addresss' do

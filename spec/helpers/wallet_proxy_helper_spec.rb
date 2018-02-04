@@ -64,6 +64,16 @@ RSpec.describe WalletProxyHelperExample do
     expect(subject.account_work(account_param)).to eq(work_id)
   end
 
+  it 'provides #accounts' do
+    allow(subject).to(
+      receive(:account_list)
+        .and_return(Nano::Response.new('accounts' => addresses))
+    )
+    accounts = subject.accounts
+    expect(accounts.class).to eq(Nano::Accounts)
+    expect(accounts.addresses).to eq(addresses)
+  end
+
   it 'provides #add_key' do
     allow(subject).to(
       receive(:wallet_add)

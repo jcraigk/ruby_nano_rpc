@@ -17,6 +17,13 @@ RSpec.describe AccountProxyHelperExample do
   let(:account_move_opts) do
     { wallet: 'DEF', source: seed1, accounts: [addr1] }
   end
+  let(:account_move_opts2) do
+    {
+      source: wallet.seed,
+      wallet: wallet2.seed,
+      accounts: [addr1]
+    }
+  end
   let(:addr1) { 'nano_address1' }
   let(:addr2) { 'nano_address2' }
   let(:seed1) { 'A4C1EF' }
@@ -27,6 +34,8 @@ RSpec.describe AccountProxyHelperExample do
   let(:balance_data) { { 'balance' => '100', 'pending' => '5' } }
   let(:wallet_work_params) { { wallet: seed1, work: work1 } }
   let(:rep_set_params) { { wallet: seed1, representative: addr1 } }
+  let(:wallet) { Nano::Wallet.new(seed1) }
+  let(:wallet2) { Nano::Wallet.new(seed2) }
 
   it 'provides #balance' do
     allow(subject).to receive(:account_balance).and_return(
@@ -73,9 +82,16 @@ RSpec.describe AccountProxyHelperExample do
         .with(account_move_opts)
         .and_return(Nano::Response.new('moved' => '1'))
     )
-    expect(
-      subject.move(account_move_params)
-    ).to eq(true)
+    expect(subject.move(account_move_params)).to eq(true)
+
+    # Allows passing in Nano::Wallet objects
+    allow(subject).to(
+      receive(:account_move)
+        .with(account_move_opts2)
+        .and_return(Nano::Response.new('moved' => '1'))
+    )
+    expect(subject).to receive(:account_move).with(account_move_opts2)
+    subject.move(from: wallet, to: wallet2)
   end
 
   it 'provides #wallet_work_set' do

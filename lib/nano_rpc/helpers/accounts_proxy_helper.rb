@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 module Nano::AccountsProxyHelper
+  include Nano::ApplicationHelper
+
   def balances
     accounts_balances
       .balances
@@ -22,7 +24,10 @@ module Nano::AccountsProxyHelper
   end
 
   def move(from:, to:)
-    account_move(wallet: to, source: from).moved == 1
+    account_move(
+      source: wallet_seed(from),
+      wallet: wallet_seed(to)
+    ).moved == 1
   end
 
   def pending(count:, threshold: nil, source: nil)
@@ -63,5 +68,9 @@ module Nano::AccountsProxyHelper
 
   def last
     self[-1]
+  end
+
+  def size
+    addresses.size
   end
 end
