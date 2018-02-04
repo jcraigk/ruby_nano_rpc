@@ -134,7 +134,9 @@ RSpec.describe WalletProxyHelperExample do
         .with(work: true)
         .and_return(Nano::Response.new('account' => addr1))
     )
-    expect(subject.create_account(work: true)).to eq(addr1)
+    account = subject.create_account(work: true)
+    expect(account.class).to eq(Nano::Account)
+    expect(account.address).to eq(addr1)
   end
 
   it 'provides #create_accounts' do
@@ -143,7 +145,9 @@ RSpec.describe WalletProxyHelperExample do
         .with(create_accounts_params)
         .and_return(Nano::Response.new('accounts' => addresses))
     )
-    expect(subject.create_accounts(create_accounts_params)).to eq(addresses)
+    accounts = subject.create_accounts(create_accounts_params)
+    expect(accounts.class).to eq(Nano::Accounts)
+    expect(accounts.addresses).to eq(addresses)
   end
 
   it 'provides #destroy' do

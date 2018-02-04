@@ -30,17 +30,21 @@ module Nano::Proxy
     end
 
     def define_proxy_method(m, singleton = false)
-      send(method_style(singleton), method_alias(m)) do |opts = {}|
-        params = Nano::ProxyContext.new(
-          singleton ? self : self.class, m, opts
-        ).populate_params(singleton ? nil : base_params)
-        data = (singleton ? Nano.client : @client).call(m, params)
-        # If single-key response matches method name, expose nested data
-        data.is_a?(Hash) && data.keys.map(&:to_s) == [m.to_s] ? data[m] : data
+      send(method_style(singleton), method_alias(m)) do |call_args = {}|
+        context = Nano::ProxyContext.new(
+          singleton ? self : self.class, m, call_args, base_params
+        )
+        context.expose_nested_data(
+          (singleton ? Nano.client : @client).call(m, context.call_args)
+        )
       end
     end
 
     private
+
+    def base_params
+      nil
+    end
 
     def method_style(singleton)
       singleton ? :define_singleton_method : :define_method

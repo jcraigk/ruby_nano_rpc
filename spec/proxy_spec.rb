@@ -10,13 +10,14 @@ class ProxyExample
   proxy_method :some_action,
                required: %i[param1 param2], optional: %i[param3 param4]
   proxy_method :proxytest_another_action
+  proxy_method :single_param_method, required: %i[param1]
 end
 
 RSpec.describe ProxyExample do
   subject { described_class.new }
   let(:addr1) { 'nano_address1' }
   let(:client) { spy('Nano::Client') }
-  let(:expected_proxy_methods) { %i[proxytest_another_action some_action] }
+  let(:expected_proxy_methods) { %i[proxytest_another_action single_param_method some_action] }
 
   before do
     allow(Nano).to receive(:client).and_return(client)
@@ -66,17 +67,24 @@ RSpec.describe ProxyExample do
   end
 
   it 'does not persist parameters across method calls' do
-    subject.some_action(param1: 'true', param2: 'true')
-    expect { subject.some_action(param1: 'true') }.to(
+    subject.some_action(param1: 'value', param2: 'value')
+    expect { subject.some_action(param1: 'value') }.to(
       raise_error(Nano::MissingParameters)
     )
   end
 
   it 'defines instance proxy methods' do
     expect do
-      subject.some_action(param1: 'true', param2: 'true')
+      subject.some_action(param1: 'value', param2: 'value')
     end.not_to raise_error
     expect { subject.proxytest_another_action }.not_to raise_error
+  end
+
+  it 'allows passing single literal to single-parameter methods' do
+    expect(client).to receive(:call).with(
+      :single_param_method, account: addr1, param1: 'value'
+    )
+    subject.single_param_method('value')
   end
 
   context 'no proxy_params defined' do
@@ -113,7 +121,7 @@ RSpec.describe ProxyExample do
   end
 
   it 'raises MissingParameters when required parameters missing' do
-    expect { subject.some_action(param1: 'true') }.to(
+    expect { subject.some_action(param1: 'value') }.to(
       raise_error(
         Nano::MissingParameters,
         'Missing required parameter(s): param2'
@@ -124,25 +132,16 @@ RSpec.describe ProxyExample do
   it 'raises ForbiddenParameter when unexpected parameter passed' do
     expect do
       subject.some_action(
-        param1: 'true',
-        param2: 'true',
-        param3: 'true',
-        bad_param: 'true',
-        bad_param2: 'true'
+        param1: 'value',
+        param2: 'value',
+        param3: 'value',
+        bad_param: 'value',
+        bad_param2: 'value'
       )
     end.to(
       raise_error(
         Nano::ForbiddenParameter,
         'Forbidden parameter(s) passed: bad_param, bad_param2'
-      )
-    )
-  end
-
-  it 'raises InvalidParameterType when anything but hash is passed' do
-    expect { subject.some_action(:bad_argument) }.to(
-      raise_error(
-        Nano::InvalidParameterType,
-        'You must pass a hash to an action method'
       )
     )
   end

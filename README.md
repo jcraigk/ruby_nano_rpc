@@ -1,6 +1,8 @@
 # Nano RPC
 
-An RPC wrapper for Nano digitial currency nodes. Arbitrary RPC access is provided along with proxy objects that expose helper methods ([Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki/Proxy-Object-Reference)).
+![Ruby Logo](https://i.imgur.com/pTKxwQq.png)
+
+An RPC wrapper for Nano digitial currency nodes written in Ruby. Arbitrary RPC access is provided along with proxy objects that expose helper methods ([Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki/Proxy-Object-Reference)).
 
 To run a Nano node locally, see [Nano Docker Docs](https://github.com/clemahieu/raiblocks/wiki/Docker-node).
 
@@ -33,10 +35,10 @@ Every method requires an `action`, which is passed as the first argument to `cal
 First setup the client:
 
 ```ruby
-# Connect to localhost:7076
+# Connect to the default node (localhost:7076)
 client = Nano.client
 
-# Connect to custom host
+# or connect to a custom node
 client = Nano::Client.new(host: 'mynanonode', port: 1234)
 ```
 
@@ -60,7 +62,7 @@ Response data are provided as [Hashie](https://github.com/intridea/hashie) objec
   # => 100
 ````
 
-### Proxy Objects
+### Proxy Objects / Helper Methods
 
 Proxy objects are provided to ease interaction with the API by providing logically grouped helper methods. Here we do not strictly follow the grouping as expressed in the [Nano RPC Docs](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).  Instead, the following objects are provided:
 
@@ -77,26 +79,18 @@ Proxy objects are provided to ease interaction with the API by providing logical
   account = Nano::Account.new('xrb_someaddress1234')
 
   account.account_balance
-  # => {"balance"=>100, "pending"=>0}
+  # => {"balance"=>100, "pending"=>5}
   account.account_balance.balance
-  # 100
+  # => 100
 ```
 
-You can ask an object what raw RPC methods it provides using `proxy_methods`:
+There are also helper methods to bypass repetitive nested calls:
 
 ```ruby
-  account.proxy_methods
-  # => [:account_balance, :account_block_count, :account_create, ...]
-```
-
-There are also helper methods for terser code:
-
-```ruby
-  account = Nano::Account.new('xrb_someaddress1234')
   account.balance
-  # 100
+  # => 100
   account.pending_balance
-  # 0
+  # => 5
 ```
 
 `Node` methods are provided at both the instance and class levels:
@@ -110,15 +104,11 @@ There are also helper methods for terser code:
   # => 1
   node.peers
   # => {"[::ffff:2.80.5.202]:64317"=>"5", "[::ffff:2.249.74.58]:7075"=>"5", "[::ffff:5.9.31.82]:7077"=>"4", ... }
-  node.available_supply
-  # => {"available"=>132596127030666124778600855847014518457}
-  node.available
-  # => 132596127030666124778600855847014518457
   node.block_count.unchecked
   # => 4868605
 ```
 
-You can point each proxy object at its own node by passing a custom client in:
+You can point each proxy object at its own node by passing it a client instance:
 
 ```ruby
   client = Nano::Client.new(host: 'mynanonode', port: 1234)

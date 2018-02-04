@@ -60,4 +60,8 @@ module Nano::AccountsProxyHelper
   def third
     self[2]
   end
+
+  def last
+    self[-1]
+  end
 end

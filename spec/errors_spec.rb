@@ -4,13 +4,13 @@ require 'spec_helper'
 RSpec.describe 'Nano errors' do
   describe Nano::Error do
     it 'is a StandardError' do
-      expect(subject).to be_a StandardError
+      expect(subject).to be_a(StandardError)
     end
   end
 
   shared_examples 'child error' do
     it 'is a Nano::Error' do
-      expect(subject).to be_a Nano::Error
+      expect(subject).to be_a(Nano::Error)
     end
   end
 
@@ -18,9 +18,6 @@ RSpec.describe 'Nano errors' do
     include_examples 'child error'
   end
   describe Nano::InvalidRequest do
-    include_examples 'child error'
-  end
-  describe Nano::InvalidParameterType do
     include_examples 'child error'
   end
   describe Nano::ForbiddenParameter do

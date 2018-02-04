@@ -43,11 +43,11 @@ module Nano::WalletProxyHelper
   end
 
   def create_account(work: true)
-    account_create(work: work).account
+    Nano::Account.new(account_create(work: work).account)
   end
 
   def create_accounts(count:, work: true)
-    accounts_create(count: count, work: work).accounts
+    Nano::Accounts.new(accounts_create(count: count, work: work).accounts)
   end
 
   def destroy
