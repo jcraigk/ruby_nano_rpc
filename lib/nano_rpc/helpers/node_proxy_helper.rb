@@ -6,7 +6,7 @@ module Nano::NodeProxyHelper
     block_account(opts_hash(opts)).account
   end
 
-  def available_nano
+  def total_supply
     available_supply.available
   end
 

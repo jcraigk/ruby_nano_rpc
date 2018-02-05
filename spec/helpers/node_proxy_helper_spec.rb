@@ -24,11 +24,11 @@ RSpec.describe NodeProxyHelperExample do
     expect(subject.account_containing_block(pending_hash_param)).to eq(addr1)
   end
 
-  it 'provides #available_nano' do
+  it 'provides #total_supply' do
     allow(subject).to receive(:available_supply).and_return(
       Nano::Response.new('available' => '200')
     )
-    expect(subject.available_nano).to eq(200)
+    expect(subject.total_supply).to eq(200)
   end
 
   it 'provides #create_wallet' do
