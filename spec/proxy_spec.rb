@@ -45,7 +45,6 @@ RSpec.describe ProxyExample do
   end
 
   it 'includes proxy_methods in #methods' do
-    expect(described_class.methods).to include(*described_class.proxy_methods)
     expect(subject.methods).to include(*subject.proxy_methods)
   end
 

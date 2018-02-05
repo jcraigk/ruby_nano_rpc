@@ -4,6 +4,7 @@ module Nano::Proxy
 
   def initialize(opts = {})
     @client = opts[:client] || Nano.client
+    self.class.proxy_methods.each { |m| define_proxy_method(m) }
   end
 
   def self.included(base)
@@ -24,31 +25,13 @@ module Nano::Proxy
     def proxy_methods
       proxy_method_def.keys.sort
     end
-
-    def methods
-      (super + proxy_methods).sort
-    end
   end
 
   def proxy_methods
     self.class.proxy_methods
   end
 
-  def methods
-    (super + proxy_methods).sort
-  end
-
   private
-
-  def method_missing(m, *args, &_block)
-    return super unless methods.include?(m)
-    define_proxy_method(m)
-    send(m, args.first)
-  end
-
-  def respond_to_missing?(m, include_private = false)
-    methods.include?(m) || super
-  end
 
   def define_proxy_method(m)
     self.class.send(:define_method, method_alias(m)) do |call_args = {}|
