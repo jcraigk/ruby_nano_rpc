@@ -17,4 +17,8 @@ module Nano::ApplicationHelper
   def accounts_addresses(accounts)
     accounts.is_a?(Nano::Accounts) ? accounts.addresses : accounts
   end
+
+  def inspect_prefix
+    "#<#{self.class}:#{format('0x00%x', object_id << 1)}"
+  end
 end

@@ -15,10 +15,9 @@ class Nano::Wallet
     super(opts)
   end
 
-  # Hide secret seed during object inspection
+  # Hide secret seed on object inspection
   def inspect
-    "#<#{self.class}:#{format('0x00%x', object_id << 1)}, " \
-    "@client=#{@client.inspect}>"
+    "#{inspect_prefix}, @client=#{@client.inspect}>"
   end
 
   proxy_params wallet: :seed

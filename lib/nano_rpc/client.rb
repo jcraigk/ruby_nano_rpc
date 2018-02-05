@@ -8,11 +8,18 @@ module Nano
   end
 
   class Client
+    include Nano::ApplicationHelper
+
     attr_accessor :host, :port
 
     def initialize(host: 'localhost', port: 7076)
       @host = host
       @port = port
+    end
+
+    # Condense host/port on object inspection
+    def inspect
+      "#{inspect_prefix}, @url=\"#{@host}:#{port}\">"
     end
 
     def call(action, params = {})

@@ -107,4 +107,8 @@ RSpec.describe Nano::Client do
       end
     end
   end
+
+  it 'combines host/port into url in #inspect output' do
+    expect(subject.inspect).to include('@url="localhost:7076"')
+  end
 end
