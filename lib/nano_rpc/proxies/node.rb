@@ -17,6 +17,7 @@ class Nano::Node
   proxy_method :bootstrap_any
   proxy_method :chain, required: %i[block count]
   proxy_method :deterministic_key, required: %i[seed index]
+  proxy_method :frontier_count
   proxy_method :history, required: %i[hash count]
   proxy_method :keepalive, required: %i[address port]
   proxy_method :key_create

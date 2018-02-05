@@ -40,6 +40,13 @@ RSpec.describe NodeProxyHelperExample do
     expect(wallet.seed).to eq(seed1)
   end
 
+  it 'provides #num_frontiers' do
+    allow(subject).to receive(:frontier_count).and_return(
+      Nano::Response.new('count' => 100)
+    )
+    expect(subject.num_frontiers).to eq(100)
+  end
+
   it 'provides #pending_exists?' do
     allow(subject).to(
       receive(:pending_exists)

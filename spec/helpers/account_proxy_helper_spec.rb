@@ -100,17 +100,6 @@ RSpec.describe AccountProxyHelperExample do
         .with(wallet_work_params)
         .and_return(Nano::Response.new('success' => ''))
     )
-    expect(
-      subject.wallet_work_set(wallet_work_params)
-    ).to eq(true)
-  end
-
-  it 'provides #wallet_work_set' do
-    allow(subject).to(
-      receive(:work_set)
-        .with(wallet_work_params)
-        .and_return(Nano::Response.new('success' => ''))
-    )
     expect(subject.wallet_work_set(wallet_work_params)).to eq(true)
   end
 

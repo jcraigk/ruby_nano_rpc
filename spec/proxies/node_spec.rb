@@ -17,6 +17,7 @@ RSpec.describe Nano::Node do
       bootstrap_any
       chain
       deterministic_key
+      frontier_count
       history
       keepalive
       key_create

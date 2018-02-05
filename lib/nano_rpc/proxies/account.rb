@@ -31,7 +31,6 @@ class Nano::Account
   proxy_method :delegators
   proxy_method :delegators_count
   proxy_method :frontiers, required: %i[count]
-  proxy_method :frontier_count
   proxy_method :ledger,
                required: %i[count],
                optional: %i[representative weight pending sorting]

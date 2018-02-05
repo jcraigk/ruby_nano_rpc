@@ -6,16 +6,20 @@ module Nano::NodeProxyHelper
     block_account(opts_hash(opts)).account
   end
 
-  def total_supply
-    available_supply.available
-  end
-
   def create_wallet
     Nano::Wallet.new(wallet_create.wallet)
   end
 
+  def num_frontiers
+    frontier_count['count']
+  end
+
   def pending_exists?(opts)
     pending_exists(opts_hash(opts)).exists == 1
+  end
+
+  def total_supply
+    available_supply.available
   end
 
   def work_valid?(work:, hash:)

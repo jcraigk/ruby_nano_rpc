@@ -19,7 +19,6 @@ RSpec.describe Nano::Account do
       account_weight
       delegators
       delegators_count
-      frontier_count
       frontiers
       ledger
       payment_wait
