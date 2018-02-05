@@ -9,6 +9,7 @@ module Nano::WalletProxyHelper
   end
 
   def accounts
+    return [] unless account_list.accounts.size.positive?
     Nano::Accounts.new(account_list.accounts)
   end
 
@@ -159,8 +160,8 @@ module Nano::WalletProxyHelper
 
   def send_nano(from:, to:, amount:, work: nil)
     send_currency(
-      source: wallet_seed(from),
-      destination: wallet_seed(to),
+      source: account_address(from),
+      destination: account_address(to),
       amount: amount,
       work: work
     ).block

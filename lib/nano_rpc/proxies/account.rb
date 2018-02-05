@@ -3,7 +3,7 @@ class Nano::Account
   include Nano::Proxy
   include Nano::AccountProxyHelper
 
-  attr_accessor :address
+  attr_reader :address
 
   def initialize(address = nil, opts = {})
     unless address.is_a?(String)

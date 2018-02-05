@@ -53,4 +53,8 @@ RSpec.describe Nano::Wallet do
   it 'assigns seed on initialization' do
     expect(subject.seed).to eq(seed)
   end
+
+  it 'obscures seed in #inspect output' do
+    expect(subject.inspect).to_not include('@seed')
+  end
 end

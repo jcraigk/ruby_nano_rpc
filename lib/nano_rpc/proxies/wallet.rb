@@ -3,7 +3,7 @@ class Nano::Wallet
   include Nano::Proxy
   include Nano::WalletProxyHelper
 
-  attr_accessor :seed
+  attr_reader :seed
 
   def initialize(seed = nil, opts = {})
     unless seed.is_a?(String)
@@ -13,6 +13,12 @@ class Nano::Wallet
 
     @seed = seed
     super(opts)
+  end
+
+  # Hide secret seed during object inspection
+  def inspect
+    "#<#{self.class}:#{format('0x00%x', object_id << 1)}, " \
+    "@client=#{@client.inspect}>"
   end
 
   proxy_params wallet: :seed
