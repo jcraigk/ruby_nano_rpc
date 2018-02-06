@@ -3,7 +3,7 @@ module Nano::NodeHelper
   include Nano::ApplicationHelper
 
   def account_containing_block(*args)
-    block_account(opts_hash(args)).account
+    block_account(pluck_argument(args, :hash)).account
   end
 
   def create_wallet
@@ -15,7 +15,7 @@ module Nano::NodeHelper
   end
 
   def pending_exists?(*args)
-    pending_exists(opts_hash(args)).exists == 1
+    pending_exists(pluck_argument(args, :hash)).exists == 1
   end
 
   def total_supply
@@ -24,11 +24,5 @@ module Nano::NodeHelper
 
   def work_valid?(work:, hash:)
     work_validate(work: work, hash: hash).valid == 1
-  end
-
-  private
-
-  def opts_hash(args)
-    { hash: pluck_argument(args, :hash) }
   end
 end

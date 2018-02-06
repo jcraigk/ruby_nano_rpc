@@ -12,7 +12,7 @@ module Nano::AccountHelper
 
   def history(*args)
     account_history(
-      count: pluck_argument(args, :count)
+      pluck_argument(args, :count)
     ).history
   end
 
@@ -55,7 +55,7 @@ module Nano::AccountHelper
 
   def remove(*args)
     account_remove(
-      wallet: wallet_seed(pluck_argument(args, :wallet))
+      pluck_argument(args, :wallet)
     ).removed == 1
   end
 

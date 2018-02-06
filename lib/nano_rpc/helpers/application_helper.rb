@@ -2,9 +2,23 @@
 module Nano::ApplicationHelper
   private
 
-  def pluck_argument(args, key)
+  def pluck_argument(args, key, arg_key = nil)
+    k = arg_key || key
     arg = args.first
-    arg.is_a?(Hash) ? arg[key] : arg
+    v = arg.is_a?(Hash) ? arg[key] : arg
+    { k => object_to_value(v) }
+  end
+
+  def object_to_value(arg)
+    if arg.is_a?(Nano::Wallet)
+      wallet.seed
+    elsif arg.is_a?(Nano::Account)
+      account.address
+    elsif arg.is_a?(Nano::Accounts)
+      accounts.addresses
+    else
+      arg
+    end
   end
 
   def wallet_seed(wallet)

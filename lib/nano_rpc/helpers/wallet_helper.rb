@@ -3,9 +3,7 @@ module Nano::WalletHelper
   include Nano::ApplicationHelper
 
   def account_work(*args)
-    work_get(
-      account: account_address(pluck_argument(args, :account))
-    ).work
+    work_get(pluck_argument(args, :account)).work
   end
 
   def accounts
@@ -35,20 +33,18 @@ module Nano::WalletHelper
 
   def change_password(*args)
     password_change(
-      password: pluck_argument(args, :new_password)
+      pluck_argument(args, :new_password, :password)
     ).changed == 1
   end
 
   def change_seed(*args)
     wallet_change_seed(
-      seed: pluck_argument(args, :new_seed)
+      pluck_argument(args, :new_seed, :seed)
     ).success == ''
   end
 
   def contains?(*args)
-    wallet_contains(
-      account: account_address(pluck_argument(args, :account))
-    ).exists == 1
+    wallet_contains(pluck_argument(args, :account)).exists == 1
   end
 
   def create_account(work: true)
@@ -64,9 +60,7 @@ module Nano::WalletHelper
   end
 
   def enter_password(*args)
-    password_enter(
-      password: pluck_argument(args, :password)
-    ).valid == 1
+    password_enter(pluck_argument(args, :password)).valid == 1
   end
 
   def export
@@ -94,9 +88,7 @@ module Nano::WalletHelper
   end
 
   def password_valid?(*args)
-    password_valid(
-      password: pluck_argument(args, :password)
-    ).valid == 1
+    password_valid(pluck_argument(args, :password)).valid == 1
   end
 
   def pending_balance
@@ -130,9 +122,7 @@ module Nano::WalletHelper
   end
 
   def remove_account(*args)
-    account_remove(
-      account: account_address(pluck_argument(args, :account))
-    ).removed == 1
+    account_remove(pluck_argument(args, :account)).removed == 1
   end
 
   def representative
@@ -140,7 +130,7 @@ module Nano::WalletHelper
   end
 
   def republish(*args)
-    wallet_republish(count: pluck_argument(args, :count)).blocks
+    wallet_republish(pluck_argument(args, :count)).blocks
   end
 
   def account_work_set(account:, work:)
@@ -153,7 +143,7 @@ module Nano::WalletHelper
 
   def representative_set(*args)
     wallet_representative_set(
-      representative: pluck_argument(args, :representative)
+      pluck_argument(args, :representative)
     ).set == 1
   end
   alias set_representative representative_set
