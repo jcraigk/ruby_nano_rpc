@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-class WalletProxyHelperExample
-  include Nano::WalletProxyHelper
+class WalletHelperExample
+  include Nano::WalletHelper
 end
 
-RSpec.describe WalletProxyHelperExample do
+RSpec.describe WalletHelperExample do
   subject { described_class.new }
   let(:addr1) { 'nano_address1' }
   let(:addr2) { 'nano_address2' }

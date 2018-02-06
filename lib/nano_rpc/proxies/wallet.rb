@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class Nano::Wallet
   include Nano::Proxy
-  include Nano::WalletProxyHelper
+  include Nano::WalletHelper
 
   attr_reader :seed
 

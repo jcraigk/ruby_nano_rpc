@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-class AccountProxyHelperExample
-  include Nano::AccountProxyHelper
+class AccountHelperExample
+  include Nano::AccountHelper
 end
 
-RSpec.describe AccountProxyHelperExample do
+RSpec.describe AccountHelperExample do
   subject { described_class.new }
   let(:history_data) do
     [{ 'hash' => seed1 }, { 'hash' => seed1 }]

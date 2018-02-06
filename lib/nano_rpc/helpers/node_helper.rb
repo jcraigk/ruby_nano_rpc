@@ -1,9 +1,9 @@
 # frozen_string_literal: true
-module Nano::NodeProxyHelper
+module Nano::NodeHelper
   include Nano::ApplicationHelper
 
-  def account_containing_block(opts)
-    block_account(opts_hash(opts)).account
+  def account_containing_block(*args)
+    block_account(opts_hash(args)).account
   end
 
   def create_wallet
@@ -14,8 +14,8 @@ module Nano::NodeProxyHelper
     frontier_count['count']
   end
 
-  def pending_exists?(opts)
-    pending_exists(opts_hash(opts)).exists == 1
+  def pending_exists?(*args)
+    pending_exists(opts_hash(args)).exists == 1
   end
 
   def total_supply
@@ -28,7 +28,7 @@ module Nano::NodeProxyHelper
 
   private
 
-  def opts_hash(opts)
-    { hash: opts_pluck(opts, :hash) }
+  def opts_hash(args)
+    { hash: pluck_argument(args, :hash) }
   end
 end

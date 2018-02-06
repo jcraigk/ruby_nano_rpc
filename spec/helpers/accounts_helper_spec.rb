@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-class AccountsProxyHelperExample
-  include Nano::AccountsProxyHelper
+class AccountsHelperExample
+  include Nano::AccountsHelper
 end
 
-RSpec.describe AccountsProxyHelperExample do
+RSpec.describe AccountsHelperExample do
   subject { described_class.new }
   let(:addr1) { 'nano_address1' }
   let(:addr2) { 'nano_address2' }

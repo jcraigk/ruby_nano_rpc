@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class Nano::Account
   include Nano::Proxy
-  include Nano::AccountProxyHelper
+  include Nano::AccountHelper
 
   attr_reader :address
 

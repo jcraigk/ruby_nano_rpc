@@ -1,10 +1,10 @@
 # frozen_string_literal: true
-module Nano::WalletProxyHelper
+module Nano::WalletHelper
   include Nano::ApplicationHelper
 
-  def account_work(opts)
+  def account_work(*args)
     work_get(
-      account: account_address(opts_pluck(opts, :account))
+      account: account_address(pluck_argument(args, :account))
     ).work
   end
 
@@ -33,21 +33,21 @@ module Nano::WalletProxyHelper
     payment_begin.account
   end
 
-  def change_password(opts)
+  def change_password(*args)
     password_change(
-      password: opts_pluck(opts, :new_password)
+      password: pluck_argument(args, :new_password)
     ).changed == 1
   end
 
-  def change_seed(opts)
+  def change_seed(*args)
     wallet_change_seed(
-      seed: opts_pluck(opts, :new_seed)
+      seed: pluck_argument(args, :new_seed)
     ).success == ''
   end
 
-  def contains?(opts)
+  def contains?(*args)
     wallet_contains(
-      account: account_address(opts_pluck(opts, :account))
+      account: account_address(pluck_argument(args, :account))
     ).exists == 1
   end
 
@@ -63,9 +63,9 @@ module Nano::WalletProxyHelper
     wallet_destroy
   end
 
-  def enter_password(opts)
+  def enter_password(*args)
     password_enter(
-      password: opts_pluck(opts, :password)
+      password: pluck_argument(args, :password)
     ).valid == 1
   end
 
@@ -93,9 +93,9 @@ module Nano::WalletProxyHelper
     ).moved == 1
   end
 
-  def password_valid?(opts)
+  def password_valid?(*args)
     password_valid(
-      password: opts_pluck(opts, :password)
+      password: pluck_argument(args, :password)
     ).valid == 1
   end
 
@@ -129,9 +129,9 @@ module Nano::WalletProxyHelper
     ).block
   end
 
-  def remove_account(opts)
+  def remove_account(*args)
     account_remove(
-      account: account_address(opts_pluck(opts, :account))
+      account: account_address(pluck_argument(args, :account))
     ).removed == 1
   end
 
@@ -139,8 +139,8 @@ module Nano::WalletProxyHelper
     wallet_representative.representative
   end
 
-  def republish(opts)
-    wallet_republish(count: opts_pluck(opts, :count)).blocks
+  def republish(*args)
+    wallet_republish(count: pluck_argument(args, :count)).blocks
   end
 
   def account_work_set(account:, work:)
@@ -151,9 +151,9 @@ module Nano::WalletProxyHelper
   end
   alias set_account_work account_work_set
 
-  def representative_set(opts)
+  def representative_set(*args)
     wallet_representative_set(
-      representative: opts_pluck(opts, :representative)
+      representative: pluck_argument(args, :representative)
     ).set == 1
   end
   alias set_representative representative_set

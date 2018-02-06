@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module Nano::AccountProxyHelper
+module Nano::AccountHelper
   include Nano::ApplicationHelper
 
   def balance
@@ -10,9 +10,9 @@ module Nano::AccountProxyHelper
     account_block_count.block_count
   end
 
-  def history(opts)
+  def history(*args)
     account_history(
-      count: opts_pluck(opts, :count)
+      count: pluck_argument(args, :count)
     ).history
   end
 
@@ -53,9 +53,9 @@ module Nano::AccountProxyHelper
   end
   alias blocks_pending pending_blocks
 
-  def remove(opts)
+  def remove(*args)
     account_remove(
-      wallet: wallet_seed(opts_pluck(opts, :wallet))
+      wallet: wallet_seed(pluck_argument(args, :wallet))
     ).removed == 1
   end
 

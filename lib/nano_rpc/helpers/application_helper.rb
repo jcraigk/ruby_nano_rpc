@@ -2,8 +2,9 @@
 module Nano::ApplicationHelper
   private
 
-  def opts_pluck(opts, key)
-    opts.is_a?(Hash) ? opts[key] : opts
+  def pluck_argument(args, key)
+    arg = args.first
+    arg.is_a?(Hash) ? arg[key] : arg
   end
 
   def wallet_seed(wallet)

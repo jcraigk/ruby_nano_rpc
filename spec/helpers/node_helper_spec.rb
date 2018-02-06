@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-class NodeProxyHelperExample
-  include Nano::NodeProxyHelper
+class NodeHelperExample
+  include Nano::NodeHelper
 end
 
-RSpec.describe NodeProxyHelperExample do
+RSpec.describe NodeHelperExample do
   subject { described_class.new }
   let(:pending_hash) { '000BDE' }
   let(:work_params) { { work: '2def', hash: '000DEF' } }
