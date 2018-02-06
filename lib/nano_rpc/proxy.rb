@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 module Nano::Proxy
+  include Nano::ApplicationHelper
+
   attr_accessor :client
 
   def initialize(opts = {})
@@ -34,12 +36,21 @@ module Nano::Proxy
   private
 
   def define_proxy_method(m)
-    self.class.send(:define_method, method_alias(m)) do |call_args = {}|
+    self.class.send(:define_method, method_alias(m)) do |*args|
       @m = m
-      @call_args = call_args
+      @call_args = hashify_args(args)
 
       validate_params!
       execute_call
+    end
+  end
+
+  def hashify_args(args)
+    if args.first.is_a?(Hash)
+      args.first
+    else
+      (args[1].is_a?(Hash) ? args[1] : {})
+        .merge!(pluck_argument(args, required_params.first))
     end
   end
 

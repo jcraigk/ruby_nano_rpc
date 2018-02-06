@@ -26,15 +26,15 @@ module Nano::AccountHelper
 
   def move(from:, to:)
     account_move(
-      wallet: wallet_seed(to),
-      source: wallet_seed(from),
+      wallet: object_to_value(to),
+      source: object_to_value(from),
       accounts: [address]
     ).moved == 1
   end
 
   def wallet_work_set(wallet:, work:)
     work_set(
-      wallet: wallet_seed(wallet),
+      wallet: object_to_value(wallet),
       work: work
     ).success == ''
   end
@@ -65,7 +65,7 @@ module Nano::AccountHelper
 
   def representative_set(wallet:, representative:)
     account_representative_set(
-      wallet: wallet_seed(wallet),
+      wallet: object_to_value(wallet),
       representative: representative
     ).set == 1
   end

@@ -115,14 +115,25 @@ RSpec.describe ProxyExample do
         param1: 'value',
         param2: 'value',
         param3: 'value',
-        bad_param: 'value',
+        bad_param1: 'value',
         bad_param2: 'value'
       )
     end.to(
       raise_error(
         Nano::ForbiddenParameter,
-        'Forbidden parameter(s) passed: bad_param, bad_param2'
+        'Forbidden parameter(s) passed: bad_param1, bad_param2'
       )
     )
+  end
+
+  it 'allows passing in first required parameter without a key' do
+    expect(client).to receive(:call).with(
+      :some_action,
+      account: addr1,
+      param1: 'value1',
+      param2: 'value2',
+      param3: 'value3'
+    )
+    subject.some_action('value1', param2: 'value2', param3: 'value3')
   end
 end

@@ -11,26 +11,14 @@ module Nano::ApplicationHelper
 
   def object_to_value(arg)
     if arg.is_a?(Nano::Wallet)
-      wallet.seed
+      arg.seed
     elsif arg.is_a?(Nano::Account)
-      account.address
+      arg.address
     elsif arg.is_a?(Nano::Accounts)
-      accounts.addresses
+      arg.addresses
     else
       arg
     end
-  end
-
-  def wallet_seed(wallet)
-    wallet.is_a?(Nano::Wallet) ? wallet.seed : wallet
-  end
-
-  def account_address(account)
-    account.is_a?(Nano::Account) ? account.address : account
-  end
-
-  def accounts_addresses(accounts)
-    accounts.is_a?(Nano::Accounts) ? accounts.addresses : accounts
   end
 
   def inspect_prefix

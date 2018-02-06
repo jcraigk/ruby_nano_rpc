@@ -25,8 +25,8 @@ module Nano::AccountsHelper
 
   def move(from:, to:)
     account_move(
-      source: wallet_seed(from),
-      wallet: wallet_seed(to)
+      source: object_to_value(from),
+      wallet: object_to_value(to)
     ).moved == 1
   end
 

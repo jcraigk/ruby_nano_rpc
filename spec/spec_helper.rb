@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 require 'simplecov'
-SimpleCov.start do
-  coverage_dir '/Users/jcraigk/Desktop/coverage'
-end
+SimpleCov.start
 
 require 'bundler/setup'
 require 'nano_rpc'

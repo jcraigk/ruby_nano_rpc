@@ -81,9 +81,9 @@ module Nano::WalletHelper
 
   def move_accounts(to:, accounts:)
     account_move(
-      wallet: wallet_seed(to),
+      wallet: object_to_value(to),
       source: seed,
-      accounts: accounts_addresses(accounts)
+      accounts: object_to_value(accounts)
     ).moved == 1
   end
 
@@ -116,7 +116,7 @@ module Nano::WalletHelper
 
   def receive_block(account:, block:)
     receive(
-      account: account_address(account),
+      account: object_to_value(account),
       block: block
     ).block
   end
@@ -135,7 +135,7 @@ module Nano::WalletHelper
 
   def account_work_set(account:, work:)
     work_set(
-      account: account_address(account),
+      account: object_to_value(account),
       work: work
     ).success == ''
   end
@@ -150,8 +150,8 @@ module Nano::WalletHelper
 
   def send_nano(from:, to:, amount:, work: nil)
     send_currency(
-      source: account_address(from),
-      destination: account_address(to),
+      source: object_to_value(from),
+      destination: object_to_value(to),
       amount: amount,
       work: work
     ).block
