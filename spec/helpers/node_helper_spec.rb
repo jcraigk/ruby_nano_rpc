@@ -7,6 +7,12 @@ end
 
 RSpec.describe NodeHelperExample do
   subject { described_class.new }
+  let(:nano_amount) { 1_000_000_000_000_000_000_000_000 }
+  let(:knano_amount) { 1_000_000_000_000_000_000_000_000_000 }
+  let(:mnano_amount) { 1_000_000_000_000_000_000_000_000_000_000 }
+  let(:knano_amount_param) { { amount: knano_amount } }
+  let(:mnano_amount_param) { { amount: mnano_amount } }
+  let(:nano_amount_param) { { amount: nano_amount } }
   let(:pending_hash) { '000BDE' }
   let(:work_params) { { work: '2def', hash: '000DEF' } }
   let(:addr1) { 'nano_address1' }
@@ -45,6 +51,66 @@ RSpec.describe NodeHelperExample do
       Nano::Response.new('count' => 100)
     )
     expect(subject.num_frontiers).to eq(100)
+  end
+
+  it 'provides #knano_from_raw' do
+    allow(subject).to(
+      receive(:krai_from_raw)
+        .with(knano_amount_param)
+        .and_return(Nano::Response.new('amount' => '1'))
+    )
+    expect(subject.knano_from_raw(knano_amount)).to eq(1)
+    expect(subject.knano_from_raw(knano_amount_param)).to eq(1)
+  end
+
+  it 'provides #knano_to_raw' do
+    allow(subject).to(
+      receive(:krai_to_raw)
+        .with(amount_param)
+        .and_return(Nano::Response.new('amount' => knano_amount.to_s))
+    )
+    expect(subject.knano_to_raw(1)).to eq(knano_amount)
+    expect(subject.knano_to_raw(amount_param)).to eq(knano_amount)
+  end
+
+  it 'provides #mnano_from_raw' do
+    allow(subject).to(
+      receive(:mrai_from_raw)
+        .with(mnano_amount_param)
+        .and_return(Nano::Response.new('amount' => '1'))
+    )
+    expect(subject.mnano_from_raw(mnano_amount)).to eq(1)
+    expect(subject.mnano_from_raw(mnano_amount_param)).to eq(1)
+  end
+
+  it 'provides #mnano_to_raw' do
+    allow(subject).to(
+      receive(:mrai_to_raw)
+        .with(amount_param)
+        .and_return(Nano::Response.new('amount' => mnano_amount.to_s))
+    )
+    expect(subject.mnano_to_raw(1)).to eq(mnano_amount)
+    expect(subject.mnano_to_raw(amount_param)).to eq(mnano_amount)
+  end
+
+  it 'provides #nano_from_raw' do
+    allow(subject).to(
+      receive(:rai_from_raw)
+        .with(nano_amount_param)
+        .and_return(Nano::Response.new('amount' => '1'))
+    )
+    expect(subject.nano_from_raw(nano_amount)).to eq(1)
+    expect(subject.nano_from_raw(nano_amount_param)).to eq(1)
+  end
+
+  it 'provides #nano_to_raw' do
+    allow(subject).to(
+      receive(:rai_to_raw)
+        .with(amount_param)
+        .and_return(Nano::Response.new('amount' => nano_amount.to_s))
+    )
+    expect(subject.nano_to_raw(1)).to eq(nano_amount)
+    expect(subject.nano_to_raw(amount_param)).to eq(nano_amount)
   end
 
   it 'provides #pending_exists?' do

@@ -10,6 +10,30 @@ module Nano::NodeHelper
     Nano::Wallet.new(wallet_create.wallet)
   end
 
+  def knano_from_raw(*args)
+    krai_from_raw(pluck_argument(args, :amount)).amount
+  end
+
+  def knano_to_raw(*args)
+    krai_to_raw(pluck_argument(args, :amount)).amount
+  end
+
+  def mnano_from_raw(*args)
+    mrai_from_raw(pluck_argument(args, :amount)).amount
+  end
+
+  def mnano_to_raw(*args)
+    mrai_to_raw(pluck_argument(args, :amount)).amount
+  end
+
+  def nano_from_raw(*args)
+    rai_from_raw(pluck_argument(args, :amount)).amount
+  end
+
+  def nano_to_raw(*args)
+    rai_to_raw(pluck_argument(args, :amount)).amount
+  end
+
   def num_frontiers
     frontier_count['count']
   end
