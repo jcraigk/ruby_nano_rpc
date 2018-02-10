@@ -7,4 +7,5 @@ module Nano
   class InvalidRequest < Error; end
   class ForbiddenParameter < Error; end
   class MissingParameters < Error; end
+  class NodeOpenTimeout < Error; end
 end

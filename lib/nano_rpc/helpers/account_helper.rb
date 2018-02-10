@@ -10,10 +10,8 @@ module Nano::AccountHelper
     account_block_count.block_count
   end
 
-  def history(*args)
-    account_history(
-      pluck_argument(args, :count)
-    ).history
+  def history(count:)
+    account_history(count: count).history
   end
 
   def info
@@ -26,17 +24,14 @@ module Nano::AccountHelper
 
   def move(from:, to:)
     account_move(
-      wallet: object_to_value(to),
-      source: object_to_value(from),
+      source: from,
+      wallet: to,
       accounts: [address]
     ).moved == 1
   end
 
   def wallet_work_set(wallet:, work:)
-    work_set(
-      wallet: object_to_value(wallet),
-      work: work
-    ).success == ''
+    work_set(wallet: wallet, work: work).success == ''
   end
 
   def pending_balance
@@ -53,10 +48,8 @@ module Nano::AccountHelper
   end
   alias blocks_pending pending_blocks
 
-  def remove(*args)
-    account_remove(
-      pluck_argument(args, :wallet)
-    ).removed == 1
+  def remove(wallet:)
+    account_remove(wallet: wallet).removed == 1
   end
 
   def representative
@@ -65,7 +58,7 @@ module Nano::AccountHelper
 
   def representative_set(wallet:, representative:)
     account_representative_set(
-      wallet: object_to_value(wallet),
+      wallet: wallet,
       representative: representative
     ).set == 1
   end

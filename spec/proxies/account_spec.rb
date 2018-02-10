@@ -23,6 +23,7 @@ RSpec.describe Nano::Account do
       ledger
       payment_wait
       pending
+      receive
       validate_account_number
       work_get
       work_set

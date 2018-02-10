@@ -2,6 +2,8 @@
 require 'spec_helper'
 
 class WalletHelperExample
+  attr_reader :client
+
   include Nano::WalletHelper
 end
 
@@ -60,7 +62,6 @@ RSpec.describe WalletHelperExample do
         .with(account_param)
         .and_return(Nano::Response.new('work' => work_id))
     )
-    expect(subject.account_work(addr1)).to eq(work_id)
     expect(subject.account_work(account_param)).to eq(work_id)
   end
 
@@ -115,7 +116,6 @@ RSpec.describe WalletHelperExample do
         .and_return(Nano::Response.new('changed' => '1'))
     )
     expect(subject.change_password(new_password: 'newpass')).to eq(true)
-    expect(subject.change_password('newpass')).to eq(true)
   end
 
   it 'provides #change_seed' do
@@ -125,7 +125,6 @@ RSpec.describe WalletHelperExample do
         .and_return(Nano::Response.new('success' => ''))
     )
     expect(subject.change_seed(new_seed: seed1)).to eq(true)
-    expect(subject.change_seed(seed1)).to eq(true)
   end
 
   it 'provides #contains?' do
@@ -135,7 +134,6 @@ RSpec.describe WalletHelperExample do
         .and_return(Nano::Response.new('exists' => '1'))
     )
     expect(subject.contains?(account_param)).to eq(true)
-    expect(subject.contains?(addr1)).to eq(true)
   end
 
   it 'provides #create_account' do
@@ -174,7 +172,6 @@ RSpec.describe WalletHelperExample do
         .and_return(Nano::Response.new('valid' => '1'))
     )
     expect(subject.enter_password(password: 'pass1')).to eq(true)
-    expect(subject.enter_password('pass1')).to eq(true)
   end
 
   it 'provides #export' do
@@ -227,7 +224,6 @@ RSpec.describe WalletHelperExample do
         .and_return(Nano::Response.new('valid' => '1'))
     )
     expect(subject.password_valid?(password_param)).to eq(true)
-    expect(subject.password_valid?('pass1')).to eq(true)
   end
 
   it 'provides #pending_balance and #balance_pending' do
@@ -283,7 +279,6 @@ RSpec.describe WalletHelperExample do
         .and_return(Nano::Response.new('removed' => '1'))
     )
     expect(subject.remove_account(account_param)).to eq(true)
-    expect(subject.remove_account(addr1)).to eq(true)
   end
 
   it 'provides #representative' do
@@ -301,7 +296,6 @@ RSpec.describe WalletHelperExample do
         .and_return(Nano::Response.new('blocks' => blocks))
     )
     expect(subject.republish(republish_param)).to eq(blocks)
-    expect(subject.republish(2)).to eq(blocks)
   end
 
   it 'provides #account_work_set and #set_account_work' do
@@ -321,8 +315,7 @@ RSpec.describe WalletHelperExample do
         .and_return(Nano::Response.new('set' => '1'))
     )
     expect(subject.representative_set(rep_param)).to eq(true)
-    expect(subject.representative_set(addr1)).to eq(true)
-    expect(subject.set_representative(addr1)).to eq(true)
+    expect(subject.set_representative(rep_param)).to eq(true)
   end
 
   it 'provides #send_nano and #send_transaction' do

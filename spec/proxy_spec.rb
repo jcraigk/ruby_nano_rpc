@@ -125,15 +125,4 @@ RSpec.describe ProxyExample do
       )
     )
   end
-
-  it 'allows passing in first required parameter without a key' do
-    expect(client).to receive(:call).with(
-      :some_action,
-      account: addr1,
-      param1: 'value1',
-      param2: 'value2',
-      param3: 'value3'
-    )
-    subject.some_action('value1', param2: 'value2', param3: 'value3')
-  end
 end

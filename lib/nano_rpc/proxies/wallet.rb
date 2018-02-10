@@ -50,6 +50,6 @@ class Nano::Wallet
   proxy_method :wallet_representative_set, required: %i[representative]
   proxy_method :wallet_republish, required: %i[count]
   proxy_method :wallet_work_get
-  proxy_method :work_get
+  proxy_method :work_get, required: %i[account]
   proxy_method :work_set
 end

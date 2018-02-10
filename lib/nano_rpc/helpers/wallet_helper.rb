@@ -2,13 +2,13 @@
 module Nano::WalletHelper
   include Nano::ApplicationHelper
 
-  def account_work(*args)
-    work_get(pluck_argument(args, :account)).work
+  def account_work(account:)
+    work_get(account: account).work
   end
 
   def accounts
     return [] unless account_list.accounts.size.positive?
-    Nano::Accounts.new(account_list.accounts)
+    Nano::Accounts.new(account_list.accounts, client: client)
   end
 
   def add_key(key:, work: true)
@@ -31,36 +31,34 @@ module Nano::WalletHelper
     payment_begin.account
   end
 
-  def change_password(*args)
-    password_change(
-      pluck_argument(args, :new_password, :password)
-    ).changed == 1
+  def change_password(new_password:)
+    password_change(password: new_password).changed == 1
   end
 
-  def change_seed(*args)
-    wallet_change_seed(
-      pluck_argument(args, :new_seed, :seed)
-    ).success == ''
+  def change_seed(new_seed:)
+    wallet_change_seed(seed: new_seed).success == ''
   end
 
-  def contains?(*args)
-    wallet_contains(pluck_argument(args, :account)).exists == 1
+  def contains?(account:)
+    wallet_contains(account: account).exists == 1
   end
 
   def create_account(work: true)
-    Nano::Account.new(account_create(work: work).account)
+    address = account_create(work: work).account
+    Nano::Account.new(address, client: client)
   end
 
   def create_accounts(count:, work: true)
-    Nano::Accounts.new(accounts_create(count: count, work: work).accounts)
+    addresses = accounts_create(count: count, work: work).accounts
+    Nano::Accounts.new(addresses, client: client)
   end
 
   def destroy
     wallet_destroy
   end
 
-  def enter_password(*args)
-    password_enter(pluck_argument(args, :password)).valid == 1
+  def enter_password(password:)
+    password_enter(password: password).valid == 1
   end
 
   def export
@@ -80,15 +78,11 @@ module Nano::WalletHelper
   end
 
   def move_accounts(to:, accounts:)
-    account_move(
-      wallet: object_to_value(to),
-      source: seed,
-      accounts: object_to_value(accounts)
-    ).moved == 1
+    account_move(wallet: to, source: seed, accounts: accounts).moved == 1
   end
 
-  def password_valid?(*args)
-    password_valid(pluck_argument(args, :password)).valid == 1
+  def password_valid?(password:)
+    password_valid(password: password).valid == 1
   end
 
   def pending_balance
@@ -116,42 +110,37 @@ module Nano::WalletHelper
 
   def receive_block(account:, block:)
     receive(
-      account: object_to_value(account),
+      account: account,
       block: block
     ).block
   end
 
-  def remove_account(*args)
-    account_remove(pluck_argument(args, :account)).removed == 1
+  def remove_account(account:)
+    account_remove(account: account).removed == 1
   end
 
   def representative
     wallet_representative.representative
   end
 
-  def republish(*args)
-    wallet_republish(pluck_argument(args, :count)).blocks
+  def republish(count:)
+    wallet_republish(count: count).blocks
   end
 
   def account_work_set(account:, work:)
-    work_set(
-      account: object_to_value(account),
-      work: work
-    ).success == ''
+    work_set(account: account, work: work).success == ''
   end
   alias set_account_work account_work_set
 
-  def representative_set(*args)
-    wallet_representative_set(
-      pluck_argument(args, :representative)
-    ).set == 1
+  def representative_set(representative:)
+    wallet_representative_set(representative: representative).set == 1
   end
   alias set_representative representative_set
 
   def send_nano(from:, to:, amount:, work: nil)
     send_currency(
-      source: object_to_value(from),
-      destination: object_to_value(to),
+      source: from,
+      destination: to,
       amount: amount,
       work: work
     ).block

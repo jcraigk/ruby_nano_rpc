@@ -6,7 +6,7 @@ module Nano::Proxy
 
   def initialize(opts = {})
     @client = opts[:client] || Nano.client
-    self.class.proxy_methods.each { |m| define_proxy_method(m) }
+    self.class.proxy_methods&.each { |m| define_proxy_method(m) }
   end
 
   def self.included(base)
@@ -25,7 +25,7 @@ module Nano::Proxy
     end
 
     def proxy_methods
-      proxy_method_def.keys.sort
+      proxy_method_def&.keys&.sort
     end
   end
 
@@ -36,21 +36,12 @@ module Nano::Proxy
   private
 
   def define_proxy_method(m)
-    self.class.send(:define_method, method_alias(m)) do |*args|
+    self.class.send(:define_method, method_alias(m)) do |args = {}|
       @m = m
-      @call_args = hashify_args(args)
+      @call_args = args
 
       validate_params!
       execute_call
-    end
-  end
-
-  def hashify_args(args)
-    if args.first.is_a?(Hash)
-      args.first
-    else
-      (args[1].is_a?(Hash) ? args[1] : {})
-        .merge!(pluck_argument(args, required_params.first))
     end
   end
 

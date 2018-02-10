@@ -25,12 +25,31 @@ module Nano
     def call(action, params = {})
       args = { action: action }
       args.merge!(params) if params.is_a?(Hash)
-      post(args)
+      args = extract_proxy_args(args)
+      rpc_post(args)
     end
 
     private
 
-    def post(params)
+    def extract_proxy_args(args)
+      args.each do |k, v|
+        m = proxy_method(v)
+        args[k] = v.send(m) if m
+      end
+      args
+    end
+
+    def proxy_method(v)
+      if v.is_a?(Nano::Wallet)
+        :seed
+      elsif v.is_a?(Nano::Accounts)
+        :addresses
+      elsif v.is_a?(Nano::Account)
+        :address
+      end
+    end
+
+    def rpc_post(params)
       response = rest_client_post(url, params)
       ensure_status_success!(response)
 
@@ -45,6 +64,9 @@ module Nano
     rescue Errno::ECONNREFUSED
       raise Nano::NodeConnectionFailure,
             "Node connection failure at #{url}"
+    rescue RestClient::Exceptions::OpenTimeout
+      raise Nano::NodeOpenTimeout,
+            'Node failed to respond in time'
     end
 
     def url

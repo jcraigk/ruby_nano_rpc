@@ -15,6 +15,10 @@ RSpec.describe Nano::Client do
     { error: error_msg }.to_json
   end
   let(:error_msg) { 'Bad account number' }
+  let(:seed1) { 'ABCDEF' }
+  let(:addr1) { 'nano_address1' }
+  let(:addr2) { 'nano_address2' }
+  let(:addresses) { [addr1, addr2] }
 
   it 'provides a client instance on namespace' do
     expect(Nano.client.class).to eq(described_class)
@@ -31,7 +35,7 @@ RSpec.describe Nano::Client do
   end
 
   it 'implements #call' do
-    expect(subject).to receive(:post).with(
+    expect(subject).to receive(:rpc_post).with(
       { action: action }.merge(params)
     )
     subject.call(action, params)
@@ -47,6 +51,23 @@ RSpec.describe Nano::Client do
         raise_error(
           Nano::NodeConnectionFailure,
           'Node connection failure at http://localhost:7076'
+        )
+      )
+    end
+  end
+
+  context 'node timeout' do
+    before do
+      allow(RestClient).to receive(:post).and_raise(
+        RestClient::Exceptions::OpenTimeout
+      )
+    end
+
+    it 'raises NodeConnectionFailure and provides error message' do
+      expect { subject.call(action, params) }.to(
+        raise_error(
+          Nano::NodeOpenTimeout,
+          'Node failed to respond in time'
         )
       )
     end
@@ -110,5 +131,28 @@ RSpec.describe Nano::Client do
 
   it 'combines host/port into url in #inspect output' do
     expect(subject.inspect).to include('@url="localhost:7076"')
+  end
+
+  context 'proxy objects' do
+    it 'pulls #seed from Nano::Wallet' do
+      expect(subject).to(
+        receive(:rpc_post).with(action: action, wallet: seed1)
+      )
+      subject.call(action, wallet: Nano::Wallet.new(seed1))
+    end
+
+    it 'pulls #addresses from Nano::Accounts' do
+      expect(subject).to(
+        receive(:rpc_post).with(action: action, accounts: addresses)
+      )
+      subject.call(action, accounts: Nano::Accounts.new(addresses))
+    end
+
+    it 'pulls #address from Nano::Account' do
+      expect(subject).to(
+        receive(:rpc_post).with(action: action, account: addr1)
+      )
+      subject.call(action, account: Nano::Account.new(addr1))
+    end
   end
 end

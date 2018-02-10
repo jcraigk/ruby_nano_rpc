@@ -37,6 +37,7 @@ class Nano::Account
   proxy_method :validate_account_number
   proxy_method :pending, required: %i[count], optional: %i[threshold exists]
   proxy_method :payment_wait, required: %i[amount timeout]
-  proxy_method :work_get
+  proxy_method :receive, required: %i[wallet block], optional: %i[work]
+  proxy_method :work_get, required: %i[wallet]
   proxy_method :work_set
 end

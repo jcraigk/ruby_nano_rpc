@@ -24,15 +24,14 @@ module Nano::AccountsHelper
   end
 
   def move(from:, to:)
-    account_move(
-      source: object_to_value(from),
-      wallet: object_to_value(to)
-    ).moved == 1
+    account_move(source: from, wallet: to).moved == 1
   end
 
   def pending(count:, threshold: nil, source: nil)
     accounts_pending(
-      count: count, threshold: threshold, source: source
+      count: count,
+      threshold: threshold,
+      source: source
     ).blocks
   end
   alias pending_blocks pending
@@ -41,7 +40,7 @@ module Nano::AccountsHelper
   def [](idx)
     return unless @addresses[idx]
     @account_objects ||= []
-    @account_objects[idx] ||= Nano::Account.new(@addresses[idx])
+    @account_objects[idx] ||= Nano::Account.new(@addresses[idx], client: client)
   end
 
   def <<(val)
@@ -50,7 +49,7 @@ module Nano::AccountsHelper
 
   def each(&_block)
     @addresses.each do |address|
-      yield Nano::Account.new(address)
+      yield Nano::Account.new(address, client: client)
     end
   end
 

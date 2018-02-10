@@ -58,7 +58,6 @@ RSpec.describe AccountHelperExample do
         .and_return(Nano::Response.new('history' => history_data))
     )
     expect(subject.history(count: 2)).to eq(history_data)
-    expect(subject.history(2)).to eq(history_data)
   end
 
   it 'provides #info' do
@@ -83,15 +82,6 @@ RSpec.describe AccountHelperExample do
         .and_return(Nano::Response.new('moved' => '1'))
     )
     expect(subject.move(account_move_params)).to eq(true)
-
-    # Allows passing in Nano::Wallet objects
-    allow(subject).to(
-      receive(:account_move)
-        .with(account_move_opts2)
-        .and_return(Nano::Response.new('moved' => '1'))
-    )
-    expect(subject).to receive(:account_move).with(account_move_opts2)
-    subject.move(from: wallet, to: wallet2)
   end
 
   it 'provides #wallet_work_set' do
@@ -129,7 +119,6 @@ RSpec.describe AccountHelperExample do
         .and_return(Nano::Response.new('removed' => '1'))
     )
     expect(subject.remove(wallet: seed1)).to eq(true)
-    expect(subject.remove(seed1)).to eq(true)
   end
 
   it 'provides #representative' do

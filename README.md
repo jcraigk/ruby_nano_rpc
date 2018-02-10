@@ -1,8 +1,6 @@
-# Nano RPC
+![Ruby Nano RPC Logo](https://i.imgur.com/ihmmYcp.png)
 
-![Ruby Logo](https://i.imgur.com/pTKxwQq.png)
-
-An RPC wrapper for Nano digitial currency nodes written in Ruby. Arbitrary RPC access is provided along with proxy objects that expose helper methods ([Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki/Proxy-Object-Reference)).
+Nano RPC is a Ruby wrapper for making Remote Procedure Calls against Nano digitial currency nodes. Arbitrary RPC access is provided along with proxy objects that expose helper methods ([Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki/Proxy-Object-Reference)).
 
 To run a Nano node locally, see [Nano Docker Docs](https://github.com/clemahieu/raiblocks/wiki/Docker-node).
 
@@ -99,6 +97,10 @@ You can point each proxy object at its own node by passing in a client instance:
 ```
 
 For a comprehensive guide, see the [Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki).
+
+## Credits
+
+Logo created by Andrei Luca ([Twitter](https://twitter.com/lucandrei_))
 
 ## License
 

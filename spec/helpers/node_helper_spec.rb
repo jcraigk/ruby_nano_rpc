@@ -2,6 +2,7 @@
 require 'spec_helper'
 
 class NodeHelperExample
+  include Nano::Proxy
   include Nano::NodeHelper
 end
 
@@ -26,7 +27,6 @@ RSpec.describe NodeHelperExample do
         .with(pending_hash_param)
         .and_return(Nano::Response.new('account' => addr1))
     )
-    expect(subject.account_containing_block(pending_hash)).to eq(addr1)
     expect(subject.account_containing_block(pending_hash_param)).to eq(addr1)
   end
 
@@ -59,7 +59,6 @@ RSpec.describe NodeHelperExample do
         .with(knano_amount_param)
         .and_return(Nano::Response.new('amount' => '1'))
     )
-    expect(subject.knano_from_raw(knano_amount)).to eq(1)
     expect(subject.knano_from_raw(knano_amount_param)).to eq(1)
   end
 
@@ -69,7 +68,6 @@ RSpec.describe NodeHelperExample do
         .with(amount_param)
         .and_return(Nano::Response.new('amount' => knano_amount.to_s))
     )
-    expect(subject.knano_to_raw(1)).to eq(knano_amount)
     expect(subject.knano_to_raw(amount_param)).to eq(knano_amount)
   end
 
@@ -79,7 +77,6 @@ RSpec.describe NodeHelperExample do
         .with(mnano_amount_param)
         .and_return(Nano::Response.new('amount' => '1'))
     )
-    expect(subject.mnano_from_raw(mnano_amount)).to eq(1)
     expect(subject.mnano_from_raw(mnano_amount_param)).to eq(1)
   end
 
@@ -89,7 +86,6 @@ RSpec.describe NodeHelperExample do
         .with(amount_param)
         .and_return(Nano::Response.new('amount' => mnano_amount.to_s))
     )
-    expect(subject.mnano_to_raw(1)).to eq(mnano_amount)
     expect(subject.mnano_to_raw(amount_param)).to eq(mnano_amount)
   end
 
@@ -99,7 +95,6 @@ RSpec.describe NodeHelperExample do
         .with(nano_amount_param)
         .and_return(Nano::Response.new('amount' => '1'))
     )
-    expect(subject.nano_from_raw(nano_amount)).to eq(1)
     expect(subject.nano_from_raw(nano_amount_param)).to eq(1)
   end
 
@@ -109,7 +104,6 @@ RSpec.describe NodeHelperExample do
         .with(amount_param)
         .and_return(Nano::Response.new('amount' => nano_amount.to_s))
     )
-    expect(subject.nano_to_raw(1)).to eq(nano_amount)
     expect(subject.nano_to_raw(amount_param)).to eq(nano_amount)
   end
 
@@ -119,7 +113,6 @@ RSpec.describe NodeHelperExample do
         .with(pending_hash_param)
         .and_return(Nano::Response.new('exists' => '1'))
     )
-    expect(subject.pending_exists?(pending_hash)).to eq(true)
     expect(subject.pending_exists?(pending_hash_param)).to eq(true)
   end
 
