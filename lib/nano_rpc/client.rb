@@ -10,11 +10,12 @@ module Nano
   class Client
     include Nano::ApplicationHelper
 
-    attr_accessor :host, :port
+    attr_accessor :host, :port, :auth
 
-    def initialize(host: 'localhost', port: 7076)
+    def initialize(host: 'localhost', port: 7076, auth: nil)
       @host = host
       @port = port
+      @auth = auth
     end
 
     # Condense host/port on object inspection
@@ -59,8 +60,16 @@ module Nano
       data
     end
 
+    def headers
+      if @auth.nil?
+        {"Content-Type" => "json"}
+      else
+        {"Authorization" => @auth, "Content-Type" => "json"}
+      end
+    end
+
     def rest_client_post(url, params)
-      RestClient.post(url, params.to_json)
+      RestClient.post(url, params.to_json, headers)
     rescue Errno::ECONNREFUSED
       raise Nano::NodeConnectionFailure,
             "Node connection failure at #{url}"
@@ -70,7 +79,11 @@ module Nano
     end
 
     def url
-      "http://#{host}:#{port}"
+      if host.start_with?("http://") || host.start_with?("https://")
+        "#{host}:#{port}"
+      else
+        "http://#{host}:#{port}"
+      end
     end
 
     def ensure_status_success!(response)
