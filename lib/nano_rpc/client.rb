@@ -62,7 +62,7 @@ module Nano
 
     def headers
       headers = { 'Content-Type' => 'json' }
-      headers.merge('Authorization' => auth) unless auth.nil?
+      headers.merge!('Authorization' => auth) unless auth.nil?
       headers
     end
 
