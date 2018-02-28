@@ -61,11 +61,9 @@ module Nano
     end
 
     def headers
-      if @auth.nil?
-        {"Content-Type" => "json"}
-      else
-        {"Authorization" => @auth, "Content-Type" => "json"}
-      end
+      headers = { 'Content-Type' => 'json' }
+      headers.merge('Authorization' => auth) unless auth.nil?
+      headers
     end
 
     def rest_client_post(url, params)
