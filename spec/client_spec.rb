@@ -41,6 +41,22 @@ RSpec.describe Nano::Client do
     subject.call(action, params)
   end
 
+  it 'does not have an Authorization header when auth: is not specified' do
+    expect(subject.send :headers).to_not include('Authorization') 
+  end
+
+  context 'auth: is specified' do
+    let(:mock_key) { '00000000-0000-0000-0000-000000000000' }
+
+    before do
+      allow(subject).to receive(:auth).and_return(mock_key)
+    end
+
+    it 'includes an Authorization header' do
+      expect((subject.send :headers)['Authorization']).to eq(mock_key)
+    end
+  end
+
   context 'node connection failure' do
     before do
       allow(RestClient).to receive(:post).and_raise(Errno::ECONNREFUSED)
