@@ -41,19 +41,12 @@ RSpec.describe Nano::Client do
     subject.call(action, params)
   end
 
-  it 'does not have an Authorization header when auth: is not specified' do
-    expect(subject.send :headers).to_not include('Authorization') 
-  end
+  context 'auth header' do
+    let(:auth_key) { 'exampleauthkey' }
+    let(:client_with_auth_key) { described_class.new(auth: auth_key) }
 
-  context 'auth: is specified' do
-    let(:mock_key) { '00000000-0000-0000-0000-000000000000' }
-
-    before do
-      allow(subject).to receive(:auth).and_return(mock_key)
-    end
-
-    it 'includes an Authorization header' do
-      expect((subject.send :headers)['Authorization']).to eq(mock_key)
+    it 'allows and exposes auth header configuration' do
+      expect(client_with_auth_key.auth).to eq(auth_key)
     end
   end
 
