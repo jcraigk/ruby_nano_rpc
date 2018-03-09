@@ -62,7 +62,7 @@ module Nano
 
     def headers
       headers = { 'Content-Type' => 'json' }
-      headers.merge!('Authorization' => auth) unless auth.nil?
+      headers['Authorization'] = auth unless auth.nil?
       headers
     end
 
@@ -77,7 +77,7 @@ module Nano
     end
 
     def url
-      if host.start_with?("http://") || host.start_with?("https://")
+      if host.start_with?('http://', 'https://')
         "#{host}:#{port}"
       else
         "http://#{host}:#{port}"
