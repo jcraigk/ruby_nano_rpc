@@ -41,6 +41,15 @@ RSpec.describe Nano::Client do
     subject.call(action, params)
   end
 
+  context 'auth header' do
+    let(:auth_key) { 'exampleauthkey' }
+    let(:client_with_auth_key) { described_class.new(auth: auth_key) }
+
+    it 'allows and exposes auth header configuration' do
+      expect(client_with_auth_key.auth).to eq(auth_key)
+    end
+  end
+
   context 'node connection failure' do
     before do
       allow(RestClient).to receive(:post).and_raise(Errno::ECONNREFUSED)

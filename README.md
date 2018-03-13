@@ -40,6 +40,12 @@ client = Nano.client
 client = Nano::Client.new(host: 'mynanonode', port: 1234)
 ```
 
+If you're using [Nanode](https://www.nanode.co/) or some other public node, you can specify an Authorization header using `auth` too:
+
+```ruby
+
+```
+
 Then make a `call`, passing the action and data:
 
 ```ruby
