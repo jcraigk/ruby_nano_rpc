@@ -41,12 +41,32 @@ RSpec.describe Nano::Client do
     subject.call(action, params)
   end
 
-  context 'auth header' do
-    let(:auth_key) { 'exampleauthkey' }
-    let(:client_with_auth_key) { described_class.new(auth: auth_key) }
+  context 'headers and RestClient' do
+    let(:custom_headers) { { 'My-Header-X' => 'My-Value' } }
+    let(:auth_key) { 'some_auth_key' }
+    let(:client_with_headers) do
+      described_class.new(auth: auth_key, headers: custom_headers)
+    end
 
-    it 'allows and exposes auth header configuration' do
-      expect(client_with_auth_key.auth).to eq(auth_key)
+    it 'exposes auth instance var' do
+      expect(client_with_headers.auth).to eq(auth_key)
+    end
+
+    it 'exposes headers instance var' do
+      expect(client_with_headers.headers).to eq(custom_headers)
+    end
+
+    it '#call invokes RestClient#post with expected parameters' do
+      expect(RestClient).to receive(:post).with(
+        'http://localhost:7076',
+        { action: :version },
+        'Content-Type' => 'json',
+        'Authorization' => auth_key,
+        'My-Header-X' => 'My-Value'
+      )
+      expect do
+        client_with_headers.call(:version)
+      end.to raise_error(Nano::BadRequest)
     end
   end
 

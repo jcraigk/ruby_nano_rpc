@@ -10,12 +10,13 @@ module Nano
   class Client
     include Nano::ApplicationHelper
 
-    attr_accessor :host, :port, :auth
+    attr_reader :host, :port, :auth, :headers
 
-    def initialize(host: 'localhost', port: 7076, auth: nil)
+    def initialize(host: 'localhost', port: 7076, auth: nil, headers: nil)
       @host = host
       @port = port
       @auth = auth
+      @headers = headers
     end
 
     # Condense host/port on object inspection
@@ -54,20 +55,21 @@ module Nano
       response = rest_client_post(url, params)
       ensure_status_success!(response)
 
-      data = Nano::Response.new(JSON[response.body])
+      data = Nano::Response.new(JSON[response&.body])
       ensure_valid_response!(data)
 
       data
     end
 
-    def headers
-      headers = { 'Content-Type' => 'json' }
-      headers['Authorization'] = auth unless auth.nil?
-      headers
+    def request_headers
+      h = headers || {}
+      h['Content-Type'] = 'json'
+      h['Authorization'] = auth unless auth.nil?
+      h
     end
 
     def rest_client_post(url, params)
-      RestClient.post(url, params.to_json, headers)
+      RestClient.post(url, params, request_headers)
     rescue Errno::ECONNREFUSED
       raise Nano::NodeConnectionFailure,
             "Node connection failure at #{url}"
@@ -85,9 +87,9 @@ module Nano
     end
 
     def ensure_status_success!(response)
-      return if response.code == 200
+      return if response&.code == 200
       raise Nano::BadRequest,
-            "Error response from node: #{JSON[response.body]}"
+            "Error response from node: #{JSON[response&.body]}"
     end
 
     def ensure_valid_response!(data)

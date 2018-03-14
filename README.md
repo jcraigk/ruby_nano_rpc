@@ -40,13 +40,19 @@ client = Nano.client
 client = Nano::Client.new(host: 'mynanonode', port: 1234)
 ```
 
-If you're using [Nanode](https://www.nanode.co/) or some other public node, you can specify an Authorization header using `auth` too:
+If you're using [Nanode](https://www.nanode.co/) or similar service that requires `Authorization` key in HTTP header, you can specify it using `auth`.
 
 ```ruby
-
+client = Nano::Client.new(auth: 'someauthkey')
 ```
 
-Then make a `call`, passing the action and data:
+You can also specify custom headers as a hash. These will be sent with every RPC request.
+
+```ruby
+client = Nano::Client.new(headers: { 'Authorization' => 'someauthkey' })
+```
+
+Once the client is created, make a `call`, passing the action and data:
 
 ```ruby
   client.call(:account_balance, account: 'xrb_someaddress1234')
