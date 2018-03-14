@@ -37,10 +37,10 @@ RSpec.describe WalletHelperExample do
   let(:account_work_params) { { account: addr1, work: work1 } }
   let(:rep_param) { { representative: addr1 } }
   let(:send_nano_params) do
-    { from: addr1, to: addr2, amount: 100, work: work1 }
+    { from: addr1, to: addr2, amount: 100, id: 1, work: work1 }
   end
   let(:send_nano_opts) do
-    { source: addr1, destination: addr2, amount: 100, work: work1 }
+    { source: addr1, destination: addr2, amount: 100, id: 1, work: work1 }
   end
   let(:threshold_param) { { threshold: 10 } }
   let(:create_accounts_params) { { count: 2, work: true } }
@@ -165,13 +165,14 @@ RSpec.describe WalletHelperExample do
     expect(subject.destroy).to eq({})
   end
 
-  it 'provides #enter_password' do
+  it 'provides #enter_password and #unlock' do
     allow(subject).to(
       receive(:password_enter)
         .with(password: 'pass1')
         .and_return(Nano::Response.new('valid' => '1'))
     )
     expect(subject.enter_password(password: 'pass1')).to eq(true)
+    expect(subject.unlock(password: 'pass1')).to eq(true)
   end
 
   it 'provides #export' do

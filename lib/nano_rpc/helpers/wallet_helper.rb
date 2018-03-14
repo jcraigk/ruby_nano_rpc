@@ -60,6 +60,7 @@ module Nano::WalletHelper
   def enter_password(password:)
     password_enter(password: password).valid == 1
   end
+  alias unlock enter_password
 
   def export
     Nano::Response.new(JSON[wallet_export.json])
@@ -137,11 +138,12 @@ module Nano::WalletHelper
   end
   alias set_representative representative_set
 
-  def send_nano(from:, to:, amount:, work: nil)
+  def send_nano(from:, to:, amount:, id: nil, work: nil)
     send_currency(
       source: from,
       destination: to,
       amount: amount,
+      id: id,
       work: work
     ).block
   end

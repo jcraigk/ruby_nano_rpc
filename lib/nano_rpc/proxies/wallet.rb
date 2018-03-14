@@ -33,7 +33,9 @@ class Nano::Wallet
   proxy_method :payment_init
   proxy_method :payment_end, required: %i[account]
   proxy_method :receive, required: %i[account block], optional: %i[work]
-  proxy_method :send, required: %i[wallet source destination amount]
+  proxy_method :send,
+               required: %i[wallet source destination amount],
+               optional: %i[id work]
   proxy_method :search_pending
   proxy_method :wallet_add, required: %i[key], optional: %i[work]
   proxy_method :wallet_balance_total
