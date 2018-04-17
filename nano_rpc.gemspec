@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['jcraigk@gmail.com']
 
   spec.summary       = 'RPC wrapper for Nano digital nodes written in Ruby'
-  spec.description   = 'An RPC wrapper for Nano digitial currency nodes. ' \
+  spec.description   = 'An RPC wrapper for Nano digital currency nodes. ' \
                        'Arbitrary RPC access is provided along with proxy ' \
                        'objects that expose helper methods.'
   spec.homepage      = 'https://github.com/jcraigk/ruby_nano_rpc'
