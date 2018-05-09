@@ -45,7 +45,7 @@ class Nano::Node
                optional: %i[count sources destinations]
   proxy_method :search_pending, required: %i[wallet]
   proxy_method :search_pending_all
-  proxy_method :stats, require: %i[type]
+  proxy_method :stats, required: %i[type]
   proxy_method :stop
   proxy_method :successors, required: %i[block count]
   proxy_method :unchecked, required: %i[count]
