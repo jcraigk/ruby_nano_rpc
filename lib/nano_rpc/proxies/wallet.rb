@@ -38,6 +38,7 @@ class Nano::Wallet
                optional: %i[id work]
   proxy_method :search_pending
   proxy_method :wallet_add, required: %i[key], optional: %i[work]
+  proxy_method :wallet_add_watch, required: %i[accounts]
   proxy_method :wallet_balance_total
   proxy_method :wallet_balances, optional: %i[threshold]
   proxy_method :wallet_change_seed, required: %i[seed]
@@ -45,6 +46,7 @@ class Nano::Wallet
   proxy_method :wallet_destroy
   proxy_method :wallet_export
   proxy_method :wallet_frontiers
+  proxy_method :wallet_ledger
   proxy_method :wallet_locked
   proxy_method :wallet_pending,
                required: %i[count], optional: %i[threshold source]

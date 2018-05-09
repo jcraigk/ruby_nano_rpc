@@ -6,16 +6,20 @@ class Nano::Node
   proxy_method :available_supply
   proxy_method :block, required: %i[hash]
   proxy_method :block_account, required: %i[hash]
+  proxy_method :block_confirm, required: %i[hash]
   proxy_method :block_count
   proxy_method :block_count_type
   proxy_method :block_create,
-               required: %i[type key representative source], optional: %i[work]
+               required: %i[type key representative source],
+               optional: %i[work]
   proxy_method :blocks, required: %i[hashes]
   proxy_method :blocks_info,
-               required: %i[hashes], optional: %i[pending source]
+               required: %i[hashes],
+               optional: %i[pending source balance]
   proxy_method :bootstrap, required: %i[address port]
   proxy_method :bootstrap_any
   proxy_method :chain, required: %i[block count]
+  proxy_method :confirmation_history
   proxy_method :deterministic_key, required: %i[seed index]
   proxy_method :frontier_count
   proxy_method :history, required: %i[hash count]
@@ -35,11 +39,13 @@ class Nano::Node
   proxy_method :receive_minimum
   proxy_method :receive_minimum_set, required: %i[amount]
   proxy_method :representatives
+  proxy_method :representatives_online
   proxy_method :republish,
                required: %i[hash],
                optional: %i[count sources destinations]
   proxy_method :search_pending, required: %i[wallet]
   proxy_method :search_pending_all
+  proxy_method :stats, require: %i[type]
   proxy_method :stop
   proxy_method :successors, required: %i[block count]
   proxy_method :unchecked, required: %i[count]

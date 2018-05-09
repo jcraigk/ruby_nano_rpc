@@ -33,7 +33,7 @@ class Nano::Account
   proxy_method :frontiers, required: %i[count]
   proxy_method :ledger,
                required: %i[count],
-               optional: %i[representative weight pending sorting]
+               optional: %i[representative weight pending modified_since sorting]
   proxy_method :validate_account_number
   proxy_method :pending, required: %i[count], optional: %i[threshold exists]
   proxy_method :payment_wait, required: %i[amount timeout]

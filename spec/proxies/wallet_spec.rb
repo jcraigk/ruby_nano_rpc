@@ -20,6 +20,7 @@ RSpec.describe Nano::Wallet do
       search_pending
       send
       wallet_add
+      wallet_add_watch
       wallet_balance_total
       wallet_balances
       wallet_change_seed
@@ -27,6 +28,7 @@ RSpec.describe Nano::Wallet do
       wallet_destroy
       wallet_export
       wallet_frontiers
+      wallet_ledger
       wallet_locked
       wallet_pending
       wallet_representative

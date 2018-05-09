@@ -8,6 +8,7 @@ RSpec.describe Nano::Node do
       available_supply
       block
       block_account
+      block_confirm
       block_count
       block_count_type
       block_create
@@ -16,6 +17,7 @@ RSpec.describe Nano::Node do
       bootstrap
       bootstrap_any
       chain
+      confirmation_history
       deterministic_key
       frontier_count
       history
@@ -35,9 +37,11 @@ RSpec.describe Nano::Node do
       receive_minimum
       receive_minimum_set
       representatives
+      representatives_online
       republish
       search_pending
       search_pending_all
+      stats
       stop
       successors
       unchecked

@@ -15,6 +15,10 @@ module Nano::WalletHelper
     wallet_add(key: key, work: work).account
   end
 
+  def add_watch(accounts:)
+    wallet_add_watch(accounts: accounts).success == ''
+  end
+
   def balance
     wallet_balance_total.balance
   end
@@ -72,6 +76,10 @@ module Nano::WalletHelper
 
   def init_payment
     payment_init.status == 'Ready'
+  end
+
+  def ledger
+    wallet_ledger
   end
 
   def locked?
