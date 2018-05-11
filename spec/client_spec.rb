@@ -59,7 +59,7 @@ RSpec.describe Nano::Client do
     it '#call invokes RestClient#post with expected parameters' do
       expect(RestClient).to receive(:post).with(
         'http://localhost:7076',
-        { action: :version },
+        { action: :version }.to_json,
         'Content-Type' => 'json',
         'Authorization' => auth_key,
         'My-Header-X' => 'My-Value'

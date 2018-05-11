@@ -54,7 +54,6 @@ module Nano
     def rpc_post(params)
       response = rest_client_post(url, params)
       ensure_status_success!(response)
-
       data = Nano::Response.new(JSON[response&.body])
       ensure_valid_response!(data)
 
@@ -69,7 +68,7 @@ module Nano
     end
 
     def rest_client_post(url, params)
-      RestClient.post(url, params, request_headers)
+      RestClient.post(url, params.to_json, request_headers)
     rescue Errno::ECONNREFUSED
       raise Nano::NodeConnectionFailure,
             "Node connection failure at #{url}"
