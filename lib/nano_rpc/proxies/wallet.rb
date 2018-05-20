@@ -8,7 +8,7 @@ class Nano::Wallet
   def initialize(seed = nil, opts = {})
     unless seed.is_a?(String)
       raise Nano::MissingParameters,
-            'Missing argument: address (str)'
+            'Missing argument: seed (str)'
     end
 
     @seed = seed
