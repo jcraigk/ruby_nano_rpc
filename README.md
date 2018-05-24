@@ -57,22 +57,22 @@ node = NanoRpc::Node.new(headers: { 'Authorization' => 'someauthkey' })
 Once the node is setup, make a `call`, passing the action and data:
 
 ```ruby
-node.call(:account_balance, account: 'xrb_someaddress1234')
+node.call(:account_balance, account: 'xrb_1234')
 # => {"balance"=>100, "pending"=>0}
-````
+```
 
 Response data are provided as [Hashie](https://github.com/intridea/hashie) objects with integer coercion, indifferent access, and method access.
 
 ```ruby
-  data = node.call(:account_balance, account: 'xrb_someaddress1234')
-  # => {"balance"=>100, "pending"=>0}
-  data.balance
-  # => 100
-  data[:balance]
-  # => 100
-  data['balance']
-  # => 100
-````
+data = node.call(:account_balance, account: 'xrb_1234')
+# => {"balance"=>100, "pending"=>0}
+data.balance
+# => 100
+data[:balance]
+# => 100
+data['balance']
+# => 100
+```
 
 ### Proxy Objects / Helper Methods
 
@@ -86,35 +86,27 @@ Proxy objects are provided to ease interaction with the API by providing logical
 `Account`, `Accounts`, and `Wallet` each require a single parameter to be passed during initialization (`address`, `addresses`, and `seed`, respectively).  This parameter is persisted for subsequent calls.  All RPC methods are provided directly as methods.
 
 ```ruby
-  account = NanoRpc::Account.new('xrb_someaddress1234')
+account = node.account('xrb_1234') # Account address required
+accounts = node.accounts(['xrb_1234', 'xrb_456']) # Array of account addresses required
+wallet = node.wallet('3AF91AE') # Wallet seed required
+```
 
-  account.account_balance
-  # => {"balance"=>100, "pending"=>5}
-  account.account_balance.balance
-  # => 100
+You can call standard RPC methods on each object:
+
+```ruby
+account.account_balance
+# => {"balance"=>100, "pending"=>5}
+account.account_balance.balance
+# => 100
 ```
 
 There are also helper methods to bypass repetitive nested calls:
 
 ```ruby
-  account.balance
-  # => 100
-  account.pending_balance
-  # => 5
-```
-
-You can point each proxy object at its own node by passing in a node instance:
-
-```ruby
-node = NanoRpc::Node.new(host: 'mynanonode', port: 1234)
-account = NanoRpc::Account.new('xrb_someaddress1234', node: node)
-```
-
-Or, easier, you can access acounts and wallets from the node itself:
-
-```ruby
-account = node.access_account('xrb_someaddress1234')
-wallet = node.access_wallet('3AF91AE')
+account.balance
+# => 100
+account.pending_balance
+# => 5
 ```
 
 For a comprehensive guide, see the [Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki).
