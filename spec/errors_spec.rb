@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-RSpec.describe 'Nano errors' do
+RSpec.describe 'NanoRpc errors' do
   describe NanoRpc::Error do
     it 'is a StandardError' do
       expect(subject).to be_a(StandardError)
