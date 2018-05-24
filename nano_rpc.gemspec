@@ -5,7 +5,7 @@ require 'nano_rpc/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'nano_rpc'
-  spec.version       = Nano::VERSION
+  spec.version       = NanoRpc::VERSION
   spec.authors       = ['Justin Craig-Kuhn (JCK)']
   spec.email         = ['jcraigk@gmail.com']
 

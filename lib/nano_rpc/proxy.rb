@@ -1,11 +1,11 @@
 # frozen_string_literal: true
-module Nano::Proxy
-  include Nano::ApplicationHelper
+module NanoRpc::Proxy
+  include NanoRpc::ApplicationHelper
 
   attr_accessor :client
 
   def initialize(opts = {})
-    @client = opts[:client] || Nano.client
+    @client = opts[:client] || NanoRpc.client
     self.class.proxy_methods&.each { |m| define_proxy_method(m) }
   end
 
@@ -91,14 +91,14 @@ module Nano::Proxy
   def ensure_required_params!
     missing_params = required_params - opts_keys
     return unless missing_params.any?
-    raise Nano::MissingParameters,
+    raise NanoRpc::MissingParameters,
           "Missing required parameter(s): #{missing_params.join(', ')}"
   end
 
   def prevent_forbidden_params!
     forbidden_params = base_param_keys + opts_keys - allowed_params
     return unless forbidden_params.any?
-    raise Nano::ForbiddenParameter,
+    raise NanoRpc::ForbiddenParameter,
           "Forbidden parameter(s) passed: #{forbidden_params.join(', ')}"
   end
 

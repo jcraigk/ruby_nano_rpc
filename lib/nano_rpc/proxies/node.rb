@@ -1,7 +1,7 @@
 # frozen_string_literal: true
-class Nano::Node
-  include Nano::Proxy
-  include Nano::NodeHelper
+class NanoRpc::Node
+  include NanoRpc::Proxy
+  include NanoRpc::NodeHelper
 
   proxy_method :available_supply
   proxy_method :block, required: %i[hash]

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-RSpec.describe Nano::Client do
+RSpec.describe NanoRpc::Client do
   subject { described_class.new }
   let(:client_with_config) do
     described_class.new(host: '127.0.0.1', port: 7077)
@@ -21,7 +21,7 @@ RSpec.describe Nano::Client do
   let(:addresses) { [addr1, addr2] }
 
   it 'provides a client instance on namespace' do
-    expect(Nano.client.class).to eq(described_class)
+    expect(NanoRpc.client.class).to eq(described_class)
   end
 
   it 'provides default configuration' do
@@ -66,7 +66,7 @@ RSpec.describe Nano::Client do
       )
       expect do
         client_with_headers.call(:version)
-      end.to raise_error(Nano::BadRequest)
+      end.to raise_error(NanoRpc::BadRequest)
     end
   end
 
@@ -78,7 +78,7 @@ RSpec.describe Nano::Client do
     it 'raises NodeConnectionFailure and provides error message' do
       expect { subject.call(action, params) }.to(
         raise_error(
-          Nano::NodeConnectionFailure,
+          NanoRpc::NodeConnectionFailure,
           'Node connection failure at http://localhost:7076'
         )
       )
@@ -95,7 +95,7 @@ RSpec.describe Nano::Client do
     it 'raises NodeConnectionFailure and provides error message' do
       expect { subject.call(action, params) }.to(
         raise_error(
-          Nano::NodeOpenTimeout,
+          NanoRpc::NodeOpenTimeout,
           'Node failed to respond in time'
         )
       )
@@ -118,9 +118,9 @@ RSpec.describe Nano::Client do
       context 'with success response from node' do
         let(:response_json) { valid_response_json }
 
-        it 'converts to Nano::Response' do
+        it 'converts to NanoRpc::Response' do
           response = client_call
-          expect(response.class).to eq(Nano::Response)
+          expect(response.class).to eq(NanoRpc::Response)
           expect(response['balance']).to eq(1000)
         end
       end
@@ -131,7 +131,7 @@ RSpec.describe Nano::Client do
         it 'raises InvalidRequest and provides error message' do
           expect { client_call }.to(
             raise_error(
-              Nano::InvalidRequest,
+              NanoRpc::InvalidRequest,
               "Invalid request: #{error_msg}"
             )
           )
@@ -150,7 +150,7 @@ RSpec.describe Nano::Client do
       it 'raises BadReques and provides body as string in error message' do
         expect { client_call }.to(
           raise_error(
-            Nano::BadRequest,
+            NanoRpc::BadRequest,
             "Error response from node: #{JSON[response_body]}"
           )
         )
@@ -163,25 +163,25 @@ RSpec.describe Nano::Client do
   end
 
   context 'proxy objects' do
-    it 'pulls #seed from Nano::Wallet' do
+    it 'pulls #seed from NanoRpc::Wallet' do
       expect(subject).to(
         receive(:rpc_post).with(action: action, wallet: seed1)
       )
-      subject.call(action, wallet: Nano::Wallet.new(seed1))
+      subject.call(action, wallet: NanoRpc::Wallet.new(seed1))
     end
 
-    it 'pulls #addresses from Nano::Accounts' do
+    it 'pulls #addresses from NanoRpc::Accounts' do
       expect(subject).to(
         receive(:rpc_post).with(action: action, accounts: addresses)
       )
-      subject.call(action, accounts: Nano::Accounts.new(addresses))
+      subject.call(action, accounts: NanoRpc::Accounts.new(addresses))
     end
 
-    it 'pulls #address from Nano::Account' do
+    it 'pulls #address from NanoRpc::Account' do
       expect(subject).to(
         receive(:rpc_post).with(action: action, account: addr1)
       )
-      subject.call(action, account: Nano::Account.new(addr1))
+      subject.call(action, account: NanoRpc::Account.new(addr1))
     end
   end
 end

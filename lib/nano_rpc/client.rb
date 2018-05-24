@@ -2,13 +2,13 @@
 require 'rest-client'
 require 'json'
 
-module Nano
+module NanoRpc
   def self.client
     @client ||= Client.new
   end
 
   class Client
-    include Nano::ApplicationHelper
+    include NanoRpc::ApplicationHelper
 
     attr_reader :host, :port, :auth, :headers
 
@@ -42,11 +42,11 @@ module Nano
     end
 
     def proxy_method(v)
-      if v.is_a?(Nano::Wallet)
+      if v.is_a?(NanoRpc::Wallet)
         :seed
-      elsif v.is_a?(Nano::Accounts)
+      elsif v.is_a?(NanoRpc::Accounts)
         :addresses
-      elsif v.is_a?(Nano::Account)
+      elsif v.is_a?(NanoRpc::Account)
         :address
       end
     end
@@ -54,7 +54,7 @@ module Nano
     def rpc_post(params)
       response = rest_client_post(url, params)
       ensure_status_success!(response)
-      data = Nano::Response.new(JSON[response&.body])
+      data = NanoRpc::Response.new(JSON[response&.body])
       ensure_valid_response!(data)
 
       data
@@ -70,10 +70,10 @@ module Nano
     def rest_client_post(url, params)
       RestClient.post(url, params.to_json, request_headers)
     rescue Errno::ECONNREFUSED
-      raise Nano::NodeConnectionFailure,
+      raise NanoRpc::NodeConnectionFailure,
             "Node connection failure at #{url}"
     rescue RestClient::Exceptions::OpenTimeout
-      raise Nano::NodeOpenTimeout,
+      raise NanoRpc::NodeOpenTimeout,
             'Node failed to respond in time'
     end
 
@@ -87,13 +87,13 @@ module Nano
 
     def ensure_status_success!(response)
       return if response&.code == 200
-      raise Nano::BadRequest,
+      raise NanoRpc::BadRequest,
             "Error response from node: #{JSON[response&.body]}"
     end
 
     def ensure_valid_response!(data)
       return unless data['error']
-      raise Nano::InvalidRequest,
+      raise NanoRpc::InvalidRequest,
             "Invalid request: #{data['error']}"
     end
   end

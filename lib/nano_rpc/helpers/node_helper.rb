@@ -1,13 +1,13 @@
 # frozen_string_literal: true
-module Nano::NodeHelper
-  include Nano::ApplicationHelper
+module NanoRpc::NodeHelper
+  include NanoRpc::ApplicationHelper
 
   def account_containing_block(hash:)
     block_account(hash: hash).account
   end
 
   def create_wallet
-    Nano::Wallet.new(wallet_create.wallet, client: client)
+    NanoRpc::Wallet.new(wallet_create.wallet, client: client)
   end
 
   def knano_from_raw(amount:)

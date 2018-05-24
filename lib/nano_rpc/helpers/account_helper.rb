@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-module Nano::AccountHelper
-  include Nano::ApplicationHelper
+module NanoRpc::AccountHelper
+  include NanoRpc::ApplicationHelper
 
   def balance
     account_balance.balance

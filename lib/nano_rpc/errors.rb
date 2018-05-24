@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module Nano
+module NanoRpc
   class Error < StandardError; end
 
   class NodeConnectionFailure < Error; end

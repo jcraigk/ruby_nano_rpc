@@ -2,28 +2,28 @@
 require 'spec_helper'
 
 RSpec.describe 'Nano errors' do
-  describe Nano::Error do
+  describe NanoRpc::Error do
     it 'is a StandardError' do
       expect(subject).to be_a(StandardError)
     end
   end
 
   shared_examples 'child error' do
-    it 'is a Nano::Error' do
-      expect(subject).to be_a(Nano::Error)
+    it 'is a NanoRpc::Error' do
+      expect(subject).to be_a(NanoRpc::Error)
     end
   end
 
-  describe Nano::BadRequest do
+  describe NanoRpc::BadRequest do
     include_examples 'child error'
   end
-  describe Nano::InvalidRequest do
+  describe NanoRpc::InvalidRequest do
     include_examples 'child error'
   end
-  describe Nano::ForbiddenParameter do
+  describe NanoRpc::ForbiddenParameter do
     include_examples 'child error'
   end
-  describe Nano::MissingParameters do
+  describe NanoRpc::MissingParameters do
     include_examples 'child error'
   end
 end

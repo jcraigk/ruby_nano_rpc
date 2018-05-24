@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-# This spec covers both Nano::Proxy and Nano::ProxyContext
+# This spec covers both NanoRpc::Proxy and NanoRpc::ProxyContext
 
 class ProxyExample
-  include Nano::Proxy
+  include NanoRpc::Proxy
 
   proxy_params account: :address
   proxy_method :some_action,
@@ -16,19 +16,19 @@ end
 RSpec.describe ProxyExample do
   subject { described_class.new }
   let(:addr1) { 'nano_address1' }
-  let(:client) { spy('Nano::Client') }
+  let(:client) { spy('NanoRpc::Client') }
   let(:expected_proxy_methods) do
     %i[proxytest_another_action single_param_method some_action]
   end
 
   before do
-    allow(Nano).to receive(:client).and_return(client)
+    allow(NanoRpc).to receive(:client).and_return(client)
     allow(subject).to receive(:address).and_return(addr1)
     allow(client).to receive(:call).and_return(true)
   end
 
   context 'custom client' do
-    let(:custom_client) { Nano::Client.new(host: 'mynanonode', port: 1234) }
+    let(:custom_client) { NanoRpc::Client.new(host: 'mynanonode', port: 1234) }
     subject { described_class.new(client: custom_client) }
 
     it 'uses the custom client' do
@@ -70,7 +70,7 @@ RSpec.describe ProxyExample do
   it 'does not persist parameters across method calls' do
     subject.some_action(param1: 'value', param2: 'value')
     expect { subject.some_action(param1: 'value') }.to(
-      raise_error(Nano::MissingParameters)
+      raise_error(NanoRpc::MissingParameters)
     )
   end
 
@@ -103,7 +103,7 @@ RSpec.describe ProxyExample do
   it 'raises MissingParameters when required parameters missing' do
     expect { subject.some_action(param1: 'value') }.to(
       raise_error(
-        Nano::MissingParameters,
+        NanoRpc::MissingParameters,
         'Missing required parameter(s): param2'
       )
     )
@@ -120,7 +120,7 @@ RSpec.describe ProxyExample do
       )
     end.to(
       raise_error(
-        Nano::ForbiddenParameter,
+        NanoRpc::ForbiddenParameter,
         'Forbidden parameter(s) passed: bad_param1, bad_param2'
       )
     )

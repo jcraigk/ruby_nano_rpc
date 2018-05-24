@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 class AccountsHelperExample
-  include Nano::AccountsHelper
+  include NanoRpc::AccountsHelper
 end
 
 RSpec.describe AccountsHelperExample do
@@ -28,14 +28,14 @@ RSpec.describe AccountsHelperExample do
 
   it 'provides #balances' do
     allow(subject).to receive(:accounts_balances).and_return(
-      Nano::Response.new(balances_data)
+      NanoRpc::Response.new(balances_data)
     )
     expect(subject.balances).to eq(addr1 => 100, addr2 => 50)
   end
 
   it 'provides #pending_balances and #balances_pending' do
     allow(subject).to receive(:accounts_balances).and_return(
-      Nano::Response.new(balances_data)
+      NanoRpc::Response.new(balances_data)
     )
     expect(subject.pending_balances).to eq(addr1 => 2, addr2 => 3)
     expect(subject.balances_pending).to eq(addr1 => 2, addr2 => 3)
@@ -43,7 +43,7 @@ RSpec.describe AccountsHelperExample do
 
   it 'provides #frontiers' do
     allow(subject).to receive(:accounts_frontiers).and_return(
-      Nano::Response.new(frontiers_data)
+      NanoRpc::Response.new(frontiers_data)
     )
     expect(subject.frontiers).to eq(frontiers_hash)
   end
@@ -51,7 +51,7 @@ RSpec.describe AccountsHelperExample do
   it 'provides #move' do
     allow(subject).to receive(:account_move)
       .with(wallet: seed2, source: seed1)
-      .and_return(Nano::Response.new('moved' => '1'))
+      .and_return(NanoRpc::Response.new('moved' => '1'))
     expect(subject.move(from: seed1, to: seed2)).to eq(true)
   end
 
@@ -59,7 +59,7 @@ RSpec.describe AccountsHelperExample do
     allow(subject).to receive(:accounts_pending)
       .with(pending_params)
       .and_return(
-        Nano::Response.new('blocks' => pending_hash)
+        NanoRpc::Response.new('blocks' => pending_hash)
       )
     expect(subject.pending(pending_params)).to eq(pending_hash)
     expect(subject.pending_blocks(pending_params)).to eq(pending_hash)

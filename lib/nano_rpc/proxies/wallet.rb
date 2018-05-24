@@ -1,13 +1,13 @@
 # frozen_string_literal: true
-class Nano::Wallet
-  include Nano::Proxy
-  include Nano::WalletHelper
+class NanoRpc::Wallet
+  include NanoRpc::Proxy
+  include NanoRpc::WalletHelper
 
   attr_reader :seed
 
   def initialize(seed = nil, opts = {})
     unless seed.is_a?(String)
-      raise Nano::MissingParameters,
+      raise NanoRpc::MissingParameters,
             'Missing argument: seed (str)'
     end
 

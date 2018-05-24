@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-module Nano::AccountsHelper
-  include Nano::ApplicationHelper
+module NanoRpc::AccountsHelper
+  include NanoRpc::ApplicationHelper
 
   def balances
     accounts_balances
@@ -36,11 +36,11 @@ module Nano::AccountsHelper
   end
   alias pending_blocks pending
 
-  # Array-like access for Nano::Account
+  # Array-like access for NanoRpc::Account
   def [](idx)
     return unless @addresses[idx]
     @account_objects ||= []
-    @account_objects[idx] ||= Nano::Account.new(@addresses[idx], client: client)
+    @account_objects[idx] ||= NanoRpc::Account.new(@addresses[idx], client: client)
   end
 
   def <<(val)
@@ -49,7 +49,7 @@ module Nano::AccountsHelper
 
   def each(&_block)
     @addresses.each do |address|
-      yield Nano::Account.new(address, client: client)
+      yield NanoRpc::Account.new(address, client: client)
     end
   end
 

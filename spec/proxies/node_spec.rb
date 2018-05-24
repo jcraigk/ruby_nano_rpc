@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-RSpec.describe Nano::Node do
+RSpec.describe NanoRpc::Node do
   subject { described_class.new }
   let(:expected_proxy_methods) do
     %i[

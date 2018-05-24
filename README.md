@@ -34,22 +34,22 @@ First setup the client:
 
 ```ruby
 # Connect to the default node (localhost:7076)
-client = Nano.client
+client = NanoRpc.client
 
 # or connect to a custom node
-client = Nano::Client.new(host: 'mynanonode', port: 1234)
+client = NanoRpc::Client.new(host: 'mynanonode', port: 1234)
 ```
 
 If you're using [Nanode](https://www.nanode.co/) or similar service that requires `Authorization` key in HTTP header, you can specify it using `auth`.
 
 ```ruby
-client = Nano::Client.new(auth: 'someauthkey')
+client = NanoRpc::Client.new(auth: 'someauthkey')
 ```
 
 You can also specify custom headers as a hash. These will be sent with every RPC request.
 
 ```ruby
-client = Nano::Client.new(headers: { 'Authorization' => 'someauthkey' })
+client = NanoRpc::Client.new(headers: { 'Authorization' => 'someauthkey' })
 ```
 
 Once the client is created, make a `call`, passing the action and data:
@@ -76,15 +76,15 @@ Response data are provided as [Hashie](https://github.com/intridea/hashie) objec
 
 Proxy objects are provided to ease interaction with the API by providing logically grouped helper methods. Here we do not strictly follow the grouping as expressed in the [Nano RPC Docs](https://github.com/clemahieu/raiblocks/wiki/RPC-protocol).  Instead, the following objects are provided:
 
-* [Nano::Account](https://github.com/jcraigk/ruby_nano_rpc/wiki/Nano::Account)
-* [Nano::Accounts](https://github.com/jcraigk/ruby_nano_rpc/wiki/Nano::Accounts)
-* [Nano::Node](https://github.com/jcraigk/ruby_nano_rpc/wiki/Nano::Node)
-* [Nano::Wallet](https://github.com/jcraigk/ruby_nano_rpc/wiki/Nano::Wallet)
+* [NanoRpc::Account](https://github.com/jcraigk/ruby_nano_rpc/wiki/NanoRpc::Account)
+* [NanoRpc::Accounts](https://github.com/jcraigk/ruby_nano_rpc/wiki/NanoRpc::Accounts)
+* [NanoRpc::Node](https://github.com/jcraigk/ruby_nano_rpc/wiki/NanoRpc::Node)
+* [NanoRpc::Wallet](https://github.com/jcraigk/ruby_nano_rpc/wiki/NanoRpc::Wallet)
 
 `Account`, `Accounts`, and `Wallet` each require a single parameter to be passed during initialization (`address`, `addresses`, and `seed`, respectively).  This parameter is persisted for subsequent calls.  All RPC methods are provided directly as methods.
 
 ```ruby
-  account = Nano::Account.new('xrb_someaddress1234')
+  account = NanoRpc::Account.new('xrb_someaddress1234')
 
   account.account_balance
   # => {"balance"=>100, "pending"=>5}
@@ -104,8 +104,8 @@ There are also helper methods to bypass repetitive nested calls:
 You can point each proxy object at its own node by passing in a client instance:
 
 ```ruby
-  client = Nano::Client.new(host: 'mynanonode', port: 1234)
-  account = Nano::Account.new('xrb_someaddress1234', client: client)
+  client = NanoRpc::Client.new(host: 'mynanonode', port: 1234)
+  account = NanoRpc::Account.new('xrb_someaddress1234', client: client)
 ```
 
 For a comprehensive guide, see the [Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki).

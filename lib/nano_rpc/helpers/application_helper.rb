@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module Nano::ApplicationHelper
+module NanoRpc::ApplicationHelper
   private
 
   def inspect_prefix
