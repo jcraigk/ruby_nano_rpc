@@ -41,12 +41,12 @@ module NanoRpc
       args
     end
 
-    def proxy_method(v)
-      if v.is_a?(NanoRpc::Wallet)
+    def proxy_method(obj)
+      if obj.is_a?(NanoRpc::Wallet)
         :seed
-      elsif v.is_a?(NanoRpc::Accounts)
+      elsif obj.is_a?(NanoRpc::Accounts)
         :addresses
-      elsif v.is_a?(NanoRpc::Account)
+      elsif obj.is_a?(NanoRpc::Account)
         :address
       end
     end
