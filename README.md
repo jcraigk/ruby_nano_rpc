@@ -1,3 +1,5 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
+
 ![Ruby Nano RPC Logo](https://i.imgur.com/ihmmYcp.png)
 
 Nano RPC is a Ruby wrapper for making Remote Procedure Calls against Nano digital currency nodes. Arbitrary RPC access is provided along with proxy objects that expose helper methods ([Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki)).
