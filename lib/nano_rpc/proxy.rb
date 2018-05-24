@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 module NanoRpc::Proxy
-  include NanoRpc::ApplicationHelper
-
   attr_reader :node
 
   def initialize(opts = {})
-    @node ||= opts[:node]
+    @node ||= opts[:node] || NanoRpc.node
     self.class.proxy_methods&.each { |m| define_proxy_method(m) }
   end
 

@@ -16,23 +16,23 @@ end
 RSpec.describe ProxyExample do
   subject { described_class.new }
   let(:addr1) { 'nano_address1' }
-  let(:client) { spy('NanoRpc::Client') }
+  let(:node) { spy('NanoRpc::Node') }
   let(:expected_proxy_methods) do
     %i[proxytest_another_action single_param_method some_action]
   end
 
   before do
-    allow(NanoRpc).to receive(:client).and_return(client)
+    allow(NanoRpc).to receive(:node).and_return(node)
     allow(subject).to receive(:address).and_return(addr1)
-    allow(client).to receive(:call).and_return(true)
+    allow(node).to receive(:call).and_return(true)
   end
 
-  context 'custom client' do
-    let(:custom_client) { NanoRpc::Client.new(host: 'mynanonode', port: 1234) }
-    subject { described_class.new(client: custom_client) }
+  context 'custom node' do
+    let(:custom_node) { NanoRpc::Node.new(host: 'mynanonode', port: 1234) }
+    subject { described_class.new(node: custom_node) }
 
-    it 'uses the custom client' do
-      expect(custom_client).to receive(:call).with(
+    it 'uses the custom node' do
+      expect(custom_node).to receive(:call).with(
         :proxytest_another_action, account: addr1
       )
       subject.proxytest_another_action
@@ -48,8 +48,8 @@ RSpec.describe ProxyExample do
     expect(subject.methods).to include(*subject.proxy_methods)
   end
 
-  it 'invokes the client with expected parameters' do
-    expect(client).to receive(:call).with(
+  it 'invokes the node with expected parameters' do
+    expect(node).to receive(:call).with(
       :proxytest_another_action, account: addr1
     )
     subject.proxytest_another_action
@@ -57,7 +57,7 @@ RSpec.describe ProxyExample do
 
   context 'with single-key response matching method name' do
     before do
-      allow(client).to receive(:call).and_return(
+      allow(node).to receive(:call).and_return(
         proxytest_another_action: 'value'
       )
     end
@@ -82,7 +82,7 @@ RSpec.describe ProxyExample do
   end
 
   it 'allows passing single literal to single-parameter methods' do
-    expect(client).to receive(:call).with(
+    expect(node).to receive(:call).with(
       :single_param_method, account: addr1, param1: 'value'
     )
     subject.single_param_method('value')

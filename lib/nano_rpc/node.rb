@@ -8,7 +8,6 @@ module NanoRpc
   end
 
   class Node
-    include NanoRpc::ApplicationHelper
     include NanoRpc::Proxy
     include NanoRpc::NodeHelper
 

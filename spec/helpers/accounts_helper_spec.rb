@@ -6,7 +6,7 @@ class AccountsHelperExample
 end
 
 RSpec.describe AccountsHelperExample do
-  subject { described_class.new }
+  subject { NanoRpc::Accounts.new(['abc', 'def']) }
   let(:addr1) { 'nano_address1' }
   let(:addr2) { 'nano_address2' }
   let(:block1) { '9FE23A' }

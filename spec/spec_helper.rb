@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-# require 'simplecov'
-# SimpleCov.start
+require 'simplecov'
+SimpleCov.start
 
 require 'bundler/setup'
 require 'nano_rpc'

@@ -6,7 +6,7 @@ class AccountHelperExample
 end
 
 RSpec.describe AccountHelperExample do
-  subject { described_class.new }
+  subject { NanoRpc::Account.new('abc') }
   let(:history_data) do
     [{ 'hash' => seed1 }, { 'hash' => seed1 }]
   end

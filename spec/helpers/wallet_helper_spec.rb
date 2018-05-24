@@ -8,7 +8,7 @@ class WalletHelperExample
 end
 
 RSpec.describe WalletHelperExample do
-  subject { described_class.new }
+  subject { NanoRpc::Wallet.new('abcd') }
   let(:addr1) { 'nano_address1' }
   let(:addr2) { 'nano_address2' }
   let(:key1) { '34F0A3' }
