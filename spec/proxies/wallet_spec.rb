@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-RSpec.describe Nano::Wallet do
+RSpec.describe NanoRpc::Wallet do
   subject { described_class.new(seed) }
   let(:seed) { 'E929FBC3' }
   let(:expected_proxy_methods) do
@@ -48,7 +48,7 @@ RSpec.describe Nano::Wallet do
 
   it 'raises MissingParameters unless initialized with string' do
     expect { described_class.new }.to raise_error(
-      Nano::MissingParameters, 'Missing argument: address (str)'
+      NanoRpc::MissingParameters, 'Missing argument: seed (str)'
     )
   end
 

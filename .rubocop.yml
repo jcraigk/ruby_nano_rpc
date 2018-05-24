@@ -1,8 +1,15 @@
 AllCops:
   TargetRubyVersion: 2.5.0
   Exclude:
-    - 'bin/*'
+    - bin/*
   DisplayCopNames: true
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
+Metrics/ModuleLength:
+  Max: 200
+Metrics/ClassLength:
+  Max: 200
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
 Style/EmptyMethod:

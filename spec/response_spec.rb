@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-RSpec.describe Nano::Response do
+RSpec.describe NanoRpc::Response do
   subject { described_class.new(data) }
   let(:data) { { 'balance' => balance.to_s, 'float' => float } }
   let(:balance) { 1000 }

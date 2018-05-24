@@ -1,11 +1,9 @@
 # frozen_string_literal: true
-module Nano::Proxy
-  include Nano::ApplicationHelper
-
-  attr_accessor :client
+module NanoRpc::Proxy
+  attr_reader :node
 
   def initialize(opts = {})
-    @client = opts[:client] || Nano.client
+    @node ||= opts[:node] || NanoRpc.node
     self.class.proxy_methods&.each { |m| define_proxy_method(m) }
   end
 
@@ -35,9 +33,9 @@ module Nano::Proxy
 
   private
 
-  def define_proxy_method(m)
-    self.class.send(:define_method, method_alias(m)) do |args = {}|
-      @m = m
+  def define_proxy_method(meth)
+    self.class.send(:define_method, method_alias(meth)) do |args = {}|
+      @meth = meth
       @call_args = args
 
       validate_params!
@@ -46,7 +44,7 @@ module Nano::Proxy
   end
 
   def execute_call
-    expose_nested_data(@client.call(@m, @call_args))
+    expose_nested_data(node.call(@meth, @call_args))
   end
 
   def base_params
@@ -61,13 +59,16 @@ module Nano::Proxy
   end
 
   # Nano `send` action is also the method caller in Ruby ;)
-  def method_alias(m)
-    m == :send ? :send_currency : m
+  def method_alias(meth)
+    meth == :send ? :send_currency : meth
   end
 
   # If single-key response matches method name, expose nested data
   def expose_nested_data(data)
-    data.is_a?(Hash) && data.keys.map(&:to_s) == [@m.to_s] ? data[@m] : data
+    if data.is_a?(Hash) && data.keys.map(&:to_s) == [@meth.to_s]
+      return data[@meth]
+    end
+    data
   end
 
   def validate_params!
@@ -91,14 +92,14 @@ module Nano::Proxy
   def ensure_required_params!
     missing_params = required_params - opts_keys
     return unless missing_params.any?
-    raise Nano::MissingParameters,
+    raise NanoRpc::MissingParameters,
           "Missing required parameter(s): #{missing_params.join(', ')}"
   end
 
   def prevent_forbidden_params!
     forbidden_params = base_param_keys + opts_keys - allowed_params
     return unless forbidden_params.any?
-    raise Nano::ForbiddenParameter,
+    raise NanoRpc::ForbiddenParameter,
           "Forbidden parameter(s) passed: #{forbidden_params.join(', ')}"
   end
 
@@ -115,13 +116,13 @@ module Nano::Proxy
   end
 
   def required_params
-    return [] unless method_def && method_def[@m]
-    method_def[@m][:required] || []
+    return [] unless method_def && method_def[@meth]
+    method_def[@meth][:required] || []
   end
 
   def optional_params
-    return [] unless method_def && method_def[@m]
-    method_def[@m][:optional] || []
+    return [] unless method_def && method_def[@meth]
+    method_def[@meth][:optional] || []
   end
 
   def base_param_keys

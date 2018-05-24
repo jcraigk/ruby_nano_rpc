@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-module Nano::WalletHelper
-  include Nano::ApplicationHelper
+module NanoRpc::WalletHelper
+  include NanoRpc::ApplicationHelper
 
   def account_work(account:)
     work_get(account: account).work
@@ -8,7 +8,7 @@ module Nano::WalletHelper
 
   def accounts
     return [] unless account_list.accounts.size.positive?
-    Nano::Accounts.new(account_list.accounts, client: client)
+    NanoRpc::Accounts.new(account_list.accounts, node: node)
   end
 
   def add_key(key:, work: true)
@@ -49,12 +49,12 @@ module Nano::WalletHelper
 
   def create_account(work: true)
     address = account_create(work: work).account
-    Nano::Account.new(address, client: client)
+    NanoRpc::Account.new(address, node: node)
   end
 
   def create_accounts(count:, work: true)
     addresses = accounts_create(count: count, work: work).accounts
-    Nano::Accounts.new(addresses, client: client)
+    NanoRpc::Accounts.new(addresses, node: node)
   end
 
   def destroy
@@ -67,7 +67,7 @@ module Nano::WalletHelper
   alias unlock enter_password
 
   def export
-    Nano::Response.new(JSON[wallet_export.json])
+    NanoRpc::Response.new(JSON[wallet_export.json])
   end
 
   def frontiers
@@ -79,7 +79,7 @@ module Nano::WalletHelper
   end
 
   def ledger
-    wallet_ledger
+    wallet_ledger.accounts
   end
 
   def locked?

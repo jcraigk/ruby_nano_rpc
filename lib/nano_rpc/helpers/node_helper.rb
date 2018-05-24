@@ -1,13 +1,21 @@
 # frozen_string_literal: true
-module Nano::NodeHelper
-  include Nano::ApplicationHelper
+module NanoRpc::NodeHelper
+  include NanoRpc::ApplicationHelper
 
   def account_containing_block(hash:)
     block_account(hash: hash).account
   end
 
+  def account(address)
+    NanoRpc::Account.new(address, node: self)
+  end
+
+  def accounts(addresses)
+    NanoRpc::Accounts.new(addresses, node: self)
+  end
+
   def create_wallet
-    Nano::Wallet.new(wallet_create.wallet, client: client)
+    NanoRpc::Wallet.new(wallet_create.wallet, node: self)
   end
 
   def knano_from_raw(amount:)
@@ -44,6 +52,10 @@ module Nano::NodeHelper
 
   def total_supply
     available_supply.available
+  end
+
+  def wallet(seed)
+    NanoRpc::Wallet.new(seed, node: self)
   end
 
   def work_valid?(work:, hash:)

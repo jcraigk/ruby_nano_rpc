@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'hashie'
 
-class Nano::Response < Hash
+class NanoRpc::Response < Hash
   include ::Hashie::Extensions::MergeInitializer
   include ::Hashie::Extensions::IndifferentAccess
   include ::Hashie::Extensions::MethodAccess
@@ -17,15 +17,15 @@ class Nano::Response < Hash
     merge!(self) { |_k, v| to_f_or_i_or_s(v) }
   end
 
-  def to_f_or_i_or_s(v)
-    return if v.nil?
-    return v.to_i if big_integer?(v)
-    (float = Float(v)) && (float % 1.0).zero? ? float.to_i : float
+  def to_f_or_i_or_s(val)
+    return if val.nil?
+    return val.to_i if big_integer?(val)
+    (float = Float(val)) && (float % 1.0).zero? ? float.to_i : float
   rescue ArgumentError, TypeError
-    v
+    val
   end
 
-  def big_integer?(v)
-    v.respond_to?(:to_i) && v.to_i > 1_000_000_000_000_000
+  def big_integer?(val)
+    val.respond_to?(:to_i) && val.to_i > 1_000_000_000_000_000
   end
 end

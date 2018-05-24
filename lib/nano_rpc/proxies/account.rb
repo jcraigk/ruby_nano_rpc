@@ -1,13 +1,13 @@
 # frozen_string_literal: true
-class Nano::Account
-  include Nano::Proxy
-  include Nano::AccountHelper
+class NanoRpc::Account
+  include NanoRpc::Proxy
+  include NanoRpc::AccountHelper
 
   attr_reader :address
 
   def initialize(address = nil, opts = {})
     unless address.is_a?(String)
-      raise Nano::MissingParameters,
+      raise NanoRpc::MissingParameters,
             'Missing argument: address (str)'
     end
 
@@ -33,7 +33,9 @@ class Nano::Account
   proxy_method :frontiers, required: %i[count]
   proxy_method :ledger,
                required: %i[count],
-               optional: %i[representative weight pending modified_since sorting]
+               optional: %i[
+                 representative weight pending modified_since sorting
+               ]
   proxy_method :validate_account_number
   proxy_method :pending, required: %i[count], optional: %i[threshold exists]
   proxy_method :payment_wait, required: %i[amount timeout]

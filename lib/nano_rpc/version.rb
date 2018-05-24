@@ -1,4 +1,4 @@
 # frozen_string_literal: true
-module Nano
-  VERSION = '0.9.0'
+module NanoRpc
+  VERSION = '0.10.0'
 end

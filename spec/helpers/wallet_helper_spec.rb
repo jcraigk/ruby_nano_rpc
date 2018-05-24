@@ -4,11 +4,11 @@ require 'spec_helper'
 class WalletHelperExample
   attr_reader :client
 
-  include Nano::WalletHelper
+  include NanoRpc::WalletHelper
 end
 
 RSpec.describe WalletHelperExample do
-  subject { described_class.new }
+  subject { NanoRpc::Wallet.new('abcd') }
   let(:addr1) { 'nano_address1' }
   let(:addr2) { 'nano_address2' }
   let(:key1) { '34F0A3' }
@@ -60,7 +60,7 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:work_get)
         .with(account_param)
-        .and_return(Nano::Response.new('work' => work_id))
+        .and_return(NanoRpc::Response.new('work' => work_id))
     )
     expect(subject.account_work(account_param)).to eq(work_id)
   end
@@ -68,10 +68,10 @@ RSpec.describe WalletHelperExample do
   it 'provides #accounts' do
     allow(subject).to(
       receive(:account_list)
-        .and_return(Nano::Response.new('accounts' => addresses))
+        .and_return(NanoRpc::Response.new('accounts' => addresses))
     )
     accounts = subject.accounts
-    expect(accounts.class).to eq(Nano::Accounts)
+    expect(accounts.class).to eq(NanoRpc::Accounts)
     expect(accounts.addresses).to eq(addresses)
   end
 
@@ -79,15 +79,24 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:wallet_add)
         .with(add_account_params)
-        .and_return(Nano::Response.new('account' => seed1))
+        .and_return(NanoRpc::Response.new('account' => seed1))
     )
     expect(subject.add_key(add_account_params)).to eq(seed1)
+  end
+
+  it 'provides #add_watch' do
+    allow(subject).to(
+      receive(:wallet_add_watch)
+        .with(accounts: addresses)
+        .and_return(NanoRpc::Response.new('success' => ''))
+    )
+    expect(subject.add_watch(accounts: addresses)).to eq(true)
   end
 
   it 'provides #balance' do
     allow(subject).to(
       receive(:wallet_balance_total)
-        .and_return(Nano::Response.new(balance_data))
+        .and_return(NanoRpc::Response.new(balance_data))
     )
     expect(subject.balance).to eq(100)
   end
@@ -96,7 +105,7 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:wallet_balances)
         .with(threshold_param)
-        .and_return(Nano::Response.new(balances_data))
+        .and_return(NanoRpc::Response.new(balances_data))
     )
     expect(subject.balances(threshold_param)).to eq(balances_threshold_data)
   end
@@ -104,7 +113,7 @@ RSpec.describe WalletHelperExample do
   it 'provides #begin_payment' do
     allow(subject).to(
       receive(:payment_begin)
-        .and_return(Nano::Response.new('account' => addr1))
+        .and_return(NanoRpc::Response.new('account' => addr1))
     )
     expect(subject.begin_payment).to eq(addr1)
   end
@@ -113,7 +122,7 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:password_change)
         .with(password: 'newpass')
-        .and_return(Nano::Response.new('changed' => '1'))
+        .and_return(NanoRpc::Response.new('changed' => '1'))
     )
     expect(subject.change_password(new_password: 'newpass')).to eq(true)
   end
@@ -122,7 +131,7 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:wallet_change_seed)
         .with(seed: seed1)
-        .and_return(Nano::Response.new('success' => ''))
+        .and_return(NanoRpc::Response.new('success' => ''))
     )
     expect(subject.change_seed(new_seed: seed1)).to eq(true)
   end
@@ -131,7 +140,7 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:wallet_contains)
         .with(account_param)
-        .and_return(Nano::Response.new('exists' => '1'))
+        .and_return(NanoRpc::Response.new('exists' => '1'))
     )
     expect(subject.contains?(account_param)).to eq(true)
   end
@@ -140,10 +149,10 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:account_create)
         .with(work: true)
-        .and_return(Nano::Response.new('account' => addr1))
+        .and_return(NanoRpc::Response.new('account' => addr1))
     )
     account = subject.create_account(work: true)
-    expect(account.class).to eq(Nano::Account)
+    expect(account.class).to eq(NanoRpc::Account)
     expect(account.address).to eq(addr1)
   end
 
@@ -151,10 +160,10 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:accounts_create)
         .with(create_accounts_params)
-        .and_return(Nano::Response.new('accounts' => addresses))
+        .and_return(NanoRpc::Response.new('accounts' => addresses))
     )
     accounts = subject.create_accounts(create_accounts_params)
-    expect(accounts.class).to eq(Nano::Accounts)
+    expect(accounts.class).to eq(NanoRpc::Accounts)
     expect(accounts.addresses).to eq(addresses)
   end
 
@@ -169,7 +178,7 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:password_enter)
         .with(password: 'pass1')
-        .and_return(Nano::Response.new('valid' => '1'))
+        .and_return(NanoRpc::Response.new('valid' => '1'))
     )
     expect(subject.enter_password(password: 'pass1')).to eq(true)
     expect(subject.unlock(password: 'pass1')).to eq(true)
@@ -178,7 +187,7 @@ RSpec.describe WalletHelperExample do
   it 'provides #export' do
     allow(subject).to(
       receive(:wallet_export)
-        .and_return(Nano::Response.new('json' => wallet_data.to_json))
+        .and_return(NanoRpc::Response.new('json' => wallet_data.to_json))
     )
     expect(subject.export).to eq(wallet_data)
     expect(subject.export.some_key).to eq(1)
@@ -187,7 +196,7 @@ RSpec.describe WalletHelperExample do
   it 'provides #frontiers' do
     allow(subject).to(
       receive(:wallet_frontiers)
-        .and_return(Nano::Response.new('frontiers' => frontiers_data))
+        .and_return(NanoRpc::Response.new('frontiers' => frontiers_data))
     )
     expect(subject.frontiers).to eq(frontiers_data)
   end
@@ -195,15 +204,25 @@ RSpec.describe WalletHelperExample do
   it 'provides #init_payment' do
     allow(subject).to(
       receive(:payment_init)
-        .and_return(Nano::Response.new('status' => 'Ready'))
+        .and_return(NanoRpc::Response.new('status' => 'Ready'))
     )
     expect(subject.init_payment).to eq(true)
+  end
+
+  it 'provides #ledger' do
+    allow(subject).to(
+      receive(:wallet_ledger)
+        .and_return(
+          NanoRpc::Response.new('accounts' => { 'abc' => {} })
+        )
+    )
+    expect(subject.ledger).to eq('abc' => {})
   end
 
   it 'provides #locked?' do
     allow(subject).to(
       receive(:wallet_locked)
-        .and_return(Nano::Response.new('locked' => '1'))
+        .and_return(NanoRpc::Response.new('locked' => '1'))
     )
     expect(subject.locked?).to eq(true)
   end
@@ -213,7 +232,7 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:account_move)
         .with(wallet: seed2, source: seed1, accounts: addresses)
-        .and_return(Nano::Response.new('moved' => '1'))
+        .and_return(NanoRpc::Response.new('moved' => '1'))
     )
     expect(subject.move_accounts(to: seed2, accounts: addresses)).to eq(true)
   end
@@ -222,7 +241,7 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:password_valid)
         .with(password_param)
-        .and_return(Nano::Response.new('valid' => '1'))
+        .and_return(NanoRpc::Response.new('valid' => '1'))
     )
     expect(subject.password_valid?(password_param)).to eq(true)
   end
@@ -230,7 +249,7 @@ RSpec.describe WalletHelperExample do
   it 'provides #pending_balance and #balance_pending' do
     allow(subject).to(
       receive(:wallet_balance_total)
-        .and_return(Nano::Response.new(balance_data))
+        .and_return(NanoRpc::Response.new(balance_data))
     )
     expect(subject.pending_balance).to eq(5)
     expect(subject.balance_pending).to eq(5)
@@ -240,7 +259,7 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:wallet_balances)
         .with(pending_threshold_param)
-        .and_return(Nano::Response.new(balances_data))
+        .and_return(NanoRpc::Response.new(balances_data))
     )
     expect(
       subject.pending_balances(pending_threshold_param)
@@ -254,7 +273,7 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:wallet_pending)
         .with(pending_blocks_params)
-        .and_return(Nano::Response.new('blocks' => pending_blocks_data))
+        .and_return(NanoRpc::Response.new('blocks' => pending_blocks_data))
     )
     expect(
       subject.pending_blocks(pending_blocks_params)
@@ -268,7 +287,7 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:receive)
         .with(receive_block_params)
-        .and_return(Nano::Response.new('block' => block2))
+        .and_return(NanoRpc::Response.new('block' => block2))
     )
     expect(subject.receive_block(receive_block_params)).to eq(block2)
   end
@@ -277,7 +296,7 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:account_remove)
         .with(account_param)
-        .and_return(Nano::Response.new('removed' => '1'))
+        .and_return(NanoRpc::Response.new('removed' => '1'))
     )
     expect(subject.remove_account(account_param)).to eq(true)
   end
@@ -285,7 +304,7 @@ RSpec.describe WalletHelperExample do
   it 'provides #representative' do
     allow(subject).to(
       receive(:wallet_representative)
-        .and_return(Nano::Response.new('representative' => addr1))
+        .and_return(NanoRpc::Response.new('representative' => addr1))
     )
     expect(subject.representative).to eq(addr1)
   end
@@ -294,7 +313,7 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:wallet_republish)
         .with(republish_param)
-        .and_return(Nano::Response.new('blocks' => blocks))
+        .and_return(NanoRpc::Response.new('blocks' => blocks))
     )
     expect(subject.republish(republish_param)).to eq(blocks)
   end
@@ -303,7 +322,7 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:work_set)
         .with(account_work_params)
-        .and_return(Nano::Response.new('success' => ''))
+        .and_return(NanoRpc::Response.new('success' => ''))
     )
     expect(subject.account_work_set(account_work_params)).to eq(true)
     expect(subject.set_account_work(account_work_params)).to eq(true)
@@ -313,7 +332,7 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:wallet_representative_set)
         .with(rep_param)
-        .and_return(Nano::Response.new('set' => '1'))
+        .and_return(NanoRpc::Response.new('set' => '1'))
     )
     expect(subject.representative_set(rep_param)).to eq(true)
     expect(subject.set_representative(rep_param)).to eq(true)
@@ -323,7 +342,7 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:send_currency)
         .with(send_nano_opts)
-        .and_return(Nano::Response.new('block' => block1))
+        .and_return(NanoRpc::Response.new('block' => block1))
     )
     expect(subject.send_nano(send_nano_params)).to eq(block1)
     expect(subject.send_transaction(send_nano_params)).to eq(block1)
@@ -332,7 +351,7 @@ RSpec.describe WalletHelperExample do
   it 'provides #work' do
     allow(subject).to(
       receive(:wallet_work_get)
-        .and_return(Nano::Response.new('works' => work_data))
+        .and_return(NanoRpc::Response.new('works' => work_data))
     )
     expect(subject.work).to eq(work_data)
   end
