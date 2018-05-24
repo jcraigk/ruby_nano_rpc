@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/jcraigk/ruby_nano_rpc.svg?branch=master)](https://travis-ci.org/jcraigk/ruby_nano_rpc)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
 
 ![Ruby Nano RPC Logo](https://i.imgur.com/ihmmYcp.png)
