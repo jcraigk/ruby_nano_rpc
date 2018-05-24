@@ -43,6 +43,10 @@ module NanoRpc
       NanoRpc::Account.new(address, node: self)
     end
 
+    def access_accounts(addresses)
+      NanoRpc::Accounts.new(addresses, node: self)
+    end
+
     proxy_method :available_supply
     proxy_method :block, required: %i[hash]
     proxy_method :block_account, required: %i[hash]

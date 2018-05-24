@@ -84,6 +84,15 @@ RSpec.describe WalletHelperExample do
     expect(subject.add_key(add_account_params)).to eq(seed1)
   end
 
+  it 'provides #add_watch' do
+    allow(subject).to(
+      receive(:wallet_add_watch)
+        .with(accounts: addresses)
+        .and_return(NanoRpc::Response.new('success' => ''))
+    )
+    expect(subject.add_watch(accounts: addresses)).to eq(true)
+  end
+
   it 'provides #balance' do
     allow(subject).to(
       receive(:wallet_balance_total)
@@ -198,6 +207,16 @@ RSpec.describe WalletHelperExample do
         .and_return(NanoRpc::Response.new('status' => 'Ready'))
     )
     expect(subject.init_payment).to eq(true)
+  end
+
+  it 'provides #ledger' do
+    allow(subject).to(
+      receive(:wallet_ledger)
+        .and_return(
+          NanoRpc::Response.new('accounts' => { 'abc' => {} })
+        )
+    )
+    expect(subject.ledger).to eq('abc' => {})
   end
 
   it 'provides #locked?' do

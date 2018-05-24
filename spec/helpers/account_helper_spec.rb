@@ -17,13 +17,6 @@ RSpec.describe AccountHelperExample do
   let(:account_move_opts) do
     { wallet: 'DEF', source: seed1, accounts: [addr1] }
   end
-  let(:account_move_opts2) do
-    {
-      source: wallet.seed,
-      wallet: wallet2.seed,
-      accounts: [addr1]
-    }
-  end
   let(:addr1) { 'nano_address1' }
   let(:addr2) { 'nano_address2' }
   let(:seed1) { 'A4C1EF' }

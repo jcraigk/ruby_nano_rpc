@@ -83,6 +83,23 @@ RSpec.describe NanoRpc::Node do
     end
   end
 
+  context 'special methods' do
+    it 'provides #access_wallet' do
+      expect(NanoRpc::Wallet).to receive(:new).with(seed1, node: subject)
+      subject.access_wallet(seed1)
+    end
+
+    it 'provides #access_account' do
+      expect(NanoRpc::Account).to receive(:new).with(addr1, node: subject)
+      subject.access_account(addr1)
+    end
+
+    it 'provides #access_accounts' do
+      expect(NanoRpc::Accounts).to receive(:new).with(addresses, node: subject)
+      subject.access_accounts(addresses)
+    end
+  end
+
   it 'provides a node instance on namespace' do
     expect(NanoRpc.node.class).to eq(described_class)
   end
@@ -90,6 +107,23 @@ RSpec.describe NanoRpc::Node do
   it 'provides default configuration' do
     expect(subject.host).to eq('localhost')
     expect(subject.port).to eq(7076)
+  end
+
+  context 'host protocol and port' do
+    let(:host) { '127.0.0.1' }
+    let(:url_with_http) { "http://#{host}" }
+    let(:url_with_http_and_port) { "http://#{host}:7076" }
+    let(:url_with_https) { "https://#{host}" }
+    let(:url_with_https_and_port) { "https://#{host}:7076" }
+
+    it 'adds http if missing' do
+      subject = described_class.new(host: host)
+      expect(subject.send(:url)).to eq(url_with_http_and_port)
+      subject = described_class.new(host: url_with_http)
+      expect(subject.send(:url)).to eq(url_with_http_and_port)
+      subject = described_class.new(host: url_with_https)
+      expect(subject.send(:url)).to eq(url_with_https_and_port)
+    end
   end
 
   it 'allows host configuration' do

@@ -79,7 +79,7 @@ module NanoRpc::WalletHelper
   end
 
   def ledger
-    wallet_ledger
+    wallet_ledger.accounts
   end
 
   def locked?
