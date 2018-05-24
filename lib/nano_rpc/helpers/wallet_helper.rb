@@ -8,7 +8,7 @@ module NanoRpc::WalletHelper
 
   def accounts
     return [] unless account_list.accounts.size.positive?
-    NanoRpc::Accounts.new(account_list.accounts, client: client)
+    NanoRpc::Accounts.new(account_list.accounts, node: node)
   end
 
   def add_key(key:, work: true)
@@ -49,12 +49,12 @@ module NanoRpc::WalletHelper
 
   def create_account(work: true)
     address = account_create(work: work).account
-    NanoRpc::Account.new(address, client: client)
+    NanoRpc::Account.new(address, node: node)
   end
 
   def create_accounts(count:, work: true)
     addresses = accounts_create(count: count, work: work).accounts
-    NanoRpc::Accounts.new(addresses, client: client)
+    NanoRpc::Accounts.new(addresses, node: node)
   end
 
   def destroy

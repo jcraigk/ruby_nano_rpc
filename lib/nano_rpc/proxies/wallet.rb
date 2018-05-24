@@ -17,7 +17,7 @@ class NanoRpc::Wallet
 
   # Hide secret seed on object inspection
   def inspect
-    "#{inspect_prefix}, @client=#{@client.inspect}>"
+    "#{inspect_prefix}, @node=#{@node.inspect}>"
   end
 
   proxy_params wallet: :seed

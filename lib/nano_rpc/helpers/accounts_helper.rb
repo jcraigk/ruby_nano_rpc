@@ -40,7 +40,7 @@ module NanoRpc::AccountsHelper
   def [](idx)
     return unless @addresses[idx]
     @account_objects ||= []
-    @account_objects[idx] ||= NanoRpc::Account.new(@addresses[idx], client: client)
+    @account_objects[idx] ||= NanoRpc::Account.new(@addresses[idx], node: node)
   end
 
   def <<(val)
@@ -49,7 +49,7 @@ module NanoRpc::AccountsHelper
 
   def each(&_block)
     @addresses.each do |address|
-      yield NanoRpc::Account.new(address, client: client)
+      yield NanoRpc::Account.new(address, node: node)
     end
   end
 

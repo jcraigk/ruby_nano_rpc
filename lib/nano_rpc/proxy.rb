@@ -2,10 +2,10 @@
 module NanoRpc::Proxy
   include NanoRpc::ApplicationHelper
 
-  attr_accessor :client
+  attr_reader :node
 
   def initialize(opts = {})
-    @client = opts[:client] || NanoRpc.client
+    @node ||= opts[:node]
     self.class.proxy_methods&.each { |m| define_proxy_method(m) }
   end
 
@@ -35,9 +35,9 @@ module NanoRpc::Proxy
 
   private
 
-  def define_proxy_method(m)
-    self.class.send(:define_method, method_alias(m)) do |args = {}|
-      @m = m
+  def define_proxy_method(meth)
+    self.class.send(:define_method, method_alias(meth)) do |args = {}|
+      @meth = meth
       @call_args = args
 
       validate_params!
@@ -46,7 +46,7 @@ module NanoRpc::Proxy
   end
 
   def execute_call
-    expose_nested_data(@client.call(@m, @call_args))
+    expose_nested_data(node.call(@meth, @call_args))
   end
 
   def base_params
@@ -61,13 +61,13 @@ module NanoRpc::Proxy
   end
 
   # Nano `send` action is also the method caller in Ruby ;)
-  def method_alias(m)
-    m == :send ? :send_currency : m
+  def method_alias(meth)
+    meth == :send ? :send_currency : meth
   end
 
   # If single-key response matches method name, expose nested data
   def expose_nested_data(data)
-    data.is_a?(Hash) && data.keys.map(&:to_s) == [@m.to_s] ? data[@m] : data
+    data.is_a?(Hash) && data.keys.map(&:to_s) == [@meth.to_s] ? data[@meth] : data
   end
 
   def validate_params!
@@ -115,13 +115,13 @@ module NanoRpc::Proxy
   end
 
   def required_params
-    return [] unless method_def && method_def[@m]
-    method_def[@m][:required] || []
+    return [] unless method_def && method_def[@meth]
+    method_def[@meth][:required] || []
   end
 
   def optional_params
-    return [] unless method_def && method_def[@m]
-    method_def[@m][:optional] || []
+    return [] unless method_def && method_def[@meth]
+    method_def[@meth][:optional] || []
   end
 
   def base_param_keys

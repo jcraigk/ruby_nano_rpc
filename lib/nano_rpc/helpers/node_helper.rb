@@ -7,7 +7,7 @@ module NanoRpc::NodeHelper
   end
 
   def create_wallet
-    NanoRpc::Wallet.new(wallet_create.wallet, client: client)
+    NanoRpc::Wallet.new(wallet_create.wallet, node: self)
   end
 
   def knano_from_raw(amount:)
