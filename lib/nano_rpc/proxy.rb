@@ -65,7 +65,10 @@ module NanoRpc::Proxy
 
   # If single-key response matches method name, expose nested data
   def expose_nested_data(data)
-    data.is_a?(Hash) && data.keys.map(&:to_s) == [@meth.to_s] ? data[@meth] : data
+    if data.is_a?(Hash) && data.keys.map(&:to_s) == [@meth.to_s]
+      return data[@meth]
+    end
+    data
   end
 
   def validate_params!
