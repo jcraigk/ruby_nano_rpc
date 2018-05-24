@@ -2,6 +2,9 @@
 require 'simplecov'
 SimpleCov.start
 
+require 'codecov'
+SimpleCov.formatter = SimpleCov::Formatter::Codecov
+
 require 'bundler/setup'
 require 'nano_rpc'
 
