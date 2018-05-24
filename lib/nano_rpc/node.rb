@@ -35,18 +35,6 @@ module NanoRpc
       rpc_post(args)
     end
 
-    def access_wallet(seed)
-      NanoRpc::Wallet.new(seed, node: self)
-    end
-
-    def access_account(address)
-      NanoRpc::Account.new(address, node: self)
-    end
-
-    def access_accounts(addresses)
-      NanoRpc::Accounts.new(addresses, node: self)
-    end
-
     proxy_method :available_supply
     proxy_method :block, required: %i[hash]
     proxy_method :block_account, required: %i[hash]

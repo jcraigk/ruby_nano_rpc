@@ -6,6 +6,14 @@ module NanoRpc::NodeHelper
     block_account(hash: hash).account
   end
 
+  def account(address)
+    NanoRpc::Account.new(address, node: self)
+  end
+
+  def accounts(addresses)
+    NanoRpc::Accounts.new(addresses, node: self)
+  end
+
   def create_wallet
     NanoRpc::Wallet.new(wallet_create.wallet, node: self)
   end
@@ -44,6 +52,10 @@ module NanoRpc::NodeHelper
 
   def total_supply
     available_supply.available
+  end
+
+  def wallet(seed)
+    NanoRpc::Wallet.new(seed, node: self)
   end
 
   def work_valid?(work:, hash:)

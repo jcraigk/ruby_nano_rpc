@@ -20,6 +20,24 @@ RSpec.describe NodeHelperExample do
   let(:seed1) { 'A0BF3C' }
   let(:amount_param) { { amount: 1 } }
   let(:pending_hash_param) { { hash: pending_hash } }
+  let(:addresses) { %w[abc def] }
+
+  context 'proxy object wrappers' do
+    it 'provides #wallet' do
+      expect(NanoRpc::Wallet).to receive(:new).with(seed1, node: subject)
+      subject.wallet(seed1)
+    end
+
+    it 'provides #account' do
+      expect(NanoRpc::Account).to receive(:new).with(addr1, node: subject)
+      subject.account(addr1)
+    end
+
+    it 'provides #accounts' do
+      expect(NanoRpc::Accounts).to receive(:new).with(addresses, node: subject)
+      subject.accounts(addresses)
+    end
+  end
 
   it 'provides #account_containing_block' do
     allow(subject).to(

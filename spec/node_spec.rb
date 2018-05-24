@@ -83,23 +83,6 @@ RSpec.describe NanoRpc::Node do
     end
   end
 
-  context 'special methods' do
-    it 'provides #access_wallet' do
-      expect(NanoRpc::Wallet).to receive(:new).with(seed1, node: subject)
-      subject.access_wallet(seed1)
-    end
-
-    it 'provides #access_account' do
-      expect(NanoRpc::Account).to receive(:new).with(addr1, node: subject)
-      subject.access_account(addr1)
-    end
-
-    it 'provides #access_accounts' do
-      expect(NanoRpc::Accounts).to receive(:new).with(addresses, node: subject)
-      subject.access_accounts(addresses)
-    end
-  end
-
   it 'provides a node instance on namespace' do
     expect(NanoRpc.node.class).to eq(described_class)
   end
