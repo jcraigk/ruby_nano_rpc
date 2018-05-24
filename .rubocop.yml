@@ -10,7 +10,6 @@ Metrics/ModuleLength:
   Max: 200
 Metrics/ClassLength:
   Max: 200
-
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
 Style/EmptyMethod:
@@ -19,4 +18,3 @@ Layout/EmptyLineAfterMagicComment:
   Enabled: false
 Documentation:
   Enabled: false
-
