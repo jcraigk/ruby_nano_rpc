@@ -63,6 +63,10 @@ module NanoRpc::AccountHelper
     ).set == 1
   end
 
+  def valid?
+    validate_account_number.valid == 1
+  end
+
   def weight
     account_weight.weight
   end

@@ -131,6 +131,14 @@ RSpec.describe AccountHelperExample do
     expect(subject.representative_set(rep_set_params)).to eq(true)
   end
 
+  it 'provides #valid?' do
+    allow(subject).to(
+      receive(:validate_account_number)
+        .and_return(NanoRpc::Response.new('valid' => '1'))
+    )
+    expect(subject.valid?).to eq(true)
+  end
+
   it 'provides #weight' do
     allow(subject).to(
       receive(:account_weight)
