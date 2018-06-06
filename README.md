@@ -113,6 +113,16 @@ account.pending_balance
 # => 5
 ```
 
+To convert from Nano to raw and back, use `#to_raw` and `#to_nano`, available on all `Numeric` objects:
+
+```ruby
+4622800482000000000000000000000000.to_nano
+# => 4622.800482
+
+4622.800482.to_raw
+# => 4622800482000000000000000000000000
+```
+
 For a comprehensive guide, see the [Wiki](https://github.com/jcraigk/ruby_nano_rpc/wiki).
 
 ## Credits

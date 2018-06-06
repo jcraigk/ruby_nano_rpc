@@ -17,13 +17,32 @@ RSpec.describe 'NanoRpc errors' do
   describe NanoRpc::BadRequest do
     include_examples 'child error'
   end
-  describe NanoRpc::InvalidRequest do
-    include_examples 'child error'
-  end
+
   describe NanoRpc::ForbiddenParameter do
     include_examples 'child error'
   end
+
+  describe NanoRpc::InvalidNanoAmount do
+    include_examples 'child error'
+  end
+
+  describe NanoRpc::InvalidRawAmount do
+    include_examples 'child error'
+  end
+
+  describe NanoRpc::InvalidRequest do
+    include_examples 'child error'
+  end
+
   describe NanoRpc::MissingParameters do
+    include_examples 'child error'
+  end
+
+  describe NanoRpc::NodeConnectionFailure do
+    include_examples 'child error'
+  end
+
+  describe NanoRpc::NodeOpenTimeout do
     include_examples 'child error'
   end
 end
