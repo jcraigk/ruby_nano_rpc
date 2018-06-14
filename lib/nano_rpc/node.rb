@@ -87,7 +87,9 @@ module NanoRpc
     proxy_method :version
     proxy_method :wallet_create
     proxy_method :work_cancel, required: %i[hash]
-    proxy_method :work_generate, required: %i[hash]
+    proxy_method :work_generate,
+                 required: %i[hash],
+                 optional: %i[use_peers]
     proxy_method :work_peer_add, required: %i[address port]
     proxy_method :work_peers
     proxy_method :work_peers_clear
