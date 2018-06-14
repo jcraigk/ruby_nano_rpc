@@ -117,9 +117,9 @@ module NanoRpc
 
     def rpc_post(params)
       response = rest_client_post(url, params)
-      ensure_status_success!(response)
+      ensure_status_success(response)
       data = NanoRpc::Response.new(JSON[response&.body])
-      ensure_valid_response!(data)
+      ensure_valid_response(data)
 
       data
     end
@@ -149,13 +149,13 @@ module NanoRpc
       end
     end
 
-    def ensure_status_success!(response)
+    def ensure_status_success(response)
       return if response&.code == 200
       raise NanoRpc::BadRequest,
             "Error response from node: #{JSON[response&.body]}"
     end
 
-    def ensure_valid_response!(data)
+    def ensure_valid_response(data)
       return unless data['error']
       raise NanoRpc::InvalidRequest,
             "Invalid request: #{data['error']}"

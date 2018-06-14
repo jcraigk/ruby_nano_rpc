@@ -5,14 +5,14 @@ module NanoRpc
 
   module NanoToRaw
     def to_raw
-      ensure_valid_nano_amount!
+      ensure_valid_nano_amount
       (self * 10**RAW_PRECISION).floor *
         10**(RAW_FACTOR - RAW_PRECISION)
     end
 
     private
 
-    def ensure_valid_nano_amount!
+    def ensure_valid_nano_amount
       raise NanoRpc::InvalidNanoAmount unless valid_nano_amount?
     end
 
@@ -24,13 +24,13 @@ module NanoRpc
 
   module RawToNano
     def to_nano
-      ensure_valid_raw_amount!
+      ensure_valid_raw_amount
       (to_f / 10**RAW_FACTOR).round(RAW_PRECISION)
     end
 
     private
 
-    def ensure_valid_raw_amount!
+    def ensure_valid_raw_amount
       raise NanoRpc::InvalidRawAmount unless valid_raw_amount?
     end
 

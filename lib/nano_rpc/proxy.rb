@@ -38,7 +38,7 @@ module NanoRpc::Proxy
       @meth = meth
       @call_args = args
 
-      validate_params!
+      validate_params
       execute_call
     end
   end
@@ -71,10 +71,10 @@ module NanoRpc::Proxy
     data
   end
 
-  def validate_params!
+  def validate_params
     prepare_params
-    ensure_required_params!
-    prevent_forbidden_params!
+    ensure_required_params
+    prevent_forbidden_params
     drop_nil_params
   end
 
@@ -89,14 +89,14 @@ module NanoRpc::Proxy
     @call_args.merge!(base_params) if base_params
   end
 
-  def ensure_required_params!
+  def ensure_required_params
     missing_params = required_params - opts_keys
     return unless missing_params.any?
     raise NanoRpc::MissingParameters,
           "Missing required parameter(s): #{missing_params.join(', ')}"
   end
 
-  def prevent_forbidden_params!
+  def prevent_forbidden_params
     forbidden_params = base_param_keys + opts_keys - allowed_params
     return unless forbidden_params.any?
     raise NanoRpc::ForbiddenParameter,
