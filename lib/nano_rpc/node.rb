@@ -72,7 +72,7 @@ class NanoRpc::Node
   proxy_method :krai_to_raw, required: %i[amount]
   proxy_method :mrai_from_raw, required: %i[amount]
   proxy_method :mrai_to_raw, required: %i[amount]
-  proxy_method :payment_wait, required: %i[account amount   eout]
+  proxy_method :payment_wait, required: %i[account amount timeout]
   proxy_method :peers
   proxy_method :pending_exists, required: %i[hash]
   proxy_method :process, required: %i[block]

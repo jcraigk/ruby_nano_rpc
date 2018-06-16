@@ -159,7 +159,9 @@ RSpec.describe NanoRpc::Node do
 
   context 'node connection failure' do
     before do
-      allow(RestClient::Request).to receive(:execute).and_raise(Errno::ECONNREFUSED)
+      allow(RestClient::Request).to(
+        receive(:execute).and_raise(Errno::ECONNREFUSED)
+      )
     end
 
     it 'raises NodeConnectionFailure and provides error message' do
