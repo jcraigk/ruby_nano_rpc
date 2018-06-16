@@ -14,7 +14,7 @@ class NanoRpc::Node
 
   attr_reader :host, :port, :auth, :headers, :node, :timeout
 
-  DEFAULT_TIMEOUT = 20
+  DEFAULT_TIMEOUT = 60
 
   def initialize(
     host: 'localhost',
