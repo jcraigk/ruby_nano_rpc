@@ -34,17 +34,23 @@ module NanoRpc::Proxy
   private
 
   def define_proxy_method(meth)
-    self.class.send(:define_method, method_alias(meth)) do |args = {}|
+    self.class
+        .send(:define_method, method_alias(meth)) do |args = {}|
       @meth = meth
       @call_args = args
-
       validate_params
       execute_call
     end
   end
 
   def execute_call
-    expose_nested_data(node.call(@meth, @call_args))
+    result = node.call(@meth, @call_args)
+    handle_special_methods
+    expose_nested_data(result)
+  end
+
+  def handle_special_methods
+    @seed = @call_args[:seed] if @meth == :wallet_change_seed
   end
 
   def base_params

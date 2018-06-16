@@ -59,4 +59,19 @@ RSpec.describe NanoRpc::Wallet do
   it 'obscures seed in #inspect output' do
     expect(subject.inspect).to_not include('@seed')
   end
+
+  context 'when changing the remote seed' do
+    let(:new_seed) { 'abcdef' }
+
+    before do
+      allow_any_instance_of(NanoRpc::Node).to receive(:call).and_return(
+        NanoRpc::Response.new('success' => '')
+      )
+    end
+
+    it 'changes local @seed when changing remote seed' do
+      subject.wallet_change_seed(seed: new_seed)
+      expect(subject.seed).to eq(new_seed)
+    end
+  end
 end

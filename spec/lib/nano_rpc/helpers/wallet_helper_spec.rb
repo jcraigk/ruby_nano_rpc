@@ -128,12 +128,11 @@ RSpec.describe WalletHelperExample do
   end
 
   it 'provides #change_seed' do
-    allow(subject).to(
-      receive(:wallet_change_seed)
-        .with(seed: seed1)
-        .and_return(NanoRpc::Response.new('success' => ''))
+    allow_any_instance_of(NanoRpc::Node).to receive(:call).and_return(
+      NanoRpc::Response.new('success' => '')
     )
     expect(subject.change_seed(new_seed: seed1)).to eq(true)
+    expect(subject.seed).to eq(seed1)
   end
 
   it 'provides #contains?' do
