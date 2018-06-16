@@ -11,9 +11,17 @@ module NanoRpc
     include NanoRpc::Proxy
     include NanoRpc::NodeHelper
 
-    attr_reader :host, :port, :auth, :headers, :node
+    attr_reader :host, :port, :auth, :headers, :node, :timeout
 
-    def initialize(host: 'localhost', port: 7076, auth: nil, headers: nil)
+    DEFAULT_TIMEOUT = 20
+
+    def initialize(
+      host: 'localhost',
+      port: 7076,
+      auth: nil,
+      headers: nil,
+      timeout: DEFAULT_TIMEOUT
+    )
       @host = host
       @port = port
       @auth = auth
@@ -131,14 +139,24 @@ module NanoRpc
       h
     end
 
-    def rest_client_post(url, params)
-      RestClient.post(url, params.to_json, request_headers)
+    def rest_client_post(params)
+      execute_post(params)
     rescue Errno::ECONNREFUSED
       raise NanoRpc::NodeConnectionFailure,
             "Node connection failure at #{url}"
     rescue RestClient::Exceptions::OpenTimeout
       raise NanoRpc::NodeOpenTimeout,
             'Node failed to respond in time'
+    end
+
+    def execute_post(params)
+      RestClient::Request.execute(
+        method: :post,
+        url: url,
+        headers: headers,
+        params: params.to_json,
+        timeout: timeout
+      )
     end
 
     def url
