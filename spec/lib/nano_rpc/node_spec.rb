@@ -121,38 +121,45 @@ RSpec.describe NanoRpc::Node do
     subject.call(action, params)
   end
 
-  context 'headers and RestClient' do
+  context 'RestClient' do
     let(:custom_headers) { { 'My-Header-X' => 'My-Value' } }
+    let(:custom_timeout) { 10 }
     let(:auth_key) { 'some_auth_key' }
-    let(:node_with_headers) do
-      described_class.new(auth: auth_key, headers: custom_headers)
+    let(:node_with_options) do
+      described_class.new(
+        auth: auth_key,
+        headers: custom_headers,
+        timeout: custom_timeout
+      )
     end
 
-    it 'exposes auth instance var' do
-      expect(node_with_headers.auth).to eq(auth_key)
-    end
-
-    it 'exposes headers instance var' do
-      expect(node_with_headers.headers).to eq(custom_headers)
+    it 'exposes instance vars' do
+      expect(node_with_options.auth).to eq(auth_key)
+      expect(node_with_options.headers).to eq(custom_headers)
+      expect(node_with_options.timeout).to eq(custom_timeout)
     end
 
     it '#call invokes RestClient#post with expected parameters' do
-      expect(RestClient).to receive(:post).with(
-        'http://localhost:7076',
-        { action: :version }.to_json,
-        'Content-Type' => 'json',
-        'Authorization' => auth_key,
-        'My-Header-X' => 'My-Value'
+      expect(RestClient::Request).to receive(:execute).with(
+        method: :post,
+        url: 'http://localhost:7076',
+        headers: {
+          'Content-Type' => 'json',
+          'Authorization' => auth_key,
+          'My-Header-X' => 'My-Value'
+        },
+        payload: { action: :version }.to_json,
+        timeout: custom_timeout
       )
       expect do
-        node_with_headers.call(:version)
+        node_with_options.call(:version)
       end.to raise_error(NanoRpc::BadRequest)
     end
   end
 
   context 'node connection failure' do
     before do
-      allow(RestClient).to receive(:post).and_raise(Errno::ECONNREFUSED)
+      allow(RestClient::Request).to receive(:execute).and_raise(Errno::ECONNREFUSED)
     end
 
     it 'raises NodeConnectionFailure and provides error message' do
@@ -167,7 +174,7 @@ RSpec.describe NanoRpc::Node do
 
   context 'node timeout' do
     before do
-      allow(RestClient).to receive(:post).and_raise(
+      allow(RestClient::Request).to receive(:execute).and_raise(
         RestClient::Exceptions::OpenTimeout
       )
     end
@@ -186,7 +193,7 @@ RSpec.describe NanoRpc::Node do
     let(:mock_response) { double }
     let(:node_call) { subject.call(action, params) }
     before do
-      allow(RestClient).to receive(:post).and_return(mock_response)
+      allow(RestClient::Request).to receive(:execute).and_return(mock_response)
     end
 
     context 'with status code 200' do

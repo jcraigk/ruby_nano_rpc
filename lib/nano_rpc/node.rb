@@ -27,6 +27,7 @@ class NanoRpc::Node
     @port = port
     @auth = auth
     @headers = headers
+    @timeout = timeout
     @node = self
 
     super
@@ -170,7 +171,7 @@ class NanoRpc::Node
     RestClient::Request.execute(
       method: :post,
       url: url,
-      headers: headers,
+      headers: request_headers,
       payload: params.to_json,
       timeout: timeout
     )
