@@ -45,12 +45,7 @@ module NanoRpc::Proxy
 
   def execute_call
     result = node.call(@meth, @call_args)
-    handle_special_methods
     expose_nested_data(result)
-  end
-
-  def handle_special_methods
-    @seed = @call_args[:seed] if @meth == :wallet_change_seed
   end
 
   def base_params

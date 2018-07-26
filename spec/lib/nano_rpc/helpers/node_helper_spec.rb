@@ -17,15 +17,15 @@ RSpec.describe NodeHelperExample do
   let(:pending_hash) { '000BDE' }
   let(:work_params) { { work: '2def', hash: '000DEF' } }
   let(:addr1) { 'nano_address1' }
-  let(:seed1) { 'A0BF3C' }
+  let(:wallet_id1) { 'A0BF3C' }
   let(:amount_param) { { amount: 1 } }
   let(:pending_hash_param) { { hash: pending_hash } }
   let(:addresses) { %w[abc def] }
 
   context 'proxy object wrappers' do
     it 'provides #wallet' do
-      expect(NanoRpc::Wallet).to receive(:new).with(seed1, node: subject)
-      subject.wallet(seed1)
+      expect(NanoRpc::Wallet).to receive(:new).with(wallet_id1, node: subject)
+      subject.wallet(wallet_id1)
     end
 
     it 'provides #account' do
@@ -57,11 +57,11 @@ RSpec.describe NodeHelperExample do
 
   it 'provides #create_wallet' do
     allow(subject).to receive(:wallet_create).and_return(
-      NanoRpc::Response.new('wallet' => seed1)
+      NanoRpc::Response.new('wallet' => wallet_id1)
     )
     wallet = subject.create_wallet
     expect(wallet.class).to eq(NanoRpc::Wallet)
-    expect(wallet.seed).to eq(seed1)
+    expect(wallet.id).to eq(wallet_id1)
   end
 
   it 'provides #num_frontiers' do

@@ -2,8 +2,8 @@
 require 'spec_helper'
 
 RSpec.describe NanoRpc::Wallet do
-  subject { described_class.new(seed) }
-  let(:seed) { 'E929FBC3' }
+  subject { described_class.new(wallet_id) }
+  let(:wallet_id) { 'E929FBC3' }
   let(:expected_proxy_methods) do
     %i[
       account_create
@@ -39,7 +39,7 @@ RSpec.describe NanoRpc::Wallet do
       work_set
     ]
   end
-  let(:expected_proxy_params) { { wallet: :seed } }
+  let(:expected_proxy_params) { { wallet: :id } }
 
   it 'defines expected proxy params and methods' do
     expect(described_class.proxy_param_def).to eq(expected_proxy_params)
@@ -48,30 +48,11 @@ RSpec.describe NanoRpc::Wallet do
 
   it 'raises MissingParameters unless initialized with string' do
     expect { described_class.new }.to raise_error(
-      NanoRpc::MissingParameters, 'Missing argument: seed (str)'
+      NanoRpc::MissingParameters, 'Missing argument: id (str)'
     )
   end
 
-  it 'assigns seed on initialization' do
-    expect(subject.seed).to eq(seed)
-  end
-
-  it 'obscures seed in #inspect output' do
-    expect(subject.inspect).to_not include('@seed')
-  end
-
-  context 'when changing the remote seed' do
-    let(:new_seed) { 'abcdef' }
-
-    before do
-      allow_any_instance_of(NanoRpc::Node).to receive(:call).and_return(
-        NanoRpc::Response.new('success' => '')
-      )
-    end
-
-    it 'changes local @seed when changing remote seed' do
-      subject.wallet_change_seed(seed: new_seed)
-      expect(subject.seed).to eq(new_seed)
-    end
+  it 'assigns id on initialization' do
+    expect(subject.id).to eq(wallet_id)
   end
 end

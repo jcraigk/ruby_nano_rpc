@@ -87,7 +87,7 @@ module NanoRpc::WalletHelper
   end
 
   def move_accounts(to:, accounts:)
-    account_move(wallet: to, source: seed, accounts: accounts).moved == 1
+    account_move(wallet: to, source: id, accounts: accounts).moved == 1
   end
 
   def password_valid?(password:)

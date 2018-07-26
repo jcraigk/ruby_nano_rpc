@@ -11,8 +11,8 @@ RSpec.describe AccountsHelperExample do
   let(:addr2) { 'nano_address2' }
   let(:block1) { '9FE23A' }
   let(:block2) { '1ACFF4' }
-  let(:seed1) { 'ABCDEF' }
-  let(:seed2) { '298EDA' }
+  let(:wallet_id1) { 'ABCDEF' }
+  let(:wallet_id2) { '298EDA' }
   let(:balances_data) do
     {
       'balances' => {
@@ -50,9 +50,9 @@ RSpec.describe AccountsHelperExample do
 
   it 'provides #move' do
     allow(subject).to receive(:account_move)
-      .with(wallet: seed2, source: seed1)
+      .with(wallet: wallet_id2, source: wallet_id1)
       .and_return(NanoRpc::Response.new('moved' => '1'))
-    expect(subject.move(from: seed1, to: seed2)).to eq(true)
+    expect(subject.move(from: wallet_id1, to: wallet_id2)).to eq(true)
   end
 
   it 'provides #pending and #pending_blocks' do
