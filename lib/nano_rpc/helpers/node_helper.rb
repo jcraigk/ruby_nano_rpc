@@ -54,8 +54,8 @@ module NanoRpc::NodeHelper
     available_supply.available
   end
 
-  def wallet(seed)
-    NanoRpc::Wallet.new(seed, node: self)
+  def wallet(id)
+    NanoRpc::Wallet.new(id, node: self)
   end
 
   def work_valid?(work:, hash:)

@@ -133,7 +133,7 @@ class NanoRpc::Node
 
   def proxy_method(obj)
     if obj.is_a?(NanoRpc::Wallet)
-      :seed
+      :id
     elsif obj.is_a?(NanoRpc::Accounts)
       :addresses
     elsif obj.is_a?(NanoRpc::Account)

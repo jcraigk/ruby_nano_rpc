@@ -3,24 +3,19 @@ class NanoRpc::Wallet
   include NanoRpc::Proxy
   include NanoRpc::WalletHelper
 
-  attr_reader :seed
+  attr_reader :id
 
-  def initialize(seed = nil, opts = {})
-    unless seed.is_a?(String)
+  def initialize(id = nil, opts = {})
+    unless id.is_a?(String)
       raise NanoRpc::MissingParameters,
-            'Missing argument: seed (str)'
+            'Missing argument: id (str)'
     end
 
-    @seed = seed
+    @id = id
     super(opts)
   end
 
-  # Hide secret seed on object inspection
-  def inspect
-    "#{inspect_prefix}, @node=#{@node.inspect}>"
-  end
-
-  proxy_params wallet: :seed
+  proxy_params wallet: :id
 
   proxy_method :account_create, optional: %i[work]
   proxy_method :accounts_create, required: %i[count], optional: %i[work]

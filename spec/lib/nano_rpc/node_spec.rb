@@ -15,7 +15,7 @@ RSpec.describe NanoRpc::Node do
     { error: error_msg }.to_json
   end
   let(:error_msg) { 'Bad account number' }
-  let(:seed1) { 'ABCDEF' }
+  let(:wallet_id) { 'ABCDEF' }
   let(:addr1) { 'nano_address1' }
   let(:addr2) { 'nano_address2' }
   let(:addresses) { [addr1, addr2] }
@@ -252,11 +252,11 @@ RSpec.describe NanoRpc::Node do
   end
 
   context 'proxy objects' do
-    it 'pulls #seed from NanoRpc::Wallet' do
+    it 'pulls #id from NanoRpc::Wallet' do
       expect(subject).to(
-        receive(:rpc_post).with(action: action, wallet: seed1)
+        receive(:rpc_post).with(action: action, wallet: wallet_id)
       )
-      subject.call(action, wallet: NanoRpc::Wallet.new(seed1))
+      subject.call(action, wallet: NanoRpc::Wallet.new(wallet_id))
     end
 
     it 'pulls #addresses from NanoRpc::Accounts' do

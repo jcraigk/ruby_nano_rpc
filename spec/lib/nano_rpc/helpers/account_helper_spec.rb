@@ -8,27 +8,27 @@ end
 RSpec.describe AccountHelperExample do
   subject { NanoRpc::Account.new('abc') }
   let(:history_data) do
-    [{ 'hash' => seed1 }, { 'hash' => seed1 }]
+    [{ 'hash' => wallet_id1 }, { 'hash' => wallet_id1 }]
   end
   let(:info_data) do
-    { 'frontier' => addr1, 'open_block' => seed1 }
+    { 'frontier' => addr1, 'open_block' => wallet_id1 }
   end
-  let(:account_move_params) { { from: seed1, to: 'DEF' } }
+  let(:account_move_params) { { from: wallet_id1, to: 'DEF' } }
   let(:account_move_opts) do
-    { wallet: 'DEF', source: seed1, accounts: [addr1] }
+    { wallet: 'DEF', source: wallet_id1, accounts: [addr1] }
   end
   let(:addr1) { 'nano_address1' }
   let(:addr2) { 'nano_address2' }
-  let(:seed1) { 'A4C1EF' }
-  let(:seed2) { 'F9CD82' }
-  let(:seeds) { [seed1, seed2] }
+  let(:wallet_id1) { 'A4C1EF' }
+  let(:wallet_id2) { 'F9CD82' }
+  let(:wallet_ids) { [wallet_id1, wallet_id2] }
   let(:work1) { '000000' }
   let(:pending_blocks_data) { { count: 1, threshold: '1000', source: true } }
   let(:balance_data) { { 'balance' => '100', 'pending' => '5' } }
-  let(:wallet_work_params) { { wallet: seed1, work: work1 } }
-  let(:rep_set_params) { { wallet: seed1, representative: addr1 } }
-  let(:wallet) { NanoRpc::Wallet.new(seed1) }
-  let(:wallet2) { NanoRpc::Wallet.new(seed2) }
+  let(:wallet_work_params) { { wallet: wallet_id1, work: work1 } }
+  let(:rep_set_params) { { wallet: wallet_id1, representative: addr1 } }
+  let(:wallet) { NanoRpc::Wallet.new(wallet_id1) }
+  let(:wallet2) { NanoRpc::Wallet.new(wallet_id2) }
 
   it 'provides #balance' do
     allow(subject).to receive(:account_balance).and_return(
@@ -62,9 +62,9 @@ RSpec.describe AccountHelperExample do
 
   it 'provides #key' do
     allow(subject).to(
-      receive(:account_key).and_return(NanoRpc::Response.new('key' => seed1))
+      receive(:account_key).and_return(NanoRpc::Response.new('key' => wallet_id1))
     )
-    expect(subject.key).to eq(seed1)
+    expect(subject.key).to eq(wallet_id1)
   end
 
   it 'provides #move' do
@@ -99,19 +99,19 @@ RSpec.describe AccountHelperExample do
     allow(subject).to(
       receive(:pending)
         .with(pending_blocks_data)
-        .and_return(NanoRpc::Response.new('blocks' => seeds))
+        .and_return(NanoRpc::Response.new('blocks' => wallet_ids))
     )
-    expect(subject.pending_blocks(pending_blocks_data)).to eq(seeds)
-    expect(subject.blocks_pending(pending_blocks_data)).to eq(seeds)
+    expect(subject.pending_blocks(pending_blocks_data)).to eq(wallet_ids)
+    expect(subject.blocks_pending(pending_blocks_data)).to eq(wallet_ids)
   end
 
   it 'provides #remove' do
     allow(subject).to(
       receive(:account_remove)
-        .with(wallet: seed1)
+        .with(wallet: wallet_id1)
         .and_return(NanoRpc::Response.new('removed' => '1'))
     )
-    expect(subject.remove(wallet: seed1)).to eq(true)
+    expect(subject.remove(wallet: wallet_id1)).to eq(true)
   end
 
   it 'provides #representative' do

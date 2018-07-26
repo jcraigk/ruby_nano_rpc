@@ -41,12 +41,12 @@ Proxy objects are provided to ease interaction with the API by providing logical
 * [NanoRpc::Node](https://github.com/jcraigk/ruby_nano_rpc/wiki/NanoRpc::Node)
 * [NanoRpc::Wallet](https://github.com/jcraigk/ruby_nano_rpc/wiki/NanoRpc::Wallet)
 
-`Account`, `Accounts`, and `Wallet` each require a single parameter to be passed during initialization (`address`, `addresses`, and `seed`, respectively).  This parameter is persisted for subsequent calls.  All RPC methods are provided directly as methods.
+`Account`, `Accounts`, and `Wallet` each require a single parameter to be passed during initialization (`address`, `addresses`, and `id`, respectively).  This parameter is persisted for subsequent calls.  All RPC methods are provided directly as methods.
 
 ```ruby
 account = NanoRpc.node.account('xrb_1234') # Account address required
 accounts = NanoRpc.node.accounts(%w[xrb_1234 xrb_456]) # Array of account addresses required
-wallet = NanoRpc.node.wallet('3AF91AE') # Wallet seed required
+wallet = NanoRpc.node.wallet('3AF91AE') # Wallet id required
 ```
 
 You can call standard RPC methods on each object:

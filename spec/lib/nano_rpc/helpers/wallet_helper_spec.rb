@@ -25,13 +25,14 @@ RSpec.describe WalletHelperExample do
       }
     }
   end
-  let(:seed1) { 'CB3004' }
+  let(:wallet_id1) { 'CB3004' }
+  let(:seed) { 'ABCDEF' }
   let(:wallet_data) { { 'some_key' => 1 } }
   let(:block1) { '000D1BA' }
   let(:block2) { 'F2B3809' }
-  let(:seed1) { 'A4C1EF' }
-  let(:seed2) { 'F9CD82' }
-  let(:pending_blocks_params) { { count: 2, threshold: 10, source: seed1 } }
+  let(:wallet_id1) { 'A4C1EF' }
+  let(:wallet_id2) { 'F9CD82' }
+  let(:pending_blocks_params) { { count: 2, threshold: 10, source: wallet_id1 } }
   let(:work1) { '000000' }
   let(:account_param) { { account: addr1 } }
   let(:account_work_params) { { account: addr1, work: work1 } }
@@ -79,9 +80,9 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:wallet_add)
         .with(add_account_params)
-        .and_return(NanoRpc::Response.new('account' => seed1))
+        .and_return(NanoRpc::Response.new('account' => wallet_id1))
     )
-    expect(subject.add_key(add_account_params)).to eq(seed1)
+    expect(subject.add_key(add_account_params)).to eq(wallet_id1)
   end
 
   it 'provides #add_watch' do
@@ -131,8 +132,7 @@ RSpec.describe WalletHelperExample do
     allow_any_instance_of(NanoRpc::Node).to receive(:call).and_return(
       NanoRpc::Response.new('success' => '')
     )
-    expect(subject.change_seed(new_seed: seed1)).to eq(true)
-    expect(subject.seed).to eq(seed1)
+    expect(subject.change_seed(new_seed: seed)).to eq(true)
   end
 
   it 'provides #contains?' do
@@ -227,13 +227,13 @@ RSpec.describe WalletHelperExample do
   end
 
   it 'provides #move_accounts' do
-    allow(subject).to receive(:seed).and_return(seed1)
+    allow(subject).to receive(:id).and_return(wallet_id1)
     allow(subject).to(
       receive(:account_move)
-        .with(wallet: seed2, source: seed1, accounts: addresses)
+        .with(wallet: wallet_id2, source: wallet_id1, accounts: addresses)
         .and_return(NanoRpc::Response.new('moved' => '1'))
     )
-    expect(subject.move_accounts(to: seed2, accounts: addresses)).to eq(true)
+    expect(subject.move_accounts(to: wallet_id2, accounts: addresses)).to eq(true)
   end
 
   it 'provides #password_valid?' do
