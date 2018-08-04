@@ -170,7 +170,7 @@ RSpec.describe WalletHelperExample do
     allow(subject).to(
       receive(:wallet_destroy).and_return({})
     )
-    expect(subject.destroy).to eq({})
+    expect(subject.destroy).to eq(true)
   end
 
   it 'provides #enter_password and #unlock' do

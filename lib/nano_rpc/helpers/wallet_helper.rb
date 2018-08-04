@@ -58,7 +58,7 @@ module NanoRpc::WalletHelper
   end
 
   def destroy
-    wallet_destroy
+    wallet_destroy == {}
   end
 
   def enter_password(password:)
