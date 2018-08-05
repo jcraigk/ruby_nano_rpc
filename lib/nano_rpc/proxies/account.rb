@@ -13,9 +13,6 @@ class NanoRpc::Account
     end
 
     @address = address
-
-    method_signatures.each { |k, v| self.class.proxy_method(k, v) }
-
     super(opts)
   end
 

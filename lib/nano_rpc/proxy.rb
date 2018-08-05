@@ -4,6 +4,7 @@ module NanoRpc::Proxy
 
   def initialize(opts = {})
     @node ||= opts[:node] || NanoRpc.node
+    # method_signatures.each { |k, v| self.class.proxy_method(k, v) }
     self.class.proxy_methods&.each { |m| define_proxy_method(m) }
   end
 
