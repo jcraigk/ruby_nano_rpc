@@ -39,7 +39,7 @@ module NanoRpc::AccountHelper
   end
   alias balance_pending pending_balance
 
-  def pending_blocks(count:, threshold: nil, source: nil)
+  def pending_blocks(count: 100, threshold: nil, source: nil)
     pending(
       count: count,
       threshold: threshold,
