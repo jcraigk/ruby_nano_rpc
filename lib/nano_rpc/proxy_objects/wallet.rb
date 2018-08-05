@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class NanoRpc::Wallet
+  include NanoRpc::ProxyMethods::Wallet
   include NanoRpc::Proxy
   include NanoRpc::WalletHelper
 
@@ -14,6 +15,4 @@ class NanoRpc::Wallet
     @id = id
     super(opts)
   end
-
-  proxy_params wallet: :id
 end

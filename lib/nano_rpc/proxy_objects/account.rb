@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class NanoRpc::Account
   include NanoRpc::AccountHelper
-  include NanoRpc::Methods::Account
+  include NanoRpc::ProxyMethods::Account
   include NanoRpc::Proxy
 
   attr_reader :address
@@ -15,6 +15,4 @@ class NanoRpc::Account
     @address = address
     super(opts)
   end
-
-  proxy_params account: :address
 end

@@ -4,7 +4,7 @@ module NanoRpc::Proxy
 
   def initialize(opts = {})
     @node ||= opts[:node] || NanoRpc.node
-    # method_signatures.each { |k, v| self.class.proxy_method(k, v) }
+    method_signatures.each { |k, v| self.class.proxy_method(k, v) }
     self.class.proxy_methods&.each { |m| define_proxy_method(m) }
   end
 
@@ -13,10 +13,6 @@ module NanoRpc::Proxy
   end
   module ClassMethods
     attr_reader :proxy_method_def, :proxy_param_def
-
-    def proxy_params(param_def = nil)
-      @proxy_param_def = param_def
-    end
 
     def proxy_method(name, signature = nil)
       @proxy_method_def ||= {}

@@ -4,13 +4,24 @@ require 'spec_helper'
 # This spec covers both NanoRpc::Proxy and NanoRpc::ProxyContext
 
 class ProxyExample
-  include NanoRpc::Proxy
+  def proxy_params
+    { account: :address }
+  end
 
-  proxy_params account: :address
-  proxy_method :some_action,
-               required: %i[param1 param2], optional: %i[param3 param4]
-  proxy_method :proxytest_another_action
-  proxy_method :single_param_method, required: %i[param1]
+  def method_signatures
+    {
+      some_action: {
+        required: %i[param1 param2],
+        optional: %i[param3 param4]
+      },
+      proxytest_another_action: {},
+      single_param_method: {
+        required: %i[param1]
+      }
+    }
+  end
+
+  include NanoRpc::Proxy
 end
 
 RSpec.describe ProxyExample do

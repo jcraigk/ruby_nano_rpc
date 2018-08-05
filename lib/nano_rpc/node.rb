@@ -10,7 +10,7 @@ end
 
 class NanoRpc::Node
   include NanoRpc::NodeHelper
-  include NanoRpc::Methods::Node
+  include NanoRpc::ProxyMethods::Node
   include NanoRpc::Proxy
 
   attr_reader :host, :port, :auth, :headers, :node, :timeout
@@ -31,8 +31,6 @@ class NanoRpc::Node
     @headers = headers
     @timeout = timeout
     @node = self
-
-    method_signatures.each { |k, v| self.class.proxy_method(k, v) }
 
     super
   end

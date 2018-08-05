@@ -1,5 +1,9 @@
 # frozen_string_literal: true
-module NanoRpc::Methods::Wallet
+module NanoRpc::ProxyMethods::Wallet
+  def proxy_params
+    { wallet: :id }
+  end
+
   def method_signatures # rubocop:disable Metrics/MethodLength
     {
       account_create: {

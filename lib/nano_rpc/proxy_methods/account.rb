@@ -1,5 +1,9 @@
 # frozen_string_literal: true
-module NanoRpc::Methods::Account
+module NanoRpc::ProxyMethods::Account
+  def proxy_params
+    { account: :address }
+  end
+
   def method_signatures # rubocop:disable Metrics/MethodLength
     {
       account_balance: {},
