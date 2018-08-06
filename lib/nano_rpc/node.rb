@@ -17,7 +17,6 @@ class NanoRpc::Node
 
   DEFAULT_TIMEOUT = 60
 
-  require 'pry'
   def initialize(
     host: 'localhost',
     port: 7076,
