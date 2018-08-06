@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module NanoRpc::ProxyMethods::Account
+module NanoRpc::AccountMethods
   def proxy_params
     { account: :address }
   end

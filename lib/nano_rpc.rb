@@ -7,8 +7,12 @@ require 'nano_rpc/helpers/accounts_helper'
 require 'nano_rpc/helpers/node_helper'
 require 'nano_rpc/helpers/wallet_helper'
 
+require 'nano_rpc/proxy_methods/account'
+require 'nano_rpc/proxy_methods/accounts'
+require 'nano_rpc/proxy_methods/node'
+require 'nano_rpc/proxy_methods/wallet'
+
 require 'nano_rpc/proxy'
-require 'nano_rpc/methods'
 require 'nano_rpc/node'
 require 'nano_rpc/errors'
 require 'nano_rpc/response'

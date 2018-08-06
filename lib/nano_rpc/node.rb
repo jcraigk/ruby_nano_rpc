@@ -10,7 +10,7 @@ end
 
 class NanoRpc::Node
   include NanoRpc::NodeHelper
-  include NanoRpc::ProxyMethods::Node
+  include NanoRpc::NodeMethods
   include NanoRpc::Proxy
 
   attr_reader :host, :port, :auth, :headers, :node, :timeout

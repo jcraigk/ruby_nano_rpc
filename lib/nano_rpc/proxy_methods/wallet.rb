@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module NanoRpc::ProxyMethods::Wallet
+module NanoRpc::WalletMethods
   def proxy_params
     { wallet: :id }
   end

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module NanoRpc::ProxyMethods::Node
+module NanoRpc::NodeMethods
   def proxy_params
     {}
   end

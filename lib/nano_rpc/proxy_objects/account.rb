@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class NanoRpc::Account
   include NanoRpc::AccountHelper
-  include NanoRpc::ProxyMethods::Account
+  include NanoRpc::AccountMethods
   include NanoRpc::Proxy
 
   attr_reader :address

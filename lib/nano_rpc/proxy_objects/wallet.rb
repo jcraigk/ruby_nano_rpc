@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 class NanoRpc::Wallet
-  include NanoRpc::ProxyMethods::Wallet
   include NanoRpc::Proxy
   include NanoRpc::WalletHelper
+  include NanoRpc::WalletMethods
 
   attr_reader :id
 
@@ -14,5 +14,10 @@ class NanoRpc::Wallet
 
     @id = id
     super(opts)
+  end
+
+  # Show only @id
+  def inspect
+    "#{inspect_prefix}, @id=\"#{@id}\">"
   end
 end
