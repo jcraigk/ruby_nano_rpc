@@ -78,8 +78,8 @@ RSpec.describe NanoRpc::Node do
     end
 
     it 'defines expected proxy params and methods' do
-      expect(described_class.proxy_param_def).to eq(nil)
-      expect(described_class.proxy_methods).to eq(expected_proxy_methods)
+      expect(subject.proxy_params).to eq({})
+      expect(subject.proxy_methods.keys).to eq(expected_proxy_methods)
     end
   end
 

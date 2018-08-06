@@ -17,8 +17,8 @@ RSpec.describe NanoRpc::Accounts do
   let(:expected_proxy_params) { { accounts: :addresses } }
 
   it 'declares expected proxy params and methods' do
-    expect(described_class.proxy_param_def).to eq(expected_proxy_params)
-    expect(described_class.proxy_methods).to eq(expected_proxy_methods)
+    expect(subject.proxy_params).to eq(expected_proxy_params)
+    expect(subject.proxy_methods.keys).to eq(expected_proxy_methods)
   end
 
   it 'raises MissingParameters unless initialized with array' do
@@ -56,5 +56,9 @@ RSpec.describe NanoRpc::Accounts do
       expect(account.address).to eq(addresses[idx])
       idx += 1
     end
+  end
+
+  it 'has a custom #inspect' do
+    expect(subject.inspect).to include("@addresses=\"#{subject.addresses}\"")
   end
 end

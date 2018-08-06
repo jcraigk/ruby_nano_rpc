@@ -62,7 +62,9 @@ RSpec.describe AccountHelperExample do
 
   it 'provides #key' do
     allow(subject).to(
-      receive(:account_key).and_return(NanoRpc::Response.new('key' => wallet_id1))
+      receive(:account_key).and_return(
+        NanoRpc::Response.new('key' => wallet_id1)
+      )
     )
     expect(subject.key).to eq(wallet_id1)
   end

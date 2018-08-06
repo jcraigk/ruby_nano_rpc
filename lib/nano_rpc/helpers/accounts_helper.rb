@@ -66,7 +66,7 @@ module NanoRpc::AccountsHelper
   end
 
   def last
-    self[-1]
+    size > 1 ? self[-1] : first
   end
 
   def size

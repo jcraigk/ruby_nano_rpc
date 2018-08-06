@@ -32,7 +32,9 @@ RSpec.describe WalletHelperExample do
   let(:block2) { 'F2B3809' }
   let(:wallet_id1) { 'A4C1EF' }
   let(:wallet_id2) { 'F9CD82' }
-  let(:pending_blocks_params) { { count: 2, threshold: 10, source: wallet_id1 } }
+  let(:pending_blocks_params) do
+    { count: 2, threshold: 10, source: wallet_id1 }
+  end
   let(:work1) { '000000' }
   let(:account_param) { { account: addr1 } }
   let(:account_work_params) { { account: addr1, work: work1 } }
@@ -233,7 +235,9 @@ RSpec.describe WalletHelperExample do
         .with(wallet: wallet_id2, source: wallet_id1, accounts: addresses)
         .and_return(NanoRpc::Response.new('moved' => '1'))
     )
-    expect(subject.move_accounts(to: wallet_id2, accounts: addresses)).to eq(true)
+    expect(
+      subject.move_accounts(to: wallet_id2, accounts: addresses)
+    ).to eq(true)
   end
 
   it 'provides #password_valid?' do

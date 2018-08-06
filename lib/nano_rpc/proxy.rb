@@ -4,38 +4,13 @@ module NanoRpc::Proxy
 
   def initialize(opts = {})
     @node ||= opts[:node] || NanoRpc.node
-    self.class.proxy_methods&.each { |m| define_proxy_method(m) }
-  end
-
-  def self.included(base)
-    base.extend(ClassMethods)
-  end
-  module ClassMethods
-    attr_reader :proxy_method_def, :proxy_param_def
-
-    def proxy_params(param_def = nil)
-      @proxy_param_def = param_def
-    end
-
-    def proxy_method(name, signature = nil)
-      @proxy_method_def ||= {}
-      @proxy_method_def[name] = signature
-    end
-
-    def proxy_methods
-      proxy_method_def&.keys&.sort
-    end
-  end
-
-  def proxy_methods
-    self.class.proxy_methods
+    proxy_methods.each { |meth, _| define_proxy_method(meth) }
   end
 
   private
 
   def define_proxy_method(meth)
-    self.class
-        .send(:define_method, method_alias(meth)) do |args = {}|
+    self.class.send(:define_method, method_alias(meth)) do |args = {}|
       @meth = meth
       @call_args = args
       validate_params
@@ -49,14 +24,10 @@ module NanoRpc::Proxy
   end
 
   def base_params
-    @base_params ||= begin
-      return if self.class.proxy_param_def.nil?
-      self.class
-          .proxy_param_def
-          .each_with_object({}) do |(k, v), params|
+    @base_params ||=
+      proxy_params.each_with_object({}) do |(k, v), params|
         params[k] ||= send(v)
       end
-    end
   end
 
   # Nano `send` action is also the method caller in Ruby ;)
@@ -82,11 +53,12 @@ module NanoRpc::Proxy
   def prepare_params
     # Allow non-Hash literal argument if this method requires single param
     # Ex `create('new')` vs `create(name: 'new')`
-    @call_args = if required_params.size == 1 && !@call_args.is_a?(Hash)
-                   { required_params.first => @call_args }
-                 else
-                   @call_args.is_a?(Hash) ? @call_args : {}
-                 end
+    @call_args =
+      if required_params.size == 1 && !@call_args.is_a?(Hash)
+        { required_params.first => @call_args }
+      else
+        @call_args.is_a?(Hash) ? @call_args : {}
+      end
     @call_args.merge!(base_params) if base_params
   end
 
@@ -117,24 +89,16 @@ module NanoRpc::Proxy
   end
 
   def required_params
-    return [] unless method_def && method_def[@meth]
-    method_def[@meth][:required] || []
+    return [] unless proxy_methods[@meth]
+    proxy_methods[@meth][:required] || []
   end
 
   def optional_params
-    return [] unless method_def && method_def[@meth]
-    method_def[@meth][:optional] || []
+    return [] unless proxy_methods[@meth]
+    proxy_methods[@meth][:optional] || []
   end
 
   def base_param_keys
-    param_def.is_a?(Hash) ? param_def.keys : []
-  end
-
-  def method_def
-    self.class.proxy_method_def
-  end
-
-  def param_def
-    self.class.proxy_param_def
+    proxy_params.keys
   end
 end
