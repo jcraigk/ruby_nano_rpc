@@ -42,7 +42,6 @@ class NanoRpc::Node
     rpc_post(args)
   end
 
-  # Condense host/port on object inspection
   def inspect
     "#{inspect_prefix}, @url=\"#{@host}:#{port}\">"
   end

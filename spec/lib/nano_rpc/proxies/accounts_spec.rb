@@ -57,4 +57,8 @@ RSpec.describe NanoRpc::Accounts do
       idx += 1
     end
   end
+
+  it 'has a custom #inspect' do
+    expect(subject.inspect).to include("@addresses=\"#{subject.addresses}\"")
+  end
 end

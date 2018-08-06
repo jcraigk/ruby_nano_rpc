@@ -55,4 +55,8 @@ RSpec.describe NanoRpc::Wallet do
   it 'assigns id on initialization' do
     expect(subject.id).to eq(wallet_id)
   end
+
+  it 'has a custom #inspect' do
+    expect(subject.inspect).to include("@id=\"#{subject.id}\"")
+  end
 end

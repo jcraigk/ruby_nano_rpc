@@ -59,4 +59,8 @@ RSpec.describe NanoRpc::Account do
       expect(subject.balance).to eq(balance)
     end
   end
+
+  it 'has a custom #inspect' do
+    expect(subject.inspect).to include("@address=\"#{subject.address}\"")
+  end
 end

@@ -15,4 +15,8 @@ class NanoRpc::Accounts
     @addresses = addresses
     super(opts)
   end
+
+  def inspect
+    "#{inspect_prefix}, @addresses=\"#{@addresses}\">"
+  end
 end

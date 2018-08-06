@@ -16,7 +16,6 @@ class NanoRpc::Wallet
     super(opts)
   end
 
-  # Show only @id
   def inspect
     "#{inspect_prefix}, @id=\"#{@id}\">"
   end
