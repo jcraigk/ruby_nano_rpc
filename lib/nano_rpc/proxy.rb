@@ -4,7 +4,7 @@ module NanoRpc::Proxy
 
   def initialize(opts = {})
     @node ||= opts[:node] || NanoRpc.node
-    proxy_methods.each { |meth, _signature| define_proxy_method(meth) }
+    proxy_methods.each { |meth, _| define_proxy_method(meth) }
   end
 
   private
