@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-# This spec covers both NanoRpc::Proxy and NanoRpc::ProxyContext
-
 class ProxyExample
   def proxy_params
     { account: :address }
@@ -50,8 +48,10 @@ RSpec.describe ProxyExample do
     end
   end
 
-  it 'includes proxy_methods in #methods' do
-    expect(subject.methods).to include(*subject.proxy_methods.keys)
+  it 'defines proxy_methods on subject' do
+    expected_proxy_methods.each do |meth|
+      expect(subject.respond_to?(meth)).to eq(true)
+    end
   end
 
   it 'invokes the node with expected parameters' do
