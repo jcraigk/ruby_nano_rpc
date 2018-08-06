@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 module NanoRpc::ProxyMethods::Node
-  def method_signatures # rubocop:disable Metrics/MethodLength
+  def proxy_params
+    {}
+  end
+
+  def proxy_methods # rubocop:disable Metrics/MethodLength
     {
       available_supply: {},
       block: {

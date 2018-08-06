@@ -4,7 +4,7 @@ module NanoRpc::ProxyMethods::Accounts
     { accounts: :addresses }
   end
 
-  def method_signatures # rubocop:disable Metrics/MethodLength
+  def proxy_methods # rubocop:disable Metrics/MethodLength
     {
       account_move: {
         required: %i[wallet source]

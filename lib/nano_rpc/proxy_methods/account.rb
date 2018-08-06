@@ -4,11 +4,11 @@ module NanoRpc::ProxyMethods::Account
     { account: :address }
   end
 
-  def method_signatures # rubocop:disable Metrics/MethodLength
+  def proxy_methods # rubocop:disable Metrics/MethodLength
     {
       account_balance: {},
       account_block_count: {},
-      account_info: {},
+
       account_create: {
         required: %i[wallet],
         optional: %i[work]
@@ -16,10 +16,11 @@ module NanoRpc::ProxyMethods::Account
       account_history: {
         required: %i[count]
       },
+      account_info: {},
+      account_key: {},
       account_move: {
         required: %i[wallet source accounts]
       },
-      account_key: {},
       account_remove: {
         required: %i[wallet]
       },
@@ -37,18 +38,18 @@ module NanoRpc::ProxyMethods::Account
         required: %i[count],
         optional: %i[representative weight pending modified_since sorting]
       },
-      validate_account_number: {},
+      payment_wait: {
+        required: %i[amount timeout]
+      },
       pending: {
         required: %i[count],
         optional: %i[threshold exists source]
-      },
-      payment_wait: {
-        required: %i[amount timeout]
       },
       receive: {
         required: %i[wallet block],
         optional: %i[work]
       },
+      validate_account_number: {},
       work_get: {
         required: %i[wallet]
       },

@@ -4,18 +4,18 @@ module NanoRpc::ProxyMethods::Wallet
     { wallet: :id }
   end
 
-  def method_signatures # rubocop:disable Metrics/MethodLength
+  def proxy_methods # rubocop:disable Metrics/MethodLength
     {
       account_create: {
-        optional: %i[work]
-      },
-      accounts_create: {
-        required: %i[count],
         optional: %i[work]
       },
       account_list: {},
       account_remove: {
         required: %i[account]
+      },
+      accounts_create: {
+        required: %i[count],
+        optional: %i[work]
       },
       password_change: {
         required: %i[password]
@@ -25,19 +25,19 @@ module NanoRpc::ProxyMethods::Wallet
       },
       password_valid: {},
       payment_begin: {},
-      payment_init: {},
       payment_end: {
         required: %i[account]
       },
+      payment_init: {},
       receive: {
         required: %i[account block],
         optional: %i[work]
       },
+      search_pending: {},
       send: {
         required: %i[wallet source destination amount],
         optional: %i[id work]
       },
-      search_pending: {},
       wallet_add: {
         required: %i[key],
         optional: %i[work]

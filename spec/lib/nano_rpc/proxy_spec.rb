@@ -8,7 +8,7 @@ class ProxyExample
     { account: :address }
   end
 
-  def method_signatures
+  def proxy_methods
     {
       some_action: {
         required: %i[param1 param2],
@@ -50,13 +50,8 @@ RSpec.describe ProxyExample do
     end
   end
 
-  it 'provides sorted list of methods' do
-    expect(described_class.proxy_methods).to eq(expected_proxy_methods)
-    expect(subject.proxy_methods).to eq(expected_proxy_methods)
-  end
-
   it 'includes proxy_methods in #methods' do
-    expect(subject.methods).to include(*subject.proxy_methods)
+    expect(subject.methods).to include(*subject.proxy_methods.keys)
   end
 
   it 'invokes the node with expected parameters' do
