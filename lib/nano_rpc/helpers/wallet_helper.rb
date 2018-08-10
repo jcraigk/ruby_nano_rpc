@@ -147,6 +147,8 @@ module NanoRpc::WalletHelper
   alias set_representative representative_set
 
   def send_nano(from:, to:, amount:, id: nil, work: nil)
+    from = from.respond_to?(:address) ? from.address : from
+    to = to.respond_to?(:address) ? to.address : to
     send_currency(
       source: from,
       destination: to,
