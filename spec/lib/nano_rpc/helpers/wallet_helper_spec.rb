@@ -42,6 +42,15 @@ RSpec.describe WalletHelperExample do
   let(:send_nano_params) do
     { from: addr1, to: addr2, amount: 100, id: 1, work: work1 }
   end
+  let(:send_nano_objects) do
+    {
+      from: NanoRpc::Account.new(addr1),
+      to: NanoRpc::Account.new(addr2),
+      amount: 100,
+      id: 1,
+      work: work1
+    }
+  end
   let(:send_nano_opts) do
     { source: addr1, destination: addr2, amount: 100, id: 1, work: work1 }
   end
@@ -348,6 +357,7 @@ RSpec.describe WalletHelperExample do
         .and_return(NanoRpc::Response.new('block' => block1))
     )
     expect(subject.send_nano(send_nano_params)).to eq(block1)
+    expect(subject.send_nano(send_nano_objects)).to eq(block1)
     expect(subject.send_transaction(send_nano_params)).to eq(block1)
   end
 
