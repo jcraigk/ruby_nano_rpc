@@ -107,7 +107,7 @@ RSpec.describe WalletHelperExample do
 
   it 'provides #balance' do
     allow(subject).to(
-      receive(:wallet_balance_total)
+      receive(:wallet_info)
         .and_return(NanoRpc::Response.new(balance_data))
     )
     expect(subject.balance).to eq(100)
@@ -260,7 +260,7 @@ RSpec.describe WalletHelperExample do
 
   it 'provides #pending_balance and #balance_pending' do
     allow(subject).to(
-      receive(:wallet_balance_total)
+      receive(:wallet_info)
         .and_return(NanoRpc::Response.new(balance_data))
     )
     expect(subject.pending_balance).to eq(5)
