@@ -21,13 +21,13 @@ RSpec.describe NanoRpc::Wallet do
       send
       wallet_add
       wallet_add_watch
-      wallet_balance_total
       wallet_balances
       wallet_change_seed
       wallet_contains
       wallet_destroy
       wallet_export
       wallet_frontiers
+      wallet_info
       wallet_ledger
       wallet_locked
       wallet_pending

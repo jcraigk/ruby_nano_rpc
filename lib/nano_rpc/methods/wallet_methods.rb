@@ -45,7 +45,6 @@ module NanoRpc::WalletMethods
       wallet_add_watch: {
         required: %i[accounts]
       },
-      wallet_balance_total: {},
       wallet_balances: {
         optional: %i[threshold]
       },
@@ -58,11 +57,12 @@ module NanoRpc::WalletMethods
       wallet_destroy: {},
       wallet_export: {},
       wallet_frontiers: {},
+      wallet_info: {},
       wallet_ledger: {},
       wallet_locked: {},
       wallet_pending: {
         required: %i[count],
-        optional: %i[threshold source]
+        optional: %i[threshold source include_active]
       },
       wallet_representative: {},
       wallet_representative_set: {

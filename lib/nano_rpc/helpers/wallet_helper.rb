@@ -20,7 +20,7 @@ module NanoRpc::WalletHelper
   end
 
   def balance
-    wallet_balance_total.balance
+    wallet_info.balance
   end
 
   def balances(threshold: nil)
@@ -95,7 +95,7 @@ module NanoRpc::WalletHelper
   end
 
   def pending_balance
-    wallet_balance_total.pending
+    wallet_info.pending
   end
   alias balance_pending pending_balance
 
@@ -108,11 +108,12 @@ module NanoRpc::WalletHelper
   end
   alias balances_pending pending_balances
 
-  def pending_blocks(count:, threshold: nil, source: nil)
+  def pending_blocks(count:, threshold: nil, source: nil, include_active: nil)
     wallet_pending(
       count: count,
       threshold: threshold,
-      source: source
+      source: source,
+      include_active: include_active
     ).blocks
   end
   alias blocks_pending pending_blocks

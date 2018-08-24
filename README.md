@@ -10,7 +10,10 @@ Nano RPC is a Ruby wrapper for making Remote Procedure Calls against Nano digita
 
 To run a Nano node locally, see [Nano Docker Docs](https://github.com/clemahieu/raiblocks/wiki/Docker-node).
 
-**This gem is compliant with Nano release v14.2.**
+| Gem version | Nanocurrency version |
+|-------------|----------------------|
+| 0.20        | >= 15.0              |
+| 0.19        | >= 14.2, < 15.0      |
 
 ## Installation
 

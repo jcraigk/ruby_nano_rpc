@@ -27,11 +27,12 @@ module NanoRpc::AccountsHelper
     account_move(source: from, wallet: to).moved == 1
   end
 
-  def pending(count:, threshold: nil, source: nil)
+  def pending(count:, threshold: nil, source: nil, include_active: nil)
     accounts_pending(
       count: count,
       threshold: threshold,
-      source: source
+      source: source,
+      include_active: include_active
     ).blocks
   end
   alias pending_blocks pending
