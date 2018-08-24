@@ -32,8 +32,13 @@ RSpec.describe WalletHelperExample do
   let(:block2) { 'F2B3809' }
   let(:wallet_id1) { 'A4C1EF' }
   let(:wallet_id2) { 'F9CD82' }
-  let(:pending_blocks_params) do
-    { count: 2, threshold: 10, source: wallet_id1 }
+  let(:wallet_pending_params) do
+    {
+      count: 2,
+      threshold: 10,
+      source: wallet_id1,
+      include_active: true
+    }
   end
   let(:work1) { '000000' }
   let(:account_param) { { account: addr1 } }
@@ -284,14 +289,14 @@ RSpec.describe WalletHelperExample do
   it 'provides #pending_blocks and #blocks_pending' do
     allow(subject).to(
       receive(:wallet_pending)
-        .with(pending_blocks_params)
+        .with(wallet_pending_params)
         .and_return(NanoRpc::Response.new('blocks' => pending_blocks_data))
     )
     expect(
-      subject.pending_blocks(pending_blocks_params)
+      subject.pending_blocks(wallet_pending_params)
     ).to eq(pending_blocks_data)
     expect(
-      subject.blocks_pending(pending_blocks_params)
+      subject.blocks_pending(wallet_pending_params)
     ).to eq(pending_blocks_data)
   end
 

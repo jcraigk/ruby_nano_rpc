@@ -24,7 +24,14 @@ RSpec.describe AccountsHelperExample do
   let(:frontiers_data) { { 'frontiers' => frontiers_hash } }
   let(:frontiers_hash) { { addr1 => block1, addr2 => block2 } }
   let(:pending_hash) { { addr1 => [block1], addr2 => [block2] } }
-  let(:pending_params) { { count: 1, threshold: 100, source: true } }
+  let(:pending_params) do
+    {
+      count: 1,
+      threshold: 100,
+      source: true,
+      include_active: true
+    }
+  end
 
   it 'provides #balances' do
     allow(subject).to receive(:accounts_balances).and_return(

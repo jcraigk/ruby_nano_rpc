@@ -17,7 +17,7 @@ module NanoRpc::AccountsMethods
       accounts_frontiers: {},
       accounts_pending: {
         required: %i[count],
-        optional: %i[threshold source]
+        optional: %i[threshold source include_active]
       }
     }
   end

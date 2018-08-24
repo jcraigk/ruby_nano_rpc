@@ -62,7 +62,7 @@ module NanoRpc::WalletMethods
       wallet_locked: {},
       wallet_pending: {
         required: %i[count],
-        optional: %i[threshold source]
+        optional: %i[threshold source include_active]
       },
       wallet_representative: {},
       wallet_representative_set: {
