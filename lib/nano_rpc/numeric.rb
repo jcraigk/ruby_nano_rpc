@@ -36,7 +36,7 @@ module NanoRpc
 
     # Ensure at least 10^23
     def valid_raw_amount?
-      self >= 100_000_000_000_000_000_000_000
+      zero? || self >= 100_000_000_000_000_000_000_000
     end
   end
 end
