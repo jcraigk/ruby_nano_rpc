@@ -8,10 +8,12 @@ RSpec.describe 'Numeric conversion monkeypatching' do
   let(:invalid_raw) { 100_000_000 } # too small
   let(:valid_nano) { 52_343.0234319 }
   let(:invalid_nano) { 100_000_000_000_000 } # too large
+  let(:zero) { 0 }
 
   context '#to_nano' do
     it 'converts valid raw amounts' do
       expect(valid_raw.to_nano).to eq(52_343.023431)
+      expect(zero.to_nano).to eq(0.0)
     end
 
     it 'raises error on invalid raw amounts' do
@@ -22,6 +24,7 @@ RSpec.describe 'Numeric conversion monkeypatching' do
   context '#to_raw' do
     it 'converts valid nano amounts' do
       expect(valid_nano.to_raw).to eq(valid_raw)
+      expect(zero.to_raw).to eq(0)
     end
 
     it 'raises error on invalid nano amounts' do
