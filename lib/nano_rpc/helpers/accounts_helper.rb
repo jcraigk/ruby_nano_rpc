@@ -39,38 +39,23 @@ module NanoRpc::AccountsHelper
 
   # Array-like access for NanoRpc::Account
   def [](idx)
-    return unless @addresses[idx]
-    @account_objects ||= []
-    @account_objects[idx] ||= NanoRpc::Account.new(@addresses[idx], node: node)
+    return unless addresses[idx]
+    to_a[idx]
   end
 
   def <<(val)
+    @to_a = nil
     @addresses << val
   end
 
   def each(&_block)
-    @addresses.each do |address|
-      yield NanoRpc::Account.new(address, node: node)
-    end
+    to_a.each { |account| yield account }
   end
 
-  def first
-    self[0]
-  end
-
-  def second
-    self[1]
-  end
-
-  def third
-    self[2]
-  end
-
-  def last
-    size > 1 ? self[-1] : first
-  end
-
-  def size
-    addresses.size
+  def to_a
+    @to_a ||=
+      addresses.map do |address|
+        NanoRpc::Account.new(address, node: node)
+      end
   end
 end
