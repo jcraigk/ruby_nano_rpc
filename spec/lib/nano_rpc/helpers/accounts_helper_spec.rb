@@ -6,7 +6,9 @@ class AccountsHelperExample
 end
 
 RSpec.describe AccountsHelperExample do
-  subject { NanoRpc::Accounts.new(%w[abc def]) }
+  subject { NanoRpc::Accounts.new(addresses) }
+  let(:addresses) { [addr1, addr2] }
+  let(:additional_address) { 'xrb_address4' }
   let(:addr1) { 'nano_address1' }
   let(:addr2) { 'nano_address2' }
   let(:block1) { '9FE23A' }
@@ -70,5 +72,26 @@ RSpec.describe AccountsHelperExample do
       )
     expect(subject.pending(pending_params)).to eq(pending_hash)
     expect(subject.pending_blocks(pending_params)).to eq(pending_hash)
+  end
+
+  it 'provides `<<` addition of account addresss' do
+    subject << additional_address
+    expect(subject[2].class).to eq(NanoRpc::Account)
+    expect(subject[2].address).to eq(additional_address)
+  end
+
+  it 'provides #each' do
+    idx = 0
+    subject.each do |account|
+      expect(account.class).to eq(NanoRpc::Account)
+      expect(account.address).to eq(addresses[idx])
+      idx += 1
+    end
+  end
+
+  it 'provides #to_a' do
+    array = subject.to_a
+    expect(array.class).to eq(Array)
+    expect(array.size).to eq(2)
   end
 end

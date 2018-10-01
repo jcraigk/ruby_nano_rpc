@@ -4,7 +4,6 @@ require 'spec_helper'
 RSpec.describe NanoRpc::Accounts do
   subject { described_class.new(addresses) }
   let(:addresses) { %w[nano_address1 xrb_address2 xrb_address3] }
-  let(:additional_address) { 'xrb_address4' }
   let(:expected_proxy_methods) do
     %i[
       account_move
@@ -29,33 +28,6 @@ RSpec.describe NanoRpc::Accounts do
 
   it 'assigns address on initialization' do
     expect(subject.addresses).to eq(addresses)
-  end
-
-  it 'provides Array-like read access to NanoRpc::Account objects' do
-    expect(subject[0].class).to eq(NanoRpc::Account)
-    expect(subject[1].class).to eq(NanoRpc::Account)
-    expect(subject[2].class).to eq(NanoRpc::Account)
-    expect(subject[3]).to eq(nil)
-    expect(subject.first).to eq(subject[0])
-    expect(subject.second).to eq(subject[1])
-    expect(subject.third).to eq(subject[2])
-    expect(subject.last).to eq(subject[2])
-    expect(subject.size).to eq(addresses.size)
-  end
-
-  it 'provides `<<` addition of wallet addresss' do
-    subject << additional_address
-    expect(subject[3].class).to eq(NanoRpc::Account)
-    expect(subject[3].address).to eq(additional_address)
-  end
-
-  it 'provides #each iteration' do
-    idx = 0
-    subject.each do |account|
-      expect(account.class).to eq(NanoRpc::Account)
-      expect(account.address).to eq(addresses[idx])
-      idx += 1
-    end
   end
 
   it 'has a custom #inspect' do
