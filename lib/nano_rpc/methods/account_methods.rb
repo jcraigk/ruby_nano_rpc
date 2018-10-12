@@ -14,7 +14,8 @@ module NanoRpc::AccountMethods
         optional: %i[work]
       },
       account_history: {
-        required: %i[count]
+        required: %i[count],
+        optional: %i[raw head]
       },
       account_info: {},
       account_key: {},
