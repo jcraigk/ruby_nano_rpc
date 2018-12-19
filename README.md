@@ -12,8 +12,9 @@ To run a Nano node locally, see [Nano Docker Docs](https://github.com/clemahieu/
 
 | Gem version | Nanocurrency version |
 |-------------|----------------------|
-| 0.22        | >= 16.0              |
-| 0.20        | >= 15.0              |
+| 0.24        | >= 17.0              |
+| 0.23        | >= 16.0, < 17.0      |
+| 0.20        | >= 15.0, < 16.0      |
 | 0.19        | >= 14.2, < 15.0      |
 
 ## Installation
