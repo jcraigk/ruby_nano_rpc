@@ -1,17 +1,11 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-RSpec.describe 'NanoRpc errors' do
-  describe NanoRpc::Error do
-    it 'is a StandardError' do
-      expect(subject).to be_a(StandardError)
-    end
-  end
+RSpec.describe NanoRpc::Error do
+  it { is_expected.to be_a(StandardError) }
 
   shared_examples 'child error' do
-    it 'is a NanoRpc::Error' do
-      expect(subject).to be_a(NanoRpc::Error)
-    end
+    it { is_expected.to be_a(described_class) }
   end
 
   describe NanoRpc::BadRequest do

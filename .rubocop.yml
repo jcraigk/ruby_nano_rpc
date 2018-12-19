@@ -1,4 +1,14 @@
 require: rubocop-rspec
+RSpec/ExampleLength:
+  Max: 8
+RSpec/MessageSpies:
+  Enabled: false
+RSpec/MultipleExpectations:
+  Enabled: false
+RSpec/NestedGroups:
+  Max: 5
+RSpec/SubjectStub:
+  Enabled: false
 
 AllCops:
   TargetRubyVersion: 2.5.3

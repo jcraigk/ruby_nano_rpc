@@ -3,6 +3,7 @@ require 'spec_helper'
 
 RSpec.describe NanoRpc::Account do
   subject { described_class.new(address) }
+
   let(:address) { 'nano_address1' }
   let(:expected_proxy_methods) do
     %i[

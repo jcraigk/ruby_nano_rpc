@@ -7,6 +7,7 @@ end
 
 RSpec.describe AccountHelperExample do
   subject { NanoRpc::Account.new('abc') }
+
   let(:history_data) do
     [{ 'hash' => wallet_id1 }, { 'hash' => wallet_id1 }]
   end

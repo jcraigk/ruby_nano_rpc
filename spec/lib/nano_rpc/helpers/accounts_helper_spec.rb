@@ -7,6 +7,7 @@ end
 
 RSpec.describe AccountsHelperExample do
   subject { NanoRpc::Accounts.new(addresses) }
+
   let(:addresses) { [addr1, addr2] }
   let(:additional_address) { 'xrb_address4' }
   let(:addr1) { 'nano_address1' }

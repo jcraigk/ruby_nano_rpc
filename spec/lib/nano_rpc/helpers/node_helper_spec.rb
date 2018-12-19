@@ -8,6 +8,7 @@ end
 
 RSpec.describe NodeHelperExample do
   subject { NanoRpc::Node.new }
+
   let(:nano_amount) { 1_000_000_000_000_000_000_000_000 }
   let(:knano_amount) { 1_000_000_000_000_000_000_000_000_000 }
   let(:mnano_amount) { 1_000_000_000_000_000_000_000_000_000_000 }

@@ -3,6 +3,7 @@ require 'spec_helper'
 
 RSpec.describe NanoRpc::Wallet do
   subject { described_class.new(wallet_id) }
+
   let(:wallet_id) { 'E929FBC3' }
   let(:expected_proxy_methods) do
     %i[

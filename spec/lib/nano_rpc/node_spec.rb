@@ -2,7 +2,8 @@
 require 'spec_helper'
 
 RSpec.describe NanoRpc::Node do
-  subject { described_class.new }
+  subject(:node) { described_class.new }
+
   let(:node_with_config) do
     described_class.new(host: '127.0.0.1', port: 7077)
   end
@@ -20,7 +21,7 @@ RSpec.describe NanoRpc::Node do
   let(:addr2) { 'nano_address2' }
   let(:addresses) { [addr1, addr2] }
 
-  context 'proxy methods' do
+  describe 'proxy methods' do
     let(:expected_proxy_methods) do
       %i[
         available_supply
@@ -84,9 +85,12 @@ RSpec.describe NanoRpc::Node do
       ]
     end
 
-    it 'defines expected proxy params and methods' do
-      expect(subject.proxy_params).to eq({})
-      expect(subject.proxy_methods.keys).to eq(expected_proxy_methods)
+    it 'defines expected proxy params' do
+      expect(node.proxy_params).to eq({})
+    end
+
+    it 'defines expected proxy methods' do
+      expect(node.proxy_methods.keys).to eq(expected_proxy_methods)
     end
   end
 
@@ -94,41 +98,44 @@ RSpec.describe NanoRpc::Node do
     expect(NanoRpc.node.class).to eq(described_class)
   end
 
-  it 'provides default configuration' do
-    expect(subject.host).to eq('localhost')
-    expect(subject.port).to eq(7076)
+  it 'sets default config' do
+    expect(node.host).to eq('localhost')
+    expect(node.port).to eq(7076)
   end
 
-  context 'host protocol and port' do
-    let(:host) { '127.0.0.1' }
-    let(:url_with_http) { "http://#{host}" }
-    let(:url_with_http_and_port) { "http://#{host}:7076" }
-    let(:url_with_https) { "https://#{host}" }
-    let(:url_with_https_and_port) { "https://#{host}:7076" }
-
-    it 'adds http if missing' do
-      subject = described_class.new(host: host)
-      expect(subject.send(:url)).to eq(url_with_http_and_port)
-      subject = described_class.new(host: url_with_http)
-      expect(subject.send(:url)).to eq(url_with_http_and_port)
-      subject = described_class.new(host: url_with_https)
-      expect(subject.send(:url)).to eq(url_with_https_and_port)
-    end
-  end
-
-  it 'allows host configuration' do
+  it 'allows custom config' do
     expect(node_with_config.host).to eq('127.0.0.1')
     expect(node_with_config.port).to eq(7077)
   end
 
-  it 'implements #call' do
-    expect(subject).to receive(:rpc_post).with(
-      { action: action }.merge(params)
-    )
-    subject.call(action, params)
+  describe 'host protocol and port' do
+    let(:host) { '127.0.0.1' }
+    let(:url_with_http_and_port) { "http://#{host}:7076" }
+
+    it 'adds http and port if missing' do
+      node = described_class.new(host: host)
+      expect(node.send(:url)).to eq(url_with_http_and_port)
+    end
+
+    it 'adds port if missing' do
+      node = described_class.new(host: "http://#{host}")
+      expect(node.send(:url)).to eq(url_with_http_and_port)
+    end
+
+    it 'adds http if missing' do
+      node = described_class.new(host: "https://#{host}")
+      expect(node.send(:url)).to eq("https://#{host}:7076")
+    end
   end
 
-  context 'RestClient' do
+  it 'implements #call' do
+    expect(node).to receive(:rpc_post).with(
+      { action: action }.merge(params)
+    )
+    node.call(action, params)
+  end
+
+  describe 'RestClient' do
     let(:custom_headers) { { 'My-Header-X' => 'My-Value' } }
     let(:custom_timeout) { 10 }
     let(:auth_key) { 'some_auth_key' }
@@ -164,7 +171,7 @@ RSpec.describe NanoRpc::Node do
     end
   end
 
-  context 'node connection failure' do
+  context 'when node refuses to connect' do
     before do
       allow(RestClient::Request).to(
         receive(:execute).and_raise(Errno::ECONNREFUSED)
@@ -172,7 +179,7 @@ RSpec.describe NanoRpc::Node do
     end
 
     it 'raises NodeConnectionFailure and provides error message' do
-      expect { subject.call(action, params) }.to(
+      expect { node.call(action, params) }.to(
         raise_error(
           NanoRpc::NodeConnectionFailure,
           'Node connection failure at http://localhost:7076'
@@ -181,7 +188,7 @@ RSpec.describe NanoRpc::Node do
     end
   end
 
-  context 'node timeout' do
+  context 'when node times out' do
     before do
       allow(RestClient::Request).to receive(:execute).and_raise(
         RestClient::Exceptions::OpenTimeout
@@ -189,7 +196,7 @@ RSpec.describe NanoRpc::Node do
     end
 
     it 'raises NodeConnectionFailure and provides error message' do
-      expect { subject.call(action, params) }.to(
+      expect { node.call(action, params) }.to(
         raise_error(
           NanoRpc::NodeOpenTimeout,
           'Node failed to respond in time'
@@ -198,9 +205,10 @@ RSpec.describe NanoRpc::Node do
     end
   end
 
-  context 'handling server response' do
+  describe 'handling server response' do
     let(:mock_response) { double }
-    let(:node_call) { subject.call(action, params) }
+    let(:node_call) { node.call(action, params) }
+
     before do
       allow(RestClient::Request).to receive(:execute).and_return(mock_response)
     end
@@ -211,7 +219,7 @@ RSpec.describe NanoRpc::Node do
         allow(mock_response).to receive(:body).and_return(response_json)
       end
 
-      context 'with success response from node' do
+      context 'when node responds successfully' do
         let(:response_json) { valid_response_json }
 
         it 'converts to NanoRpc::Response' do
@@ -221,7 +229,7 @@ RSpec.describe NanoRpc::Node do
         end
       end
 
-      context 'with error response from node' do
+      context 'when node responds with error' do
         let(:response_json) { bad_response_json }
 
         it 'raises InvalidRequest and provides error message' do
@@ -255,29 +263,29 @@ RSpec.describe NanoRpc::Node do
   end
 
   it 'combines host/port into url in #inspect output' do
-    expect(subject.inspect).to include('@url="localhost:7076"')
+    expect(node.inspect).to include('@url="localhost:7076"')
   end
 
-  context 'proxy objects' do
+  describe 'proxy objects' do
     it 'pulls #id from NanoRpc::Wallet' do
-      expect(subject).to(
+      expect(node).to(
         receive(:rpc_post).with(action: action, wallet: wallet_id)
       )
-      subject.call(action, wallet: NanoRpc::Wallet.new(wallet_id))
+      node.call(action, wallet: NanoRpc::Wallet.new(wallet_id))
     end
 
     it 'pulls #addresses from NanoRpc::Accounts' do
-      expect(subject).to(
+      expect(node).to(
         receive(:rpc_post).with(action: action, accounts: addresses)
       )
-      subject.call(action, accounts: NanoRpc::Accounts.new(addresses))
+      node.call(action, accounts: NanoRpc::Accounts.new(addresses))
     end
 
     it 'pulls #address from NanoRpc::Account' do
-      expect(subject).to(
+      expect(node).to(
         receive(:rpc_post).with(action: action, account: addr1)
       )
-      subject.call(action, account: NanoRpc::Account.new(addr1))
+      node.call(action, account: NanoRpc::Account.new(addr1))
     end
   end
 end
