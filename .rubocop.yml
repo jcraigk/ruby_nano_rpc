@@ -1,7 +1,10 @@
+require: rubocop-rspec
+
 AllCops:
-  TargetRubyVersion: 2.5.0
+  TargetRubyVersion: 2.5.3
   Exclude:
     - bin/*
+    - nano_rpc.gemspec
   DisplayCopNames: true
 Metrics/BlockLength:
   Exclude:
@@ -11,9 +14,9 @@ Metrics/ModuleLength:
 Metrics/ClassLength:
   Max: 200
 Style/ClassAndModuleChildren:
-  EnforcedStyle: compact
+  Enabled: false
 Style/EmptyMethod:
-  EnforcedStyle: expanded
+  Enabled: false
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
 Layout/EmptyLineAfterMagicComment:

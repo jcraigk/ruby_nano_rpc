@@ -33,10 +33,23 @@ module NanoRpc::NodeMethods
         required: %i[address port]
       },
       bootstrap_any: {},
+      bootstrap_lazy: {
+        required: %i[hash],
+        optional: %i[force]
+      },
+      bootstrap_status: {},
       chain: {
         required: %i[block count]
       },
+      confirmation_active: {},
       confirmation_history: {},
+      confirmation_info: {
+        required: %i[root],
+        optional: %i[contents representatives]
+      },
+      confirmation_quorum: {
+        optional: %i[peer_details]
+      },
       deterministic_key: {
         required: %i[seed index]
       },
@@ -63,6 +76,8 @@ module NanoRpc::NodeMethods
       mrai_to_raw: {
         required: %i[amount]
       },
+      node_id: {},
+      node_id_delete: {},
       payment_wait: {
         required: %i[account amount timeout]
       },
