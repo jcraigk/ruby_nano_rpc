@@ -34,8 +34,13 @@ RSpec.describe NanoRpc::Node do
         blocks_info
         bootstrap
         bootstrap_any
+        bootstrap_lazy
+        bootstrap_status
         chain
+        confirmation_active
         confirmation_history
+        confirmation_info
+        confirmation_quorum
         deterministic_key
         frontier_count
         history
@@ -46,6 +51,8 @@ RSpec.describe NanoRpc::Node do
         krai_to_raw
         mrai_from_raw
         mrai_to_raw
+        node_id
+        node_id_delete
         payment_wait
         peers
         pending_exists
