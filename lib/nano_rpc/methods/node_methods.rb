@@ -49,7 +49,7 @@ module NanoRpc::NodeMethods
       },
       confirmation_quorum: {
         optional: %i[peer_details]
-      }
+      },
       deterministic_key: {
         required: %i[seed index]
       },
