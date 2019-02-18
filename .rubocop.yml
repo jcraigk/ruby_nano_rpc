@@ -4,7 +4,7 @@ RSpec/ExampleLength:
 RSpec/MultipleExpectations:
   Enabled: false
 RSpec/NestedGroups:
-  Max: 5
+  Max: 4
 RSpec/SubjectStub:
   Enabled: false
 
