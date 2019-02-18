@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-class NodeHelperExample
+class NodeHelper
   include NanoRpc::Proxy
   include NanoRpc::NodeHelper
 end
 
-RSpec.describe NodeHelperExample do
-  subject { NanoRpc::Node.new }
+RSpec.describe NodeHelper do
+  subject(:node) { NanoRpc::Node.new }
+
   let(:nano_amount) { 1_000_000_000_000_000_000_000_000 }
   let(:knano_amount) { 1_000_000_000_000_000_000_000_000_000 }
   let(:mnano_amount) { 1_000_000_000_000_000_000_000_000_000_000 }
@@ -22,124 +23,127 @@ RSpec.describe NodeHelperExample do
   let(:pending_hash_param) { { hash: pending_hash } }
   let(:addresses) { %w[abc def] }
 
-  context 'proxy object wrappers' do
+  describe 'proxy object wrappers' do
     it 'provides #wallet' do
-      expect(NanoRpc::Wallet).to receive(:new).with(wallet_id1, node: subject)
-      subject.wallet(wallet_id1)
+      allow(NanoRpc::Wallet).to receive(:new).with(wallet_id1, node: node)
+      node.wallet(wallet_id1)
+      expect(NanoRpc::Wallet).to have_received(:new)
     end
 
     it 'provides #account' do
-      expect(NanoRpc::Account).to receive(:new).with(addr1, node: subject)
-      subject.account(addr1)
+      allow(NanoRpc::Account).to receive(:new).with(addr1, node: node)
+      node.account(addr1)
+      expect(NanoRpc::Account).to have_received(:new)
     end
 
     it 'provides #accounts' do
-      expect(NanoRpc::Accounts).to receive(:new).with(addresses, node: subject)
-      subject.accounts(addresses)
+      allow(NanoRpc::Accounts).to receive(:new).with(addresses, node: node)
+      node.accounts(addresses)
+      expect(NanoRpc::Accounts).to have_received(:new)
     end
   end
 
   it 'provides #account_containing_block' do
-    allow(subject).to(
+    allow(node).to(
       receive(:block_account)
         .with(pending_hash_param)
         .and_return(NanoRpc::Response.new('account' => addr1))
     )
-    expect(subject.account_containing_block(pending_hash_param)).to eq(addr1)
+    expect(node.account_containing_block(pending_hash_param)).to eq(addr1)
   end
 
   it 'provides #total_supply' do
-    allow(subject).to receive(:available_supply).and_return(
+    allow(node).to receive(:available_supply).and_return(
       NanoRpc::Response.new('available' => '200')
     )
-    expect(subject.total_supply).to eq(200)
+    expect(node.total_supply).to eq(200)
   end
 
   it 'provides #create_wallet' do
-    allow(subject).to receive(:wallet_create).and_return(
+    allow(node).to receive(:wallet_create).and_return(
       NanoRpc::Response.new('wallet' => wallet_id1)
     )
-    wallet = subject.create_wallet
+    wallet = node.create_wallet
     expect(wallet.class).to eq(NanoRpc::Wallet)
     expect(wallet.id).to eq(wallet_id1)
   end
 
   it 'provides #num_frontiers' do
-    allow(subject).to receive(:frontier_count).and_return(
+    allow(node).to receive(:frontier_count).and_return(
       NanoRpc::Response.new('count' => 100)
     )
-    expect(subject.num_frontiers).to eq(100)
+    expect(node.num_frontiers).to eq(100)
   end
 
   it 'provides #knano_from_raw' do
-    allow(subject).to(
+    allow(node).to(
       receive(:krai_from_raw)
         .with(knano_amount_param)
         .and_return(NanoRpc::Response.new('amount' => '1'))
     )
-    expect(subject.knano_from_raw(knano_amount_param)).to eq(1)
+    expect(node.knano_from_raw(knano_amount_param)).to eq(1)
   end
 
   it 'provides #knano_to_raw' do
-    allow(subject).to(
+    allow(node).to(
       receive(:krai_to_raw)
         .with(amount_param)
         .and_return(NanoRpc::Response.new('amount' => knano_amount.to_s))
     )
-    expect(subject.knano_to_raw(amount_param)).to eq(knano_amount)
+    expect(node.knano_to_raw(amount_param)).to eq(knano_amount)
   end
 
   it 'provides #mnano_from_raw' do
-    allow(subject).to(
+    allow(node).to(
       receive(:mrai_from_raw)
         .with(mnano_amount_param)
         .and_return(NanoRpc::Response.new('amount' => '1'))
     )
-    expect(subject.mnano_from_raw(mnano_amount_param)).to eq(1)
+    expect(node.mnano_from_raw(mnano_amount_param)).to eq(1)
   end
 
   it 'provides #mnano_to_raw' do
-    allow(subject).to(
+    allow(node).to(
       receive(:mrai_to_raw)
         .with(amount_param)
         .and_return(NanoRpc::Response.new('amount' => mnano_amount.to_s))
     )
-    expect(subject.mnano_to_raw(amount_param)).to eq(mnano_amount)
+    expect(node.mnano_to_raw(amount_param)).to eq(mnano_amount)
   end
 
   it 'provides #nano_from_raw' do
-    allow(subject).to(
+    allow(node).to(
       receive(:rai_from_raw)
         .with(nano_amount_param)
         .and_return(NanoRpc::Response.new('amount' => '1'))
     )
-    expect(subject.nano_from_raw(nano_amount_param)).to eq(1)
+    expect(node.nano_from_raw(nano_amount_param)).to eq(1)
   end
 
   it 'provides #nano_to_raw' do
-    allow(subject).to(
+    allow(node).to(
       receive(:rai_to_raw)
         .with(amount_param)
         .and_return(NanoRpc::Response.new('amount' => nano_amount.to_s))
     )
-    expect(subject.nano_to_raw(amount_param)).to eq(nano_amount)
+    expect(node.nano_to_raw(amount_param)).to eq(nano_amount)
   end
 
   it 'provides #pending_exists?' do
-    allow(subject).to(
+    allow(node).to(
       receive(:pending_exists)
         .with(pending_hash_param)
         .and_return(NanoRpc::Response.new('exists' => '1'))
     )
-    expect(subject.pending_exists?(pending_hash_param)).to eq(true)
+    expect(node.pending_exists?(pending_hash_param)).to eq(true)
   end
 
-  it 'provides #pending_exists?' do
-    allow(subject).to(
+  it 'provides #work_valid?' do
+    allow(node).to(
       receive(:work_validate)
         .with(work_params)
         .and_return(NanoRpc::Response.new('valid' => '1'))
     )
-    expect(subject.work_valid?(work_params)).to eq(true)
+    expect(node.work_valid?(work_params)).to eq(true)
   end
 end
