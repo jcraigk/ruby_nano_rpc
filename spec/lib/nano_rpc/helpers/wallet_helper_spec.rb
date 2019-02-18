@@ -150,7 +150,7 @@ RSpec.describe WalletHelper do
         .with(seed: 'newseed')
         .and_return(NanoRpc::Response.new('success' => ''))
     )
-    expect(wallet.change_seed(new_seed: seed)).to eq(true)
+    expect(wallet.change_seed(new_seed: 'newseed')).to eq(true)
   end
 
   it 'provides #contains?' do

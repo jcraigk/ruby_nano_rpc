@@ -129,10 +129,11 @@ RSpec.describe NanoRpc::Node do
   end
 
   it 'implements #call' do
-    expect(node).to receive(:rpc_post).with(
+    allow(node).to receive(:rpc_post).with(
       { action: action }.merge(params)
     )
     node.call(action, params)
+    expect(node).to have_received(:rpc_post)
   end
 
   describe 'RestClient' do
@@ -171,7 +172,7 @@ RSpec.describe NanoRpc::Node do
       expect do
         node_with_options.call(:version)
       end.to raise_error(NanoRpc::BadRequest)
-      allow(RestClient::Request).to have_received(:execute)
+      expect(RestClient::Request).to have_received(:execute)
     end
   end
 
@@ -272,24 +273,27 @@ RSpec.describe NanoRpc::Node do
 
   describe 'proxy objects' do
     it 'pulls #id from NanoRpc::Wallet' do
-      expect(node).to(
+      allow(node).to(
         receive(:rpc_post).with(action: action, wallet: wallet_id)
       )
       node.call(action, wallet: NanoRpc::Wallet.new(wallet_id))
+      expect(node).to have_received(:rpc_post)
     end
 
     it 'pulls #addresses from NanoRpc::Accounts' do
-      expect(node).to(
+      allow(node).to(
         receive(:rpc_post).with(action: action, accounts: addresses)
       )
       node.call(action, accounts: NanoRpc::Accounts.new(addresses))
+      expect(node).to have_received(:rpc_post)
     end
 
     it 'pulls #address from NanoRpc::Account' do
-      expect(node).to(
+      allow(node).to(
         receive(:rpc_post).with(action: action, account: addr1)
       )
       node.call(action, account: NanoRpc::Account.new(addr1))
+      expect(node).to have_received(:rpc_post)
     end
   end
 end

@@ -13,9 +13,9 @@ require 'nano_rpc/methods/node_methods'
 require 'nano_rpc/methods/wallet_methods'
 
 require 'nano_rpc/proxy'
-require 'nano_rpc/proxies/account'
-require 'nano_rpc/proxies/accounts'
-require 'nano_rpc/proxies/wallet'
+require 'nano_rpc/account'
+require 'nano_rpc/accounts'
+require 'nano_rpc/wallet'
 
 require 'nano_rpc/node'
 require 'nano_rpc/errors'

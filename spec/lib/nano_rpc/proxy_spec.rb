@@ -43,10 +43,11 @@ RSpec.describe NanoRpc::Proxy do
     let(:custom_node) { NanoRpc::Node.new(host: 'mynanonode', port: 1234) }
 
     it 'uses the custom node' do
-      expect(custom_node).to receive(:call).with(
+      allow(custom_node).to receive(:call).with(
         :proxytest_another_action, account: addr1
       )
       proxy.proxytest_another_action
+      expect(custom_node).to have_received(:call)
     end
   end
 
@@ -57,10 +58,11 @@ RSpec.describe NanoRpc::Proxy do
   end
 
   it 'invokes the node with expected parameters' do
-    expect(node).to receive(:call).with(
+    allow(node).to receive(:call).with(
       :proxytest_another_action, account: addr1
     )
     proxy.proxytest_another_action
+    expect(node).to have_received(:call)
   end
 
   context 'with single-key response matching method name' do
@@ -90,10 +92,11 @@ RSpec.describe NanoRpc::Proxy do
   end
 
   it 'allows passing single literal to single-parameter methods' do
-    expect(node).to receive(:call).with(
+    allow(node).to receive(:call).with(
       :single_param_method, account: addr1, param1: 'value'
     )
     proxy.single_param_method('value')
+    expect(node).to have_received(:call)
   end
 
   it 'does not define singleton proxy methods when proxy_params provided' do
