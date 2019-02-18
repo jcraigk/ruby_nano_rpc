@@ -146,15 +146,8 @@ RSpec.describe NanoRpc::Node do
         timeout: custom_timeout
       )
     end
-
-    it 'exposes instance vars' do
-      expect(node_with_options.auth).to eq(auth_key)
-      expect(node_with_options.headers).to eq(custom_headers)
-      expect(node_with_options.timeout).to eq(custom_timeout)
-    end
-
-    it '#call invokes RestClient#post with expected parameters' do
-      expect(RestClient::Request).to receive(:execute).with(
+    let(:params) do
+      {
         method: :post,
         url: 'http://localhost:7076',
         headers: {
@@ -164,10 +157,21 @@ RSpec.describe NanoRpc::Node do
         },
         payload: { action: :version }.to_json,
         timeout: custom_timeout
-      )
+      }
+    end
+
+    it 'exposes instance vars' do
+      expect(node_with_options.auth).to eq(auth_key)
+      expect(node_with_options.headers).to eq(custom_headers)
+      expect(node_with_options.timeout).to eq(custom_timeout)
+    end
+
+    it '#call invokes RestClient#post with expected parameters' do
+      allow(RestClient::Request).to receive(:execute).with(params)
       expect do
         node_with_options.call(:version)
       end.to raise_error(NanoRpc::BadRequest)
+      allow(RestClient::Request).to have_received(:execute)
     end
   end
 

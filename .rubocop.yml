@@ -11,7 +11,7 @@ RSpec/SubjectStub:
   Enabled: false
 
 AllCops:
-  TargetRubyVersion: 2.5.3
+  TargetRubyVersion: 2.6.1
   Exclude:
     - bin/*
     - nano_rpc.gemspec

@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 RSpec.describe NanoRpc::Wallet do
-  subject { described_class.new(wallet_id) }
+  subject(:wallet) { described_class.new(wallet_id) }
 
   let(:wallet_id) { 'E929FBC3' }
   let(:expected_proxy_methods) do
@@ -43,8 +43,8 @@ RSpec.describe NanoRpc::Wallet do
   let(:expected_proxy_params) { { wallet: :id } }
 
   it 'defines expected proxy params and methods' do
-    expect(subject.proxy_params).to eq(expected_proxy_params)
-    expect(subject.proxy_methods.keys).to eq(expected_proxy_methods)
+    expect(wallet.proxy_params).to eq(expected_proxy_params)
+    expect(wallet.proxy_methods.keys).to eq(expected_proxy_methods)
   end
 
   it 'raises MissingParameters unless initialized with string' do
@@ -54,10 +54,10 @@ RSpec.describe NanoRpc::Wallet do
   end
 
   it 'assigns id on initialization' do
-    expect(subject.id).to eq(wallet_id)
+    expect(wallet.id).to eq(wallet_id)
   end
 
   it 'has a custom #inspect' do
-    expect(subject.inspect).to include("@id=\"#{subject.id}\"")
+    expect(wallet.inspect).to include("@id=\"#{wallet.id}\"")
   end
 end

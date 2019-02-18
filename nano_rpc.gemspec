@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+# frozen_string_literal: true
 require 'nano_rpc/version'
 
 Gem::Specification.new do |spec|

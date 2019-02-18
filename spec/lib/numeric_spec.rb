@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-RSpec.describe NanoRpc::Numeric do
+RSpec.describe Numeric do
   let(:valid_raw) do
     52_343_023_431_000_000_000_000_000_000_000_000
   end
@@ -10,7 +10,7 @@ RSpec.describe NanoRpc::Numeric do
   let(:invalid_nano) { 100_000_000_000_000 } # too large
   let(:zero) { 0 }
 
-  desdribe '#to_nano monkeypatch' do
+  describe '#to_nano monkeypatch' do
     it 'converts valid raw amounts' do
       expect(valid_raw.to_nano).to eq(52_343.023431)
       expect(zero.to_nano).to eq(0.0)

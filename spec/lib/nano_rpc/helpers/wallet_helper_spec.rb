@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-class WalletHelperExample
+class WalletHelper
   attr_reader :client
 
   include NanoRpc::WalletHelper
 end
 
-RSpec.describe WalletHelperExample do
-  subject { NanoRpc::Wallet.new('abcd') }
+RSpec.describe WalletHelper do
+  subject(:wallet) { NanoRpc::Wallet.new('abcd') }
 
   let(:addr1) { 'nano_address1' }
   let(:addr2) { 'nano_address2' }
@@ -26,7 +26,6 @@ RSpec.describe WalletHelperExample do
       }
     }
   end
-  let(:wallet_id1) { 'CB3004' }
   let(:seed) { 'ABCDEF' }
   let(:wallet_data) { { 'some_key' => 1 } }
   let(:block1) { '000D1BA' }
@@ -75,303 +74,324 @@ RSpec.describe WalletHelperExample do
   let(:balances_threshold_data) { { addr1 => 100, addr2 => 200 } }
 
   it 'provides #account_work' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:work_get)
         .with(account_param)
         .and_return(NanoRpc::Response.new('work' => work_id))
     )
-    expect(subject.account_work(account_param)).to eq(work_id)
+    expect(wallet.account_work(account_param)).to eq(work_id)
   end
 
   it 'provides #accounts' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:account_list)
         .and_return(NanoRpc::Response.new('accounts' => addresses))
     )
-    accounts = subject.accounts
+    accounts = wallet.accounts
     expect(accounts.class).to eq(NanoRpc::Accounts)
     expect(accounts.addresses).to eq(addresses)
   end
 
   it 'provides #add_key' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:wallet_add)
         .with(add_account_params)
         .and_return(NanoRpc::Response.new('account' => wallet_id1))
     )
-    expect(subject.add_key(add_account_params)).to eq(wallet_id1)
+    expect(wallet.add_key(add_account_params)).to eq(wallet_id1)
   end
 
   it 'provides #add_watch' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:wallet_add_watch)
         .with(accounts: addresses)
         .and_return(NanoRpc::Response.new('success' => ''))
     )
-    expect(subject.add_watch(accounts: addresses)).to eq(true)
+    expect(wallet.add_watch(accounts: addresses)).to eq(true)
   end
 
   it 'provides #balance' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:wallet_info)
         .and_return(NanoRpc::Response.new(balance_data))
     )
-    expect(subject.balance).to eq(100)
+    expect(wallet.balance).to eq(100)
   end
 
   it 'provides #balances' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:wallet_balances)
         .with(threshold_param)
         .and_return(NanoRpc::Response.new(balances_data))
     )
-    expect(subject.balances(threshold_param)).to eq(balances_threshold_data)
+    expect(wallet.balances(threshold_param)).to eq(balances_threshold_data)
   end
 
   it 'provides #begin_payment' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:payment_begin)
         .and_return(NanoRpc::Response.new('account' => addr1))
     )
-    expect(subject.begin_payment).to eq(addr1)
+    expect(wallet.begin_payment).to eq(addr1)
   end
 
   it 'provides #change_password' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:password_change)
         .with(password: 'newpass')
         .and_return(NanoRpc::Response.new('changed' => '1'))
     )
-    expect(subject.change_password(new_password: 'newpass')).to eq(true)
+    expect(wallet.change_password(new_password: 'newpass')).to eq(true)
   end
 
   it 'provides #change_seed' do
-    allow_any_instance_of(NanoRpc::Node).to receive(:call).and_return(
-      NanoRpc::Response.new('success' => '')
+    allow(wallet).to(
+      receive(:wallet_change_seed)
+        .with(seed: 'newseed')
+        .and_return(NanoRpc::Response.new('success' => ''))
     )
-    expect(subject.change_seed(new_seed: seed)).to eq(true)
+    expect(wallet.change_seed(new_seed: seed)).to eq(true)
   end
 
   it 'provides #contains?' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:wallet_contains)
         .with(account_param)
         .and_return(NanoRpc::Response.new('exists' => '1'))
     )
-    expect(subject.contains?(account_param)).to eq(true)
+    expect(wallet.contains?(account_param)).to eq(true)
   end
 
   it 'provides #create_account' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:account_create)
         .with(work: true)
         .and_return(NanoRpc::Response.new('account' => addr1))
     )
-    account = subject.create_account(work: true)
+    account = wallet.create_account(work: true)
     expect(account.class).to eq(NanoRpc::Account)
     expect(account.address).to eq(addr1)
   end
 
   it 'provides #create_accounts' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:accounts_create)
         .with(create_accounts_params)
         .and_return(NanoRpc::Response.new('accounts' => addresses))
     )
-    accounts = subject.create_accounts(create_accounts_params)
+    accounts = wallet.create_accounts(create_accounts_params)
     expect(accounts.class).to eq(NanoRpc::Accounts)
     expect(accounts.addresses).to eq(addresses)
   end
 
   it 'provides #destroy' do
-    allow(subject).to(
-      receive(:wallet_destroy).and_return({})
+    allow(wallet).to(
+      receive(:wallet_destroy)
+        .and_return(NanoRpc::Response.new('destroyed' => '1'))
     )
-    expect(subject.destroy).to eq(true)
+    expect(wallet.destroy).to eq(true)
   end
 
   it 'provides #enter_password and #unlock' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:password_enter)
         .with(password: 'pass1')
         .and_return(NanoRpc::Response.new('valid' => '1'))
     )
-    expect(subject.enter_password(password: 'pass1')).to eq(true)
-    expect(subject.unlock(password: 'pass1')).to eq(true)
+    expect(wallet.enter_password(password: 'pass1')).to eq(true)
+    expect(wallet.unlock(password: 'pass1')).to eq(true)
   end
 
   it 'provides #export' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:wallet_export)
         .and_return(NanoRpc::Response.new('json' => wallet_data.to_json))
     )
-    expect(subject.export).to eq(wallet_data)
-    expect(subject.export.some_key).to eq(1)
+    expect(wallet.export).to eq(wallet_data)
+    expect(wallet.export.some_key).to eq(1)
   end
 
   it 'provides #frontiers' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:wallet_frontiers)
         .and_return(NanoRpc::Response.new('frontiers' => frontiers_data))
     )
-    expect(subject.frontiers).to eq(frontiers_data)
+    expect(wallet.frontiers).to eq(frontiers_data)
   end
 
   it 'provides #init_payment' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:payment_init)
         .and_return(NanoRpc::Response.new('status' => 'Ready'))
     )
-    expect(subject.init_payment).to eq(true)
+    expect(wallet.init_payment).to eq(true)
   end
 
   it 'provides #ledger' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:wallet_ledger)
         .and_return(
           NanoRpc::Response.new('accounts' => { 'abc' => {} })
         )
     )
-    expect(subject.ledger).to eq('abc' => {})
+    expect(wallet.ledger).to eq('abc' => {})
   end
 
   it 'provides #locked?' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:wallet_locked)
         .and_return(NanoRpc::Response.new('locked' => '1'))
     )
-    expect(subject.locked?).to eq(true)
+    expect(wallet.locked?).to eq(true)
   end
 
-  it 'provides #move_accounts' do
-    allow(subject).to receive(:id).and_return(wallet_id1)
-    allow(subject).to(
-      receive(:account_move)
-        .with(wallet: wallet_id2, source: wallet_id1, accounts: addresses)
-        .and_return(NanoRpc::Response.new('moved' => '1'))
-    )
-    expect(
-      subject.move_accounts(to: wallet_id2, accounts: addresses)
-    ).to eq(true)
+  describe '#move_accounts' do
+    before do
+      allow(wallet).to receive(:id).and_return(wallet_id1)
+      allow(wallet).to(
+        receive(:account_move)
+          .with(wallet: wallet_id2, source: wallet_id1, accounts: addresses)
+          .and_return(NanoRpc::Response.new('moved' => '1'))
+      )
+    end
+
+    it 'moves the accounts' do
+      expect(
+        wallet.move_accounts(to: wallet_id2, accounts: addresses)
+      ).to eq(true)
+    end
   end
 
   it 'provides #password_valid?' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:password_valid)
         .with(password_param)
         .and_return(NanoRpc::Response.new('valid' => '1'))
     )
-    expect(subject.password_valid?(password_param)).to eq(true)
+    expect(wallet.password_valid?(password_param)).to eq(true)
   end
 
   it 'provides #pending_balance and #balance_pending' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:wallet_info)
         .and_return(NanoRpc::Response.new(balance_data))
     )
-    expect(subject.pending_balance).to eq(5)
-    expect(subject.balance_pending).to eq(5)
+    expect(wallet.pending_balance).to eq(5)
+    expect(wallet.balance_pending).to eq(5)
   end
 
-  it 'provides #pending_balances and #balances_pending' do
-    allow(subject).to(
-      receive(:wallet_balances)
-        .with(pending_threshold_param)
-        .and_return(NanoRpc::Response.new(balances_data))
-    )
-    expect(
-      subject.pending_balances(pending_threshold_param)
-    ).to eq(pending_threshold_data)
-    expect(
-      subject.balances_pending(pending_threshold_param)
-    ).to eq(pending_threshold_data)
+  describe 'pending balances' do
+    before do
+      allow(wallet).to(
+        receive(:wallet_balances)
+          .with(pending_threshold_param)
+          .and_return(NanoRpc::Response.new(balances_data))
+      )
+    end
+
+    it 'provides #pending_balances and #balances_pending' do
+      expect(
+        wallet.pending_balances(pending_threshold_param)
+      ).to eq(pending_threshold_data)
+    end
+
+    it 'provides #pending_balances' do
+      expect(
+        wallet.balances_pending(pending_threshold_param)
+      ).to eq(pending_threshold_data)
+    end
   end
 
-  it 'provides #pending_blocks and #blocks_pending' do
-    allow(subject).to(
-      receive(:wallet_pending)
-        .with(wallet_pending_params)
-        .and_return(NanoRpc::Response.new('blocks' => pending_blocks_data))
-    )
-    expect(
-      subject.pending_blocks(wallet_pending_params)
-    ).to eq(pending_blocks_data)
-    expect(
-      subject.blocks_pending(wallet_pending_params)
-    ).to eq(pending_blocks_data)
+  describe 'pending blocks' do
+    before do
+      allow(wallet).to(
+        receive(:wallet_pending)
+          .with(wallet_pending_params)
+          .and_return(NanoRpc::Response.new('blocks' => pending_blocks_data))
+      )
+    end
+
+    it 'provides #pending_blocks and #blocks_pending' do
+      expect(
+        wallet.pending_blocks(wallet_pending_params)
+      ).to eq(pending_blocks_data)
+      expect(
+        wallet.blocks_pending(wallet_pending_params)
+      ).to eq(pending_blocks_data)
+    end
   end
 
   it 'provides #receive_block' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:receive)
         .with(receive_block_params)
         .and_return(NanoRpc::Response.new('block' => block2))
     )
-    expect(subject.receive_block(receive_block_params)).to eq(block2)
+    expect(wallet.receive_block(receive_block_params)).to eq(block2)
   end
 
   it 'provides #remove_account' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:account_remove)
         .with(account_param)
         .and_return(NanoRpc::Response.new('removed' => '1'))
     )
-    expect(subject.remove_account(account_param)).to eq(true)
+    expect(wallet.remove_account(account_param)).to eq(true)
   end
 
   it 'provides #representative' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:wallet_representative)
         .and_return(NanoRpc::Response.new('representative' => addr1))
     )
-    expect(subject.representative).to eq(addr1)
+    expect(wallet.representative).to eq(addr1)
   end
 
   it 'provides #republish' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:wallet_republish)
         .with(republish_param)
         .and_return(NanoRpc::Response.new('blocks' => blocks))
     )
-    expect(subject.republish(republish_param)).to eq(blocks)
+    expect(wallet.republish(republish_param)).to eq(blocks)
   end
 
   it 'provides #account_work_set and #set_account_work' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:work_set)
         .with(account_work_params)
         .and_return(NanoRpc::Response.new('success' => ''))
     )
-    expect(subject.account_work_set(account_work_params)).to eq(true)
-    expect(subject.set_account_work(account_work_params)).to eq(true)
+    expect(wallet.account_work_set(account_work_params)).to eq(true)
+    expect(wallet.set_account_work(account_work_params)).to eq(true)
   end
 
   it 'provides #representative_set and #set_representative' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:wallet_representative_set)
         .with(rep_param)
         .and_return(NanoRpc::Response.new('set' => '1'))
     )
-    expect(subject.representative_set(rep_param)).to eq(true)
-    expect(subject.set_representative(rep_param)).to eq(true)
+    expect(wallet.representative_set(rep_param)).to eq(true)
+    expect(wallet.set_representative(rep_param)).to eq(true)
   end
 
   it 'provides #send_nano and #send_transaction' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:send_currency)
         .with(send_nano_opts)
         .and_return(NanoRpc::Response.new('block' => block1))
     )
-    expect(subject.send_nano(send_nano_params)).to eq(block1)
-    expect(subject.send_nano(send_nano_objects)).to eq(block1)
-    expect(subject.send_transaction(send_nano_params)).to eq(block1)
+    expect(wallet.send_nano(send_nano_params)).to eq(block1)
+    expect(wallet.send_nano(send_nano_objects)).to eq(block1)
+    expect(wallet.send_transaction(send_nano_params)).to eq(block1)
   end
 
   it 'provides #work' do
-    allow(subject).to(
+    allow(wallet).to(
       receive(:wallet_work_get)
         .and_return(NanoRpc::Response.new('works' => work_data))
     )
-    expect(subject.work).to eq(work_data)
+    expect(wallet.work).to eq(work_data)
   end
 end

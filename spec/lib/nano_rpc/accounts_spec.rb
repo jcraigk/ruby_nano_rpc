@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 RSpec.describe NanoRpc::Accounts do
-  subject { described_class.new(addresses) }
+  subject(:accounts) { described_class.new(addresses) }
 
   let(:addresses) { %w[nano_address1 xrb_address2 xrb_address3] }
   let(:expected_proxy_methods) do
@@ -17,8 +17,8 @@ RSpec.describe NanoRpc::Accounts do
   let(:expected_proxy_params) { { accounts: :addresses } }
 
   it 'declares expected proxy params and methods' do
-    expect(subject.proxy_params).to eq(expected_proxy_params)
-    expect(subject.proxy_methods.keys).to eq(expected_proxy_methods)
+    expect(accounts.proxy_params).to eq(expected_proxy_params)
+    expect(accounts.proxy_methods.keys).to eq(expected_proxy_methods)
   end
 
   it 'raises MissingParameters unless initialized with array' do
@@ -28,10 +28,10 @@ RSpec.describe NanoRpc::Accounts do
   end
 
   it 'assigns address on initialization' do
-    expect(subject.addresses).to eq(addresses)
+    expect(accounts.addresses).to eq(addresses)
   end
 
   it 'has a custom #inspect' do
-    expect(subject.inspect).to include("@addresses=\"#{subject.addresses}\"")
+    expect(accounts.inspect).to include("@addresses=\"#{accounts.addresses}\"")
   end
 end
