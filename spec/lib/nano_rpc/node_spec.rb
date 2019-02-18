@@ -67,13 +67,16 @@ RSpec.describe NanoRpc::Node do
         republish
         search_pending
         search_pending_all
+        sign
         stats
+        stats_clear
         stop
         successors
         unchecked
         unchecked_clear
         unchecked_get
         unchecked_keys
+        uptime
         version
         wallet_create
         work_cancel

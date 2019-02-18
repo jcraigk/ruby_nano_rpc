@@ -52,6 +52,14 @@ RSpec.describe NodeHelper do
     expect(node.account_containing_block(pending_hash_param)).to eq(addr1)
   end
 
+  it 'provides #clear_stats' do
+    allow(node).to(
+      receive(:stats_clear)
+        .and_return(NanoRpc::Response.new('success' => ''))
+    )
+    expect(node.clear_stats).to eq(true)
+  end
+
   it 'provides #total_supply' do
     allow(node).to receive(:available_supply).and_return(
       NanoRpc::Response.new('available' => '200')
@@ -59,13 +67,22 @@ RSpec.describe NodeHelper do
     expect(node.total_supply).to eq(200)
   end
 
-  it 'provides #create_wallet' do
-    allow(node).to receive(:wallet_create).and_return(
-      NanoRpc::Response.new('wallet' => wallet_id1)
-    )
-    wallet = node.create_wallet
-    expect(wallet.class).to eq(NanoRpc::Wallet)
-    expect(wallet.id).to eq(wallet_id1)
+  describe '#create_wallet' do
+    before do
+      allow(node).to(
+        receive(:wallet_create)
+          .with(seed: 'myseed')
+          .and_return(
+            NanoRpc::Response.new('wallet' => wallet_id1)
+          )
+      )
+    end
+
+    it 'creates the wallet with optional seed' do
+      wallet = node.create_wallet(seed: 'myseed')
+      expect(wallet.class).to eq(NanoRpc::Wallet)
+      expect(wallet.id).to eq(wallet_id1)
+    end
   end
 
   it 'provides #num_frontiers' do

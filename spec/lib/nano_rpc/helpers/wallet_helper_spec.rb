@@ -147,10 +147,10 @@ RSpec.describe WalletHelper do
   it 'provides #change_seed' do
     allow(wallet).to(
       receive(:wallet_change_seed)
-        .with(seed: 'newseed')
+        .with(seed: 'newseed', count: 10)
         .and_return(NanoRpc::Response.new('success' => ''))
     )
-    expect(wallet.change_seed(new_seed: 'newseed')).to eq(true)
+    expect(wallet.change_seed(new_seed: 'newseed', count: 10)).to eq(true)
   end
 
   it 'provides #contains?' do
@@ -217,6 +217,15 @@ RSpec.describe WalletHelper do
         .and_return(NanoRpc::Response.new('frontiers' => frontiers_data))
     )
     expect(wallet.frontiers).to eq(frontiers_data)
+  end
+
+  it 'provides #history' do
+    allow(wallet).to(
+      receive(:wallet_history)
+        .with(modified_since: 1_550_461_032)
+        .and_return(NanoRpc::Response.new('history' => []))
+    )
+    expect(wallet.history(modified_since: 1_550_461_032)).to eq([])
   end
 
   it 'provides #init_payment' do
