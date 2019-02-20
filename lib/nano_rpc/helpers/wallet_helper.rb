@@ -39,8 +39,8 @@ module NanoRpc::WalletHelper
     password_change(password: new_password).changed == 1
   end
 
-  def change_seed(new_seed:)
-    wallet_change_seed(seed: new_seed).success == ''
+  def change_seed(new_seed:, count: 0)
+    wallet_change_seed(seed: new_seed, count: count).success == ''
   end
 
   def contains?(account:)
@@ -72,6 +72,10 @@ module NanoRpc::WalletHelper
 
   def frontiers
     wallet_frontiers.frontiers
+  end
+
+  def history(modified_since: 0)
+    wallet_history(modified_since: modified_since).history
   end
 
   def init_payment

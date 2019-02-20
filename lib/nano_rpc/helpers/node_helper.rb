@@ -14,8 +14,12 @@ module NanoRpc::NodeHelper
     NanoRpc::Accounts.new(addresses, node: self)
   end
 
-  def create_wallet
-    NanoRpc::Wallet.new(wallet_create.wallet, node: self)
+  def clear_stats
+    stats_clear.success == ''
+  end
+
+  def create_wallet(seed: nil)
+    NanoRpc::Wallet.new(wallet_create(seed: seed).wallet, node: self)
   end
 
   def knano_from_raw(amount:)

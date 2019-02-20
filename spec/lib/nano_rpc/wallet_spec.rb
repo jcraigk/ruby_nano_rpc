@@ -28,6 +28,7 @@ RSpec.describe NanoRpc::Wallet do
       wallet_destroy
       wallet_export
       wallet_frontiers
+      wallet_history
       wallet_info
       wallet_ledger
       wallet_locked

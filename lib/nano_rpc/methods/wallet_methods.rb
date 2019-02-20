@@ -49,7 +49,8 @@ module NanoRpc::WalletMethods
         optional: %i[threshold]
       },
       wallet_change_seed: {
-        required: %i[seed]
+        required: %i[seed],
+        optional: %i[count]
       },
       wallet_contains: {
         required: %i[account]
@@ -57,6 +58,9 @@ module NanoRpc::WalletMethods
       wallet_destroy: {},
       wallet_export: {},
       wallet_frontiers: {},
+      wallet_history: {
+        optional: %i[modified_since]
+      },
       wallet_info: {},
       wallet_ledger: {},
       wallet_locked: {},
@@ -66,7 +70,8 @@ module NanoRpc::WalletMethods
       },
       wallet_representative: {},
       wallet_representative_set: {
-        required: %i[representative]
+        required: %i[representative],
+        optional: %i[update_existing_accounts]
       },
       wallet_republish: {
         required: %i[count]

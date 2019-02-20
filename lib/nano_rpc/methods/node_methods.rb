@@ -39,7 +39,8 @@ module NanoRpc::NodeMethods
       },
       bootstrap_status: {},
       chain: {
-        required: %i[block count]
+        required: %i[block count],
+        optional: %i[offset reverse]
       },
       confirmation_active: {},
       confirmation_history: {},
@@ -81,12 +82,15 @@ module NanoRpc::NodeMethods
       payment_wait: {
         required: %i[account amount timeout]
       },
-      peers: {},
+      peers: {
+        optional: %i[peer_details]
+      },
       pending_exists: {
         required: %i[hash]
       },
       process: {
-        required: %i[block]
+        required: %i[block],
+        optional: %i[force subtype]
       },
       rai_from_raw: {
         required: %i[amount]
@@ -108,12 +112,17 @@ module NanoRpc::NodeMethods
         required: %i[wallet]
       },
       search_pending_all: {},
+      sign: {
+        optional: %i[account hash key wallet]
+      },
       stats: {
         required: %i[type]
       },
+      stats_clear: {},
       stop: {},
       successors: {
-        required: %i[block count]
+        required: %i[block count],
+        optional: %i[offset reverse]
       },
       unchecked: {
         required: %i[count]
@@ -125,8 +134,11 @@ module NanoRpc::NodeMethods
       unchecked_keys: {
         required: %i[key count]
       },
+      uptime: {},
       version: {},
-      wallet_create: {},
+      wallet_create: {
+        optional: %i[seed]
+      },
       work_cancel: {
         required: %i[hash]
       },
