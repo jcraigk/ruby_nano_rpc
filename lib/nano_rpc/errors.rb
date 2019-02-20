@@ -9,5 +9,5 @@ module NanoRpc
   class InvalidRequest < Error; end
   class MissingParameters < Error; end
   class NodeConnectionFailure < Error; end
-  class NodeOpenTimeout < Error; end
+  class NodeTimeout < Error; end
 end

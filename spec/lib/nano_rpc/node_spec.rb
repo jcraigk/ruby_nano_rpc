@@ -132,14 +132,12 @@ RSpec.describe NanoRpc::Node do
   end
 
   it 'implements #call' do
-    allow(node).to receive(:rpc_post).with(
-      { action: action }.merge(params)
-    )
+    allow(node).to receive(:rpc_post).with({ action: action }.merge(params))
     node.call(action, params)
     expect(node).to have_received(:rpc_post)
   end
 
-  describe 'RestClient' do
+  describe 'HTTP client' do
     let(:custom_headers) { { 'My-Header-X' => 'My-Value' } }
     let(:custom_timeout) { 10 }
     let(:auth_key) { 'some_auth_key' }
@@ -150,122 +148,92 @@ RSpec.describe NanoRpc::Node do
         timeout: custom_timeout
       )
     end
-    let(:params) do
+    let(:url) { 'http://localhost:7076' }
+    let(:options) do
       {
-        method: :post,
-        url: 'http://localhost:7076',
+        body: { action: action }.merge(params).to_json,
         headers: {
           'Content-Type' => 'json',
           'Authorization' => auth_key,
           'My-Header-X' => 'My-Value'
-        },
-        payload: { action: :version }.to_json,
-        timeout: custom_timeout
+        }
       }
     end
+    let(:mock_http_client) { instance_spy(HTTP::Client) }
+    let(:mock_response) { instance_spy(HTTP::Response) }
+    let(:mock_body) { instance_spy(HTTP::Response::Body) }
+    let(:node_call) { node_with_options.call(action, params) }
 
     it 'exposes instance vars' do
-      expect(node_with_options.auth).to eq(auth_key)
-      expect(node_with_options.headers).to eq(custom_headers)
-      expect(node_with_options.timeout).to eq(custom_timeout)
+      expect(node_with_options.host).to eq('localhost')
+      expect(node_with_options.port).to eq(7076)
     end
 
-    it '#call invokes RestClient#post with expected parameters' do
-      allow(RestClient::Request).to receive(:execute).with(params)
-      expect do
-        node_with_options.call(:version)
-      end.to raise_error(NanoRpc::BadRequest)
-      expect(RestClient::Request).to have_received(:execute)
-    end
-  end
-
-  context 'when node refuses to connect' do
-    before do
-      allow(RestClient::Request).to(
-        receive(:execute).and_raise(Errno::ECONNREFUSED)
-      )
-    end
-
-    it 'raises NodeConnectionFailure and provides error message' do
-      expect { node.call(action, params) }.to(
-        raise_error(
-          NanoRpc::NodeConnectionFailure,
-          'Node connection failure at http://localhost:7076'
-        )
-      )
-    end
-  end
-
-  context 'when node times out' do
-    before do
-      allow(RestClient::Request).to receive(:execute).and_raise(
-        RestClient::Exceptions::OpenTimeout
-      )
-    end
-
-    it 'raises NodeConnectionFailure and provides error message' do
-      expect { node.call(action, params) }.to(
-        raise_error(
-          NanoRpc::NodeOpenTimeout,
-          'Node failed to respond in time'
-        )
-      )
-    end
-  end
-
-  describe 'handling server response' do
-    let(:mock_response) { double }
-    let(:node_call) { node.call(action, params) }
-
-    before do
-      allow(RestClient::Request).to receive(:execute).and_return(mock_response)
-    end
-
-    context 'with status code 200' do
+    describe 'things' do
       before do
-        allow(mock_response).to receive(:code).and_return(200)
-        allow(mock_response).to receive(:body).and_return(response_json)
+        allow(HTTP).to(
+          receive(:timeout).with(custom_timeout).and_return(mock_http_client)
+        )
       end
 
-      context 'when node responds successfully' do
-        let(:response_json) { valid_response_json }
-
-        it 'converts to NanoRpc::Response' do
-          response = node_call
-          expect(response.class).to eq(NanoRpc::Response)
-          expect(response['balance']).to eq(1000)
+      context 'when node refuses to connect' do
+        before do
+          allow(mock_http_client).to receive(:post).and_raise(HTTP::ConnectionError)
         end
-      end
 
-      context 'when node responds with error' do
-        let(:response_json) { bad_response_json }
-
-        it 'raises InvalidRequest and provides error message' do
+        it 'raises NodeConnectionFailure and provides error message' do
           expect { node_call }.to(
             raise_error(
-              NanoRpc::InvalidRequest,
-              "Invalid request: #{error_msg}"
+              NanoRpc::NodeConnectionFailure,
+              'Node connection failure at http://localhost:7076'
             )
           )
         end
       end
-    end
 
-    context 'with status other than 200' do
-      let(:response_body) { { some_key: 'some message' } }.to_json
+      context 'when node times out' do
+        before do
+          allow(mock_http_client).to receive(:post).and_raise(HTTP::TimeoutError)
+        end
 
-      before do
-        allow(mock_response).to receive(:code).and_return(500)
-        allow(mock_response).to receive(:body).and_return(response_body)
+        it 'raises NodeConnectionFailure and provides error message' do
+          expect { node_call }.to(
+            raise_error(NanoRpc::NodeTimeout, 'Node timeout')
+          )
+        end
       end
 
-      it 'raises BadReques and provides body as string in error message' do
-        expect { node_call }.to(
-          raise_error(
-            NanoRpc::BadRequest,
-            "Error response from node: #{JSON[response_body]}"
+      context 'with successful response' do
+        before do
+          allow(mock_http_client).to(
+            receive(:post).with(url, options).and_return(mock_response)
           )
-        )
+          allow(mock_response).to receive(:body).and_return(mock_body)
+          allow(mock_body).to receive(:to_s).and_return(response_json)
+        end
+
+        context 'when node responds successfully' do
+          let(:response_json) { valid_response_json }
+
+          it 'converts to NanoRpc::Response' do
+            response = node_call
+            expect(response.class).to eq(NanoRpc::Response)
+            expect(response['balance']).to eq(1000)
+          end
+        end
+
+        context 'when node responds with error' do
+          let(:response_json) { bad_response_json }
+
+          it 'raises InvalidRequest and provides error message' do
+            expect { node_call }.to(
+              raise_error(
+                NanoRpc::InvalidRequest,
+                "Invalid request: #{error_msg}"
+              )
+            )
+          end
+        end
       end
     end
   end
