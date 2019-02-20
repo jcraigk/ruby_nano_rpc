@@ -36,7 +36,7 @@ RSpec.describe NanoRpc::Error do
     include_examples 'child error'
   end
 
-  describe NanoRpc::NodeOpenTimeout do
+  describe NanoRpc::NodeTimeout do
     include_examples 'child error'
   end
 end
