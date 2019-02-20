@@ -75,7 +75,7 @@ class NanoRpc::Node
   def headers
     h = @headers || {}
     h['Content-Type'] = 'json'
-    h['Authorization'] = @auth unless @auth.nil?
+    h['Authorization'] = @auth if @auth
     h
   end
 
@@ -86,9 +86,9 @@ class NanoRpc::Node
   def http_post(params)
     HTTP.timeout(@timeout).post(url, headers: headers, body: params.to_json)
   rescue HTTP::ConnectionError
-    raise NanoRpc::NodeConnectionFailure, "Node connection failure at #{url}"
+    raise NanoRpc::NodeConnectionFailure, "Node unreachable at #{url}"
   rescue HTTP::TimeoutError
-    raise NanoRpc::NodeTimeout, 'Node timeout'
+    raise NanoRpc::NodeTimeout, "Node timeout after #{@timeout} seconds"
   end
 
   def url
