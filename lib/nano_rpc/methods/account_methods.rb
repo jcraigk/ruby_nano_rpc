@@ -17,7 +17,9 @@ module NanoRpc::AccountMethods
         required: %i[count],
         optional: %i[raw head]
       },
-      account_info: {},
+      account_info: {
+        optional: %i[representative weight pending]
+      },
       account_key: {},
       account_move: {
         required: %i[wallet source accounts]

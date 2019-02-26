@@ -17,6 +17,8 @@ RSpec.describe NanoRpc::Node do
         block_count
         block_count_type
         block_create
+        block_hash
+        block_info
         blocks
         blocks_info
         bootstrap
@@ -62,6 +64,7 @@ RSpec.describe NanoRpc::Node do
         unchecked_clear
         unchecked_get
         unchecked_keys
+        unopened
         uptime
         version
         wallet_create
