@@ -6,6 +6,7 @@ module NanoRpc::NodeMethods
 
   def proxy_methods # rubocop:disable Metrics/MethodLength
     {
+      active_difficulty: {},
       available_supply: {},
       block: {
         required: %i[hash]
