@@ -34,5 +34,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov-rcov', '~> 0.2.3'
 
   spec.add_runtime_dependency 'hashie', '~> 3.6', '>= 3.6.0'
-  spec.add_runtime_dependency 'http', '~> 4.0', '>= 4.0.5'
+  spec.add_runtime_dependency 'http', '~> 4.1', '>= 4.0.5'
 end

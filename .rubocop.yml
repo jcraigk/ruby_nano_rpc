@@ -1,4 +1,24 @@
 require: rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 2.6.3
+  Exclude:
+    - bin/*
+    - nano_rpc.gemspec
+  DisplayCopNames: true
+Documentation:
+  Enabled: false
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+Layout/EmptyLineAfterMagicComment:
+  Enabled: false
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
+Metrics/ClassLength:
+  Max: 200
+Metrics/ModuleLength:
+  Max: 200
 RSpec/ExampleLength:
   Max: 8
 RSpec/MultipleExpectations:
@@ -7,27 +27,9 @@ RSpec/NestedGroups:
   Max: 4
 RSpec/SubjectStub:
   Enabled: false
-
-AllCops:
-  TargetRubyVersion: 2.6.1
-  Exclude:
-    - bin/*
-    - nano_rpc.gemspec
-  DisplayCopNames: true
-Metrics/BlockLength:
-  Exclude:
-    - spec/**/*
-Metrics/ModuleLength:
-  Max: 200
-Metrics/ClassLength:
-  Max: 200
 Style/ClassAndModuleChildren:
   Enabled: false
 Style/EmptyMethod:
   Enabled: false
-Layout/EmptyLineAfterGuardClause:
-  Enabled: false
-Layout/EmptyLineAfterMagicComment:
-  Enabled: false
-Documentation:
-  Enabled: false
+
+
