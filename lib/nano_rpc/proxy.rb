@@ -3,7 +3,7 @@ module NanoRpc::Proxy
   attr_reader :node
 
   def initialize(opts = {})
-    @node = opts[:node] || NanoRpc.node
+    @node = @node || opts[:node] || NanoRpc.node
     proxy_methods.each { |meth, _| define_proxy_method(meth) }
   end
 
