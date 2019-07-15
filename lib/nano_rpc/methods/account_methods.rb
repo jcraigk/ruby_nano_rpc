@@ -17,7 +17,9 @@ module NanoRpc::AccountMethods
         required: %i[count],
         optional: %i[raw head]
       },
-      account_info: {},
+      account_info: {
+        optional: %i[representative weight pending]
+      },
       account_key: {},
       account_move: {
         required: %i[wallet source accounts]
@@ -44,7 +46,10 @@ module NanoRpc::AccountMethods
       },
       pending: {
         required: %i[count],
-        optional: %i[threshold exists source include_active]
+        optional: %i[
+          threshold exists source include_active
+          sorting include_only_confirmed
+        ]
       },
       receive: {
         required: %i[wallet block],

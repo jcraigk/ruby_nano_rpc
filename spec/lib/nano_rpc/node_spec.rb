@@ -10,6 +10,7 @@ RSpec.describe NanoRpc::Node do
   describe 'proxy methods' do
     let(:expected_proxy_methods) do
       %i[
+        active_difficulty
         available_supply
         block
         block_account
@@ -17,6 +18,8 @@ RSpec.describe NanoRpc::Node do
         block_count
         block_count_type
         block_create
+        block_hash
+        block_info
         blocks
         blocks_info
         bootstrap
@@ -25,6 +28,7 @@ RSpec.describe NanoRpc::Node do
         bootstrap_status
         chain
         confirmation_active
+        confirmation_height_currently_processing
         confirmation_history
         confirmation_info
         confirmation_quorum
@@ -62,6 +66,7 @@ RSpec.describe NanoRpc::Node do
         unchecked_clear
         unchecked_get
         unchecked_keys
+        unopened
         uptime
         version
         wallet_create

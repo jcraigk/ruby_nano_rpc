@@ -6,6 +6,7 @@ module NanoRpc::NodeMethods
 
   def proxy_methods # rubocop:disable Metrics/MethodLength
     {
+      active_difficulty: {},
       available_supply: {},
       block: {
         required: %i[hash]
@@ -20,14 +21,21 @@ module NanoRpc::NodeMethods
       block_count_type: {},
       block_create: {
         required: %i[type key representative source],
-        optional: %i[work]
+        optional: %i[work json_block]
+      },
+      block_hash: {
+        optional: %i[json_block]
+      },
+      block_info: {
+        required: %i[hash],
+        optional: %i[json_block]
       },
       blocks: {
         required: %i[hashes]
       },
       blocks_info: {
         required: %i[hashes],
-        optional: %i[pending source balance]
+        optional: %i[pending source balance json_block]
       },
       bootstrap: {
         required: %i[address port]
@@ -42,11 +50,14 @@ module NanoRpc::NodeMethods
         required: %i[block count],
         optional: %i[offset reverse]
       },
-      confirmation_active: {},
+      confirmation_active: {
+        optional: %i[announcements]
+      },
+      confirmation_height_currently_processing: {},
       confirmation_history: {},
       confirmation_info: {
         required: %i[root],
-        optional: %i[contents representatives]
+        optional: %i[contents representatives json_block]
       },
       confirmation_quorum: {
         optional: %i[peer_details]
@@ -86,11 +97,12 @@ module NanoRpc::NodeMethods
         optional: %i[peer_details]
       },
       pending_exists: {
-        required: %i[hash]
+        required: %i[hash],
+        optional: %i[include_active include_only_confirmed]
       },
       process: {
         required: %i[block],
-        optional: %i[force subtype]
+        optional: %i[force subtype json_block]
       },
       rai_from_raw: {
         required: %i[amount]
@@ -113,7 +125,7 @@ module NanoRpc::NodeMethods
       },
       search_pending_all: {},
       sign: {
-        optional: %i[account hash key wallet]
+        optional: %i[account hash key wallet json_block]
       },
       stats: {
         required: %i[type]
@@ -129,10 +141,15 @@ module NanoRpc::NodeMethods
       },
       unchecked_clear: {},
       unchecked_get: {
-        required: %i[hash]
+        required: %i[hash],
+        optional: %i[json_block]
       },
       unchecked_keys: {
-        required: %i[key count]
+        required: %i[key count],
+        optional: %i[json_block]
+      },
+      unopened: {
+        optional: %i[account count]
       },
       uptime: {},
       version: {},
