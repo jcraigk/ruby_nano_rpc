@@ -46,7 +46,10 @@ module NanoRpc::AccountMethods
       },
       pending: {
         required: %i[count],
-        optional: %i[threshold exists source include_active sorting include_only_confirmed]
+        optional: %i[
+          threshold exists source include_active
+          sorting include_only_confirmed
+        ]
       },
       receive: {
         required: %i[wallet block],
