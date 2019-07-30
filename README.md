@@ -1,7 +1,7 @@
 [![Gem Version](https://badge.fury.io/rb/nano_rpc.svg)](https://badge.fury.io/rb/nano_rpc)
 ![Gem Downloads](https://ruby-gem-downloads-badge.herokuapp.com/nano_rpc?type=total)
 [![Build Status](https://travis-ci.org/jcraigk/ruby_nano_rpc.svg?branch=master)](https://travis-ci.org/jcraigk/ruby_nano_rpc)
-[![codecov](https://codecov.io/gh/jcraigk/ruby_nano_rpc/branch/master/graph/badge.svg)](https://codecov.io/gh/jcraigk/ruby_nano_rpc)
+[![CodeCov](https://codecov.io/gh/jcraigk/ruby_nano_rpc/branch/master/graph/badge.svg)](https://codecov.io/gh/jcraigk/ruby_nano_rpc)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
 
 ![Ruby Nano RPC Logo](https://i.imgur.com/ihmmYcp.png)
