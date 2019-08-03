@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 class WalletHelper
@@ -73,41 +74,65 @@ RSpec.describe WalletHelper do
   let(:pending_threshold_data) { { addr1 => 5, addr2 => 10 } }
   let(:balances_threshold_data) { { addr1 => 100, addr2 => 200 } }
 
-  it 'provides #account_work' do
-    allow(wallet).to(
-      receive(:work_get)
-        .with(account_param)
-        .and_return(NanoRpc::Response.new('work' => work_id))
-    )
-    expect(wallet.account_work(account_param)).to eq(work_id)
+  describe '#' do
+    before do
+      allow(wallet).to(
+        receive(:work_get)
+          .with(account_param)
+          .and_return(NanoRpc::Response.new('work' => work_id))
+      )
+    end
+
+    it 'returns exepcted value' do
+      expect(wallet.account_work(account_param)).to eq(work_id)
+    end
   end
 
-  it 'provides #accounts' do
-    allow(wallet).to(
-      receive(:account_list)
-        .and_return(NanoRpc::Response.new('accounts' => addresses))
-    )
-    accounts = wallet.accounts
-    expect(accounts.class).to eq(NanoRpc::Accounts)
-    expect(accounts.addresses).to eq(addresses)
+  describe '#accounts' do
+    let(:accounts) { wallet.accounts }
+
+    before do
+      allow(wallet).to(
+        receive(:account_list)
+          .and_return(NanoRpc::Response.new('accounts' => addresses))
+      )
+    end
+
+    it 'provides expected class' do
+      expect(accounts.class).to eq(NanoRpc::Accounts)
+    end
+
+    it 'provides expected value' do
+      expect(accounts.addresses).to eq(addresses)
+    end
   end
 
-  it 'provides #add_key' do
-    allow(wallet).to(
-      receive(:wallet_add)
-        .with(add_account_params)
-        .and_return(NanoRpc::Response.new('account' => wallet_id1))
-    )
-    expect(wallet.add_key(add_account_params)).to eq(wallet_id1)
+  describe '#add_key' do
+    before do
+      allow(wallet).to(
+        receive(:wallet_add)
+          .with(add_account_params)
+          .and_return(NanoRpc::Response.new('account' => wallet_id1))
+      )
+    end
+
+    it 'returns expected value' do
+      expect(wallet.add_key(add_account_params)).to eq(wallet_id1)
+    end
   end
 
-  it 'provides #add_watch' do
-    allow(wallet).to(
-      receive(:wallet_add_watch)
-        .with(accounts: addresses)
-        .and_return(NanoRpc::Response.new('success' => ''))
-    )
-    expect(wallet.add_watch(accounts: addresses)).to eq(true)
+  describe '#add_watch' do
+    before do
+      allow(wallet).to(
+        receive(:wallet_add_watch)
+          .with(accounts: addresses)
+          .and_return(NanoRpc::Response.new('success' => ''))
+      )
+    end
+
+    it 'returns expected value' do
+      expect(wallet.add_watch(accounts: addresses)).to eq(true)
+    end
   end
 
   it 'provides #balance' do
@@ -118,13 +143,18 @@ RSpec.describe WalletHelper do
     expect(wallet.balance).to eq(100)
   end
 
-  it 'provides #balances' do
-    allow(wallet).to(
-      receive(:wallet_balances)
-        .with(threshold_param)
-        .and_return(NanoRpc::Response.new(balances_data))
-    )
-    expect(wallet.balances(threshold_param)).to eq(balances_threshold_data)
+  describe '#balances' do
+    before do
+      allow(wallet).to(
+        receive(:wallet_balances)
+          .with(threshold_param)
+          .and_return(NanoRpc::Response.new(balances_data))
+      )
+    end
+
+    it 'returns expected value' do
+      expect(wallet.balances(threshold_param)).to eq(balances_threshold_data)
+    end
   end
 
   it 'provides #begin_payment' do
@@ -135,53 +165,86 @@ RSpec.describe WalletHelper do
     expect(wallet.begin_payment).to eq(addr1)
   end
 
-  it 'provides #change_password' do
-    allow(wallet).to(
-      receive(:password_change)
-        .with(password: 'newpass')
-        .and_return(NanoRpc::Response.new('changed' => '1'))
-    )
-    expect(wallet.change_password(new_password: 'newpass')).to eq(true)
+  describe '#change_password' do
+    before do
+      allow(wallet).to(
+        receive(:password_change)
+          .with(password: 'newpass')
+          .and_return(NanoRpc::Response.new('changed' => '1'))
+      )
+    end
+
+    it 'returns expected value ' do
+      expect(wallet.change_password(new_password: 'newpass')).to eq(true)
+    end
   end
 
-  it 'provides #change_seed' do
-    allow(wallet).to(
-      receive(:wallet_change_seed)
-        .with(seed: 'newseed', count: 10)
-        .and_return(NanoRpc::Response.new('success' => ''))
-    )
-    expect(wallet.change_seed(new_seed: 'newseed', count: 10)).to eq(true)
+  describe '#change_seed' do
+    before do
+      allow(wallet).to(
+        receive(:wallet_change_seed)
+          .with(seed: 'newseed', count: 10)
+          .and_return(NanoRpc::Response.new('success' => ''))
+      )
+    end
+
+    it 'returns expected value' do
+      expect(wallet.change_seed(new_seed: 'newseed', count: 10)).to eq(true)
+    end
   end
 
-  it 'provides #contains?' do
-    allow(wallet).to(
-      receive(:wallet_contains)
-        .with(account_param)
-        .and_return(NanoRpc::Response.new('exists' => '1'))
-    )
-    expect(wallet.contains?(account_param)).to eq(true)
+  describe '#contains?' do
+    before do
+      allow(wallet).to(
+        receive(:wallet_contains)
+          .with(account_param)
+          .and_return(NanoRpc::Response.new('exists' => '1'))
+      )
+    end
+
+    it 'returns expected value ' do
+      expect(wallet.contains?(account_param)).to eq(true)
+    end
   end
 
-  it 'provides #create_account' do
-    allow(wallet).to(
-      receive(:account_create)
-        .with(work: true)
-        .and_return(NanoRpc::Response.new('account' => addr1))
-    )
-    account = wallet.create_account(work: true)
-    expect(account.class).to eq(NanoRpc::Account)
-    expect(account.address).to eq(addr1)
+  describe '#create_account' do
+    let(:account) { wallet.create_account(work: true) }
+
+    before do
+      allow(wallet).to(
+        receive(:account_create)
+          .with(work: true)
+          .and_return(NanoRpc::Response.new('account' => addr1))
+      )
+    end
+
+    it 'provides expected class' do
+      expect(account.class).to eq(NanoRpc::Account)
+    end
+
+    it 'provides expected value' do
+      expect(account.address).to eq(addr1)
+    end
   end
 
-  it 'provides #create_accounts' do
-    allow(wallet).to(
-      receive(:accounts_create)
-        .with(create_accounts_params)
-        .and_return(NanoRpc::Response.new('accounts' => addresses))
-    )
-    accounts = wallet.create_accounts(create_accounts_params)
-    expect(accounts.class).to eq(NanoRpc::Accounts)
-    expect(accounts.addresses).to eq(addresses)
+  describe '#create_accounts' do
+    let(:accounts) { wallet.create_accounts(create_accounts_params) }
+
+    before do
+      allow(wallet).to(
+        receive(:accounts_create)
+          .with(create_accounts_params)
+          .and_return(NanoRpc::Response.new('accounts' => addresses))
+      )
+    end
+
+    it 'provides expected class' do
+      expect(accounts.class).to eq(NanoRpc::Accounts)
+    end
+
+    it 'provides expected value' do
+      expect(accounts.addresses).to eq(addresses)
+    end
   end
 
   it 'provides #destroy' do
@@ -192,23 +255,39 @@ RSpec.describe WalletHelper do
     expect(wallet.destroy).to eq(true)
   end
 
-  it 'provides #enter_password and #unlock' do
-    allow(wallet).to(
-      receive(:password_enter)
-        .with(password: 'pass1')
-        .and_return(NanoRpc::Response.new('valid' => '1'))
-    )
-    expect(wallet.enter_password(password: 'pass1')).to eq(true)
-    expect(wallet.unlock(password: 'pass1')).to eq(true)
+  describe '#enter_password and #unlock' do
+    before do
+      allow(wallet).to(
+        receive(:password_enter)
+          .with(password: 'pass1')
+          .and_return(NanoRpc::Response.new('valid' => '1'))
+      )
+    end
+
+    it 'provides #enter_password' do
+      expect(wallet.enter_password(password: 'pass1')).to eq(true)
+    end
+
+    it 'provides #unlock' do
+      expect(wallet.unlock(password: 'pass1')).to eq(true)
+    end
   end
 
-  it 'provides #export' do
-    allow(wallet).to(
-      receive(:wallet_export)
-        .and_return(NanoRpc::Response.new('json' => wallet_data.to_json))
-    )
-    expect(wallet.export).to eq(wallet_data)
-    expect(wallet.export.some_key).to eq(1)
+  describe 'export' do
+    before do
+      allow(wallet).to(
+        receive(:wallet_export)
+          .and_return(NanoRpc::Response.new('json' => wallet_data.to_json))
+      )
+    end
+
+    it 'provides #export' do
+      expect(wallet.export).to eq(wallet_data)
+    end
+
+    it 'provides #export.some_key' do
+      expect(wallet.export.some_key).to eq(1)
+    end
   end
 
   it 'provides #frontiers' do
@@ -219,13 +298,18 @@ RSpec.describe WalletHelper do
     expect(wallet.frontiers).to eq(frontiers_data)
   end
 
-  it 'provides #history' do
-    allow(wallet).to(
-      receive(:wallet_history)
-        .with(modified_since: 1_550_461_032)
-        .and_return(NanoRpc::Response.new('history' => []))
-    )
-    expect(wallet.history(modified_since: 1_550_461_032)).to eq([])
+  describe '#history' do
+    before do
+      allow(wallet).to(
+        receive(:wallet_history)
+          .with(modified_since: 1_550_461_032)
+          .and_return(NanoRpc::Response.new('history' => []))
+      )
+    end
+
+    it 'returns expected value' do
+      expect(wallet.history(modified_since: 1_550_461_032)).to eq([])
+    end
   end
 
   it 'provides #init_payment' do
@@ -236,14 +320,19 @@ RSpec.describe WalletHelper do
     expect(wallet.init_payment).to eq(true)
   end
 
-  it 'provides #ledger' do
-    allow(wallet).to(
-      receive(:wallet_ledger)
-        .and_return(
-          NanoRpc::Response.new('accounts' => { 'abc' => {} })
-        )
-    )
-    expect(wallet.ledger).to eq('abc' => {})
+  describe '#ledger' do
+    before do
+      allow(wallet).to(
+        receive(:wallet_ledger)
+          .and_return(
+            NanoRpc::Response.new('accounts' => { 'abc' => {} })
+          )
+      )
+    end
+
+    it 'returns expected value' do
+      expect(wallet.ledger).to eq('abc' => {})
+    end
   end
 
   it 'provides #locked?' do
@@ -271,22 +360,35 @@ RSpec.describe WalletHelper do
     end
   end
 
-  it 'provides #password_valid?' do
-    allow(wallet).to(
-      receive(:password_valid)
-        .with(password_param)
-        .and_return(NanoRpc::Response.new('valid' => '1'))
-    )
-    expect(wallet.password_valid?(password_param)).to eq(true)
+  describe '#password_valid?' do
+    before do
+      allow(wallet).to(
+        receive(:password_valid)
+          .with(password_param)
+          .and_return(NanoRpc::Response.new('valid' => '1'))
+      )
+    end
+
+    it 'returns expected value' do
+      expect(wallet.password_valid?(password_param)).to eq(true)
+    end
   end
 
-  it 'provides #pending_balance and #balance_pending' do
-    allow(wallet).to(
-      receive(:wallet_info)
-        .and_return(NanoRpc::Response.new(balance_data))
-    )
-    expect(wallet.pending_balance).to eq(5)
-    expect(wallet.balance_pending).to eq(5)
+  describe '#pending_balance and #balance_pending' do
+    before do
+      allow(wallet).to(
+        receive(:wallet_info)
+          .and_return(NanoRpc::Response.new(balance_data))
+      )
+    end
+
+    it 'provides #pending_balance' do
+      expect(wallet.pending_balance).to eq(5)
+    end
+
+    it 'provides #balance_pending' do
+      expect(wallet.balance_pending).to eq(5)
+    end
   end
 
   describe 'pending balances' do
@@ -320,80 +422,132 @@ RSpec.describe WalletHelper do
       )
     end
 
-    it 'provides #pending_blocks and #blocks_pending' do
-      expect(
-        wallet.pending_blocks(wallet_pending_params)
-      ).to eq(pending_blocks_data)
-      expect(
-        wallet.blocks_pending(wallet_pending_params)
-      ).to eq(pending_blocks_data)
+    describe '#pending_blocks and #blocks_pending' do
+      it 'provides #pending_blocks' do
+        expect(
+          wallet.pending_blocks(wallet_pending_params)
+        ).to eq(pending_blocks_data)
+      end
+
+      it 'provides #blocks_pending' do
+        expect(
+          wallet.blocks_pending(wallet_pending_params)
+        ).to eq(pending_blocks_data)
+      end
     end
   end
 
-  it 'provides #receive_block' do
-    allow(wallet).to(
-      receive(:receive)
-        .with(receive_block_params)
-        .and_return(NanoRpc::Response.new('block' => block2))
-    )
-    expect(wallet.receive_block(receive_block_params)).to eq(block2)
+  describe '#receive_block' do
+    before do
+      allow(wallet).to(
+        receive(:receive)
+          .with(receive_block_params)
+          .and_return(NanoRpc::Response.new('block' => block2))
+      )
+    end
+
+    it 'returns expected value' do
+      expect(wallet.receive_block(receive_block_params)).to eq(block2)
+    end
   end
 
-  it 'provides #remove_account' do
-    allow(wallet).to(
-      receive(:account_remove)
-        .with(account_param)
-        .and_return(NanoRpc::Response.new('removed' => '1'))
-    )
-    expect(wallet.remove_account(account_param)).to eq(true)
+  describe '#remove_account' do
+    before do
+      allow(wallet).to(
+        receive(:account_remove)
+          .with(account_param)
+          .and_return(NanoRpc::Response.new('removed' => '1'))
+      )
+    end
+
+    it 'returns expected value' do
+      expect(wallet.remove_account(account_param)).to eq(true)
+    end
   end
 
-  it 'provides #representative' do
-    allow(wallet).to(
-      receive(:wallet_representative)
-        .and_return(NanoRpc::Response.new('representative' => addr1))
-    )
-    expect(wallet.representative).to eq(addr1)
+  describe '#representative' do
+    before do
+      allow(wallet).to(
+        receive(:wallet_representative)
+          .and_return(NanoRpc::Response.new('representative' => addr1))
+      )
+    end
+
+    it 'returns expected value' do
+      expect(wallet.representative).to eq(addr1)
+    end
   end
 
-  it 'provides #republish' do
-    allow(wallet).to(
-      receive(:wallet_republish)
-        .with(republish_param)
-        .and_return(NanoRpc::Response.new('blocks' => blocks))
-    )
-    expect(wallet.republish(republish_param)).to eq(blocks)
+  describe '#republish' do
+    before do
+      allow(wallet).to(
+        receive(:wallet_republish)
+          .with(republish_param)
+          .and_return(NanoRpc::Response.new('blocks' => blocks))
+      )
+    end
+
+    it 'returns expected value' do
+      expect(wallet.republish(republish_param)).to eq(blocks)
+    end
   end
 
-  it 'provides #account_work_set and #set_account_work' do
-    allow(wallet).to(
-      receive(:work_set)
-        .with(account_work_params)
-        .and_return(NanoRpc::Response.new('success' => ''))
-    )
-    expect(wallet.account_work_set(account_work_params)).to eq(true)
-    expect(wallet.set_account_work(account_work_params)).to eq(true)
+  describe '#account_work_set and #set_account_work' do
+    before do
+      allow(wallet).to(
+        receive(:work_set)
+          .with(account_work_params)
+          .and_return(NanoRpc::Response.new('success' => ''))
+      )
+    end
+
+    it 'provides #account_work_set' do
+      expect(wallet.account_work_set(account_work_params)).to eq(true)
+    end
+
+    it 'provides #set_account_work' do
+      expect(wallet.set_account_work(account_work_params)).to eq(true)
+    end
   end
 
-  it 'provides #representative_set and #set_representative' do
-    allow(wallet).to(
-      receive(:wallet_representative_set)
-        .with(rep_param)
-        .and_return(NanoRpc::Response.new('set' => '1'))
-    )
-    expect(wallet.representative_set(rep_param)).to eq(true)
-    expect(wallet.set_representative(rep_param)).to eq(true)
+  describe '#representative_set and #set_representative' do
+    before do
+      allow(wallet).to(
+        receive(:wallet_representative_set)
+          .with(rep_param)
+          .and_return(NanoRpc::Response.new('set' => '1'))
+      )
+    end
+
+    it 'provides #representative_set' do
+      expect(wallet.representative_set(rep_param)).to eq(true)
+    end
+
+    it 'provides #set_representative' do
+      expect(wallet.set_representative(rep_param)).to eq(true)
+    end
   end
 
-  it 'provides #send_nano and #send_transaction' do
-    allow(wallet).to(
-      receive(:send_currency)
-        .with(send_nano_opts)
-        .and_return(NanoRpc::Response.new('block' => block1))
-    )
-    expect(wallet.send_nano(send_nano_params)).to eq(block1)
-    expect(wallet.send_nano(send_nano_objects)).to eq(block1)
-    expect(wallet.send_transaction(send_nano_params)).to eq(block1)
+  describe '#send_nano and #send_transaction' do
+    before do
+      allow(wallet).to(
+        receive(:send_currency)
+          .with(send_nano_opts)
+          .and_return(NanoRpc::Response.new('block' => block1))
+      )
+    end
+
+    it 'provides #send_nano accepting params' do
+      expect(wallet.send_nano(send_nano_params)).to eq(block1)
+    end
+
+    it 'provides #send_nano accepting objects' do
+      expect(wallet.send_nano(send_nano_objects)).to eq(block1)
+    end
+
+    it 'provides #send_transaction accepting params' do
+      expect(wallet.send_transaction(send_nano_params)).to eq(block1)
+    end
   end
 
   it 'provides #work' do

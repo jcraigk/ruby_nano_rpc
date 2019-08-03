@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe NanoRpc::Wallet do
@@ -43,8 +44,11 @@ RSpec.describe NanoRpc::Wallet do
   end
   let(:expected_proxy_params) { { wallet: :id } }
 
-  it 'defines expected proxy params and methods' do
+  it 'defines proxy params' do
     expect(wallet.proxy_params).to eq(expected_proxy_params)
+  end
+
+  it 'defines proxy methods' do
     expect(wallet.proxy_methods.keys).to eq(expected_proxy_methods)
   end
 
