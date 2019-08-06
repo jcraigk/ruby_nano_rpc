@@ -1,7 +1,12 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 class ProxyExample
+  include NanoRpc::Proxy
+
+  attr_reader :address
+
   def proxy_params
     { account: :address }
   end
@@ -18,8 +23,6 @@ class ProxyExample
       }
     }
   end
-
-  include NanoRpc::Proxy
 end
 
 RSpec.describe NanoRpc::Proxy do
@@ -33,7 +36,6 @@ RSpec.describe NanoRpc::Proxy do
 
   before do
     allow(NanoRpc).to receive(:node).and_return(node)
-    allow(proxy).to receive(:address).and_return(addr1)
     allow(node).to receive(:call).and_return(true)
   end
 
@@ -43,11 +45,11 @@ RSpec.describe NanoRpc::Proxy do
     let(:custom_node) { NanoRpc::Node.new(host: 'mynanonode', port: 1234) }
 
     it 'uses the custom node' do
-      allow(custom_node).to receive(:call).with(
-        :proxytest_another_action, account: addr1
-      )
+      allow(custom_node).to receive(:call)
       proxy.proxytest_another_action
-      expect(custom_node).to have_received(:call)
+      expect(custom_node).to(
+        have_received(:call).with(:proxytest_another_action, {})
+      )
     end
   end
 
@@ -84,11 +86,16 @@ RSpec.describe NanoRpc::Proxy do
     )
   end
 
-  it 'defines instance proxy methods' do
-    expect do
-      proxy.some_action(param1: 'value', param2: 'value')
-    end.not_to raise_error
-    expect { proxy.proxytest_another_action }.not_to raise_error
+  describe 'instance proxy methods' do
+    it 'defines #some_action' do
+      expect do
+        proxy.some_action(param1: 'value', param2: 'value')
+      end.not_to raise_error
+    end
+
+    it 'defines #proxytest_another_action' do
+      expect { proxy.proxytest_another_action }.not_to raise_error
+    end
   end
 
   it 'allows passing single literal to single-parameter methods' do
@@ -105,22 +112,31 @@ RSpec.describe NanoRpc::Proxy do
     )
   end
 
-  it 'provides respond_to? on proxy methods' do
-    expect(proxy.respond_to?(:some_action)).to eq(true)
-    expect(proxy.respond_to?(:proxytest_another_action)).to eq(true)
-    expect(proxy.respond_to?(:invalid_method)).to eq(false)
+  describe 'respond_to? on proxy methods' do
+    it 'responds to #some_action' do
+      expect(proxy.respond_to?(:some_action)).to eq(true)
+    end
+
+    it 'responds to #proxytest_another_action' do
+      expect(proxy.respond_to?(:proxytest_another_action)).to eq(true)
+    end
+
+    it 'does not respond t to #invalid_method' do
+      expect(proxy.respond_to?(:invalid_method)).to eq(false)
+    end
   end
 
-  it 'raises MissingParameters when required parameters missing' do
-    expect { proxy.some_action(param1: 'value') }.to(
-      raise_error(
-        NanoRpc::MissingParameters,
-        'Missing required parameter(s): param2'
-      )
-    )
+  context 'when required parameters missing' do
+    let(:action) { proxy.some_action(param1: 'value') }
+    let(:msg) { 'Missing required parameter(s): param2' }
+
+    it 'raises MissingParameters' do
+      expect { action }.to raise_error(NanoRpc::MissingParameters, msg)
+    end
   end
 
   context 'when unexpected parameters passed' do
+    let(:action) { proxy.some_action(invalid_params) }
     let(:invalid_params) do
       {
         param1: 'value',
@@ -130,14 +146,10 @@ RSpec.describe NanoRpc::Proxy do
         bad_param2: 'value'
       }
     end
+    let(:msg) { 'Forbidden parameter(s) passed: bad_param1, bad_param2' }
 
     it 'raises ForbiddenParameter' do
-      expect { proxy.some_action(invalid_params) }.to(
-        raise_error(
-          NanoRpc::ForbiddenParameter,
-          'Forbidden parameter(s) passed: bad_param1, bad_param2'
-        )
-      )
+      expect { action }.to raise_error(NanoRpc::ForbiddenParameter, msg)
     end
   end
 end

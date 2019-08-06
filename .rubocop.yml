@@ -1,35 +1,21 @@
-require: rubocop-rspec
+require:
+  - rubocop-performance
+  - rubocop-rspec
 
 AllCops:
   TargetRubyVersion: 2.6.3
   Exclude:
     - bin/*
-    - nano_rpc.gemspec
-  DisplayCopNames: true
-Documentation:
-  Enabled: false
-Layout/EmptyLineAfterGuardClause:
-  Enabled: false
-Layout/EmptyLineAfterMagicComment:
-  Enabled: false
+    - vendor/**/*
 Metrics/BlockLength:
   Exclude:
+    - nano_rpc.gemspec
     - spec/**/*
-Metrics/ClassLength:
-  Max: 200
-Metrics/ModuleLength:
-  Max: 200
-RSpec/ExampleLength:
-  Max: 8
-RSpec/MultipleExpectations:
-  Enabled: false
-RSpec/NestedGroups:
-  Max: 4
 RSpec/SubjectStub:
-  Enabled: false
-Style/ClassAndModuleChildren:
-  Enabled: false
-Style/EmptyMethod:
-  Enabled: false
-
-
+  Exclude:
+    - spec/lib/nano_rpc/account_spec.rb
+    - spec/lib/nano_rpc/helpers/account_helper_spec.rb
+    - spec/lib/nano_rpc/helpers/accounts_helper_spec.rb
+    - spec/lib/nano_rpc/helpers/node_helper_spec.rb
+    - spec/lib/nano_rpc/helpers/wallet_helper_spec.rb
+    - spec/lib/nano_rpc/node_spec.rb

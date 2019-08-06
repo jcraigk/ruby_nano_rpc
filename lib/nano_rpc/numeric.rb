@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+
 module NanoRpc
   RAW_FACTOR = 30
   RAW_PRECISION = 6
 
+  # Methods for converting Nano amounts to "raw" values
   module NanoToRaw
     def to_raw
       ensure_valid_nano_amount
@@ -22,6 +24,7 @@ module NanoRpc
     end
   end
 
+  # Methods for converting "raw" values to Nano amounts
   module RawToNano
     def to_nano
       ensure_valid_raw_amount
@@ -41,6 +44,7 @@ module NanoRpc
   end
 end
 
+# Modify the standard Numeric to include conversion classes
 class Numeric
   include NanoRpc::NanoToRaw
   include NanoRpc::RawToNano

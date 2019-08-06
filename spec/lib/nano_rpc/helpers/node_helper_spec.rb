@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 class NodeHelper
@@ -43,13 +44,18 @@ RSpec.describe NodeHelper do
     end
   end
 
-  it 'provides #account_containing_block' do
-    allow(node).to(
-      receive(:block_account)
-        .with(pending_hash_param)
-        .and_return(NanoRpc::Response.new('account' => addr1))
-    )
-    expect(node.account_containing_block(pending_hash_param)).to eq(addr1)
+  describe '#account_containing_block' do
+    before do
+      allow(node).to(
+        receive(:block_account)
+          .with(pending_hash_param)
+          .and_return(NanoRpc::Response.new('account' => addr1))
+      )
+    end
+
+    it 'returns expected value' do
+      expect(node.account_containing_block(pending_hash_param)).to eq(addr1)
+    end
   end
 
   it 'provides #clear_stats' do
@@ -68,6 +74,8 @@ RSpec.describe NodeHelper do
   end
 
   describe '#create_wallet' do
+    let(:wallet) { node.create_wallet(seed: 'myseed') }
+
     before do
       allow(node).to(
         receive(:wallet_create)
@@ -78,9 +86,11 @@ RSpec.describe NodeHelper do
       )
     end
 
-    it 'creates the wallet with optional seed' do
-      wallet = node.create_wallet(seed: 'myseed')
+    it 'provides wallet of expected class' do
       expect(wallet.class).to eq(NanoRpc::Wallet)
+    end
+
+    it 'sets expected id' do
       expect(wallet.id).to eq(wallet_id1)
     end
   end
@@ -92,75 +102,115 @@ RSpec.describe NodeHelper do
     expect(node.num_frontiers).to eq(100)
   end
 
-  it 'provides #knano_from_raw' do
-    allow(node).to(
-      receive(:krai_from_raw)
-        .with(knano_amount_param)
-        .and_return(NanoRpc::Response.new('amount' => '1'))
-    )
-    expect(node.knano_from_raw(knano_amount_param)).to eq(1)
+  describe '#knano_from_raw' do
+    before do
+      allow(node).to(
+        receive(:krai_from_raw)
+          .with(knano_amount_param)
+          .and_return(NanoRpc::Response.new('amount' => '1'))
+      )
+    end
+
+    it 'returns expected value' do
+      expect(node.knano_from_raw(knano_amount_param)).to eq(1)
+    end
   end
 
-  it 'provides #knano_to_raw' do
-    allow(node).to(
-      receive(:krai_to_raw)
-        .with(amount_param)
-        .and_return(NanoRpc::Response.new('amount' => knano_amount.to_s))
-    )
-    expect(node.knano_to_raw(amount_param)).to eq(knano_amount)
+  describe '#knano_to_raw' do
+    before do
+      allow(node).to(
+        receive(:krai_to_raw)
+          .with(amount_param)
+          .and_return(NanoRpc::Response.new('amount' => knano_amount.to_s))
+      )
+    end
+
+    it 'returns expected value' do
+      expect(node.knano_to_raw(amount_param)).to eq(knano_amount)
+    end
   end
 
-  it 'provides #mnano_from_raw' do
-    allow(node).to(
-      receive(:mrai_from_raw)
-        .with(mnano_amount_param)
-        .and_return(NanoRpc::Response.new('amount' => '1'))
-    )
-    expect(node.mnano_from_raw(mnano_amount_param)).to eq(1)
+  describe '#mnano_from_raw' do
+    before do
+      allow(node).to(
+        receive(:mrai_from_raw)
+          .with(mnano_amount_param)
+          .and_return(NanoRpc::Response.new('amount' => '1'))
+      )
+    end
+
+    it 'returns expected value' do
+      expect(node.mnano_from_raw(mnano_amount_param)).to eq(1)
+    end
   end
 
-  it 'provides #mnano_to_raw' do
-    allow(node).to(
-      receive(:mrai_to_raw)
-        .with(amount_param)
-        .and_return(NanoRpc::Response.new('amount' => mnano_amount.to_s))
-    )
-    expect(node.mnano_to_raw(amount_param)).to eq(mnano_amount)
+  describe '#mnano_to_raw' do
+    before do
+      allow(node).to(
+        receive(:mrai_to_raw)
+          .with(amount_param)
+          .and_return(NanoRpc::Response.new('amount' => mnano_amount.to_s))
+      )
+    end
+
+    it 'returns expected value' do
+      expect(node.mnano_to_raw(amount_param)).to eq(mnano_amount)
+    end
   end
 
-  it 'provides #nano_from_raw' do
-    allow(node).to(
-      receive(:rai_from_raw)
-        .with(nano_amount_param)
-        .and_return(NanoRpc::Response.new('amount' => '1'))
-    )
-    expect(node.nano_from_raw(nano_amount_param)).to eq(1)
+  describe '#nano_from_raw' do
+    before do
+      allow(node).to(
+        receive(:rai_from_raw)
+          .with(nano_amount_param)
+          .and_return(NanoRpc::Response.new('amount' => '1'))
+      )
+    end
+
+    it 'returns expected value' do
+      expect(node.nano_from_raw(nano_amount_param)).to eq(1)
+    end
   end
 
-  it 'provides #nano_to_raw' do
-    allow(node).to(
-      receive(:rai_to_raw)
-        .with(amount_param)
-        .and_return(NanoRpc::Response.new('amount' => nano_amount.to_s))
-    )
-    expect(node.nano_to_raw(amount_param)).to eq(nano_amount)
+  describe '#nano_to_raw' do
+    before do
+      allow(node).to(
+        receive(:rai_to_raw)
+          .with(amount_param)
+          .and_return(NanoRpc::Response.new('amount' => nano_amount.to_s))
+      )
+    end
+
+    it 'returns expected value' do
+      expect(node.nano_to_raw(amount_param)).to eq(nano_amount)
+    end
   end
 
-  it 'provides #pending_exists?' do
-    allow(node).to(
-      receive(:pending_exists)
-        .with(pending_hash_param)
-        .and_return(NanoRpc::Response.new('exists' => '1'))
-    )
-    expect(node.pending_exists?(pending_hash_param)).to eq(true)
+  describe '#pending_exists?' do
+    before do
+      allow(node).to(
+        receive(:pending_exists)
+          .with(pending_hash_param)
+          .and_return(NanoRpc::Response.new('exists' => '1'))
+      )
+    end
+
+    it 'returns expected value' do
+      expect(node.pending_exists?(pending_hash_param)).to eq(true)
+    end
   end
 
-  it 'provides #work_valid?' do
-    allow(node).to(
-      receive(:work_validate)
-        .with(work_params)
-        .and_return(NanoRpc::Response.new('valid' => '1'))
-    )
-    expect(node.work_valid?(work_params)).to eq(true)
+  describe '#work_valid?' do
+    before do
+      allow(node).to(
+        receive(:work_validate)
+          .with(work_params)
+          .and_return(NanoRpc::Response.new('valid' => '1'))
+      )
+    end
+
+    it 'returns expected value' do
+      expect(node.work_valid?(work_params)).to eq(true)
+    end
   end
 end

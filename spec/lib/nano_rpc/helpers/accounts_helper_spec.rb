@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 class AccountsHelper
@@ -43,12 +44,20 @@ RSpec.describe AccountsHelper do
     expect(accounts.balances).to eq(addr1 => 100, addr2 => 50)
   end
 
-  it 'provides #pending_balances and #balances_pending' do
-    allow(accounts).to receive(:accounts_balances).and_return(
-      NanoRpc::Response.new(balances_data)
-    )
-    expect(accounts.pending_balances).to eq(addr1 => 2, addr2 => 3)
-    expect(accounts.balances_pending).to eq(addr1 => 2, addr2 => 3)
+  describe '#pending_balances and #balances_pending' do
+    before do
+      allow(accounts).to receive(:accounts_balances).and_return(
+        NanoRpc::Response.new(balances_data)
+      )
+    end
+
+    it 'provides #pending_balances' do
+      expect(accounts.pending_balances).to eq(addr1 => 2, addr2 => 3)
+    end
+
+    it 'provides #balances_pending' do
+      expect(accounts.balances_pending).to eq(addr1 => 2, addr2 => 3)
+    end
   end
 
   it 'provides #frontiers' do
@@ -65,26 +74,32 @@ RSpec.describe AccountsHelper do
     expect(accounts.move(from: wallet_id1, to: wallet_id2)).to eq(true)
   end
 
-  it 'provides #pending and #pending_blocks' do
-    allow(accounts).to receive(:accounts_pending)
-      .with(pending_params)
-      .and_return(
-        NanoRpc::Response.new('blocks' => pending_hash)
-      )
-    expect(accounts.pending(pending_params)).to eq(pending_hash)
-    expect(accounts.pending_blocks(pending_params)).to eq(pending_hash)
+  describe '#pending and #pending_blocks' do
+    before do
+      allow(accounts).to receive(:accounts_pending)
+        .with(pending_params)
+        .and_return(
+          NanoRpc::Response.new('blocks' => pending_hash)
+        )
+    end
+
+    it 'provides #pending' do
+      expect(accounts.pending(pending_params)).to eq(pending_hash)
+    end
+
+    it 'provides #pending_blocks' do
+      expect(accounts.pending_blocks(pending_params)).to eq(pending_hash)
+    end
   end
 
   it 'provides `<<` addition of account addresss' do
     accounts << additional_address
-    expect(accounts[2].class).to eq(NanoRpc::Account)
     expect(accounts[2].address).to eq(additional_address)
   end
 
   it 'provides #each' do
     idx = 0
     accounts.each do |account|
-      expect(account.class).to eq(NanoRpc::Account)
       expect(account.address).to eq(addresses[idx])
       idx += 1
     end
@@ -92,7 +107,6 @@ RSpec.describe AccountsHelper do
 
   it 'provides #to_a' do
     array = accounts.to_a
-    expect(array.class).to eq(Array)
     expect(array.size).to eq(2)
   end
 end

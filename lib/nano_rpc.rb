@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'nano_rpc/version'
 
 require 'nano_rpc/helpers/application_helper'

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe NanoRpc::Node do
@@ -95,9 +96,7 @@ RSpec.describe NanoRpc::Node do
     let(:wallet_id) { 'ABCDEF' }
 
     it 'pulls #id from NanoRpc::Wallet' do
-      allow(node).to(
-        receive(:rpc_post).with(action: action, wallet: wallet_id)
-      )
+      allow(node).to receive(:rpc_post).with(action: action, wallet: wallet_id)
       node.call(action, wallet: NanoRpc::Wallet.new(wallet_id))
       expect(node).to have_received(:rpc_post)
     end
@@ -111,9 +110,7 @@ RSpec.describe NanoRpc::Node do
     end
 
     it 'pulls #address from NanoRpc::Account' do
-      allow(node).to(
-        receive(:rpc_post).with(action: action, account: addr1)
-      )
+      allow(node).to receive(:rpc_post).with(action: action, account: addr1)
       node.call(action, account: NanoRpc::Account.new(addr1))
       expect(node).to have_received(:rpc_post)
     end
@@ -128,14 +125,24 @@ RSpec.describe NanoRpc::Node do
       described_class.new(host: '127.0.0.1', port: 7077)
     end
 
-    it 'sets default config' do
-      expect(node.host).to eq('localhost')
-      expect(node.port).to eq(7076)
+    describe 'default config' do
+      it 'sets #host' do
+        expect(node.host).to eq('localhost')
+      end
+
+      it 'sets #port' do
+        expect(node.port).to eq(7076)
+      end
     end
 
-    it 'allows custom config' do
-      expect(node_with_config.host).to eq('127.0.0.1')
-      expect(node_with_config.port).to eq(7077)
+    describe 'allows custom config' do
+      it 'exposes #host' do
+        expect(node_with_config.host).to eq('127.0.0.1')
+      end
+
+      it 'exposes #port' do
+        expect(node_with_config.port).to eq(7077)
+      end
     end
 
     describe 'host protocol and port' do
@@ -163,9 +170,14 @@ RSpec.describe NanoRpc::Node do
     end
   end
 
-  it 'exposes instance vars' do
-    expect(node.host).to eq('localhost')
-    expect(node.port).to eq(7076)
+  describe 'attr readers' do
+    it 'exposes #host' do
+      expect(node.host).to eq('localhost')
+    end
+
+    it 'exposes #port' do
+      expect(node.port).to eq(7076)
+    end
   end
 
   it 'implements #call' do
@@ -203,6 +215,8 @@ RSpec.describe NanoRpc::Node do
     end
 
     context 'when node refuses to connect' do
+      let(:msg) { 'Node unreachable at http://localhost:7076' }
+
       before do
         allow(mock_http_client).to(
           receive(:post).and_raise(HTTP::ConnectionError)
@@ -210,16 +224,13 @@ RSpec.describe NanoRpc::Node do
       end
 
       it 'raises NodeConnectionFailure and provides error message' do
-        expect { node_call }.to(
-          raise_error(
-            NanoRpc::NodeConnectionFailure,
-            'Node unreachable at http://localhost:7076'
-          )
-        )
+        expect { node_call }.to raise_error(NanoRpc::NodeConnectionFailure, msg)
       end
     end
 
     context 'when node times out' do
+      let(:msg) { "Node timeout after #{timeout} seconds" }
+
       before do
         allow(mock_http_client).to(
           receive(:post).and_raise(HTTP::TimeoutError)
@@ -227,16 +238,11 @@ RSpec.describe NanoRpc::Node do
       end
 
       it 'raises NodeConnectionFailure and provides error message' do
-        expect { node_call }.to(
-          raise_error(
-            NanoRpc::NodeTimeout,
-            "Node timeout after #{timeout} seconds"
-          )
-        )
+        expect { node_call }.to raise_error(NanoRpc::NodeTimeout, msg)
       end
     end
 
-    context 'with json response' do
+    shared_context 'with json response' do
       let(:mock_body) { instance_spy(HTTP::Response::Body) }
       let(:mock_response) { instance_spy(HTTP::Response) }
 
@@ -247,30 +253,32 @@ RSpec.describe NanoRpc::Node do
         allow(mock_response).to receive(:body).and_return(mock_body)
         allow(mock_body).to receive(:to_s).and_return(response_json)
       end
+    end
 
-      context 'without error' do
-        let(:amount) { 1_000 }
-        let(:response_json) { { balance: amount }.to_json }
+    context 'without error' do
+      include_context 'with json response'
 
-        it 'converts to NanoRpc::Response' do
-          response = node_call
-          expect(response.class).to eq(NanoRpc::Response)
-          expect(response['balance']).to eq(amount)
-        end
+      let(:amount) { 1_000 }
+      let(:response_json) { { balance: amount }.to_json }
+
+      it 'converts to NanoRpc::Response' do
+        expect(node_call.class).to eq(NanoRpc::Response)
       end
 
-      context 'with error' do
-        let(:error_msg) { 'Bad account number' }
-        let(:response_json) { { error: error_msg }.to_json }
+      it 'returns expected balance' do
+        expect(node_call['balance']).to eq(amount)
+      end
+    end
 
-        it 'raises InvalidRequest and provides error message' do
-          expect { node_call }.to(
-            raise_error(
-              NanoRpc::InvalidRequest,
-              "Invalid request: #{error_msg}"
-            )
-          )
-        end
+    context 'with error' do
+      include_context 'with json response'
+
+      let(:error_msg) { 'Bad account number' }
+      let(:msg) { "Invalid request: #{error_msg}" }
+      let(:response_json) { { error: error_msg }.to_json }
+
+      it 'raises InvalidRequest and provides error message' do
+        expect { node_call }.to raise_error(NanoRpc::InvalidRequest, msg)
       end
     end
   end

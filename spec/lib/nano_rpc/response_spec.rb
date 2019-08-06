@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe NanoRpc::Response do
@@ -16,8 +17,13 @@ RSpec.describe NanoRpc::Response do
     expect(response[:balance]).to eq(balance)
   end
 
-  it 'provides MethodAccess methods with coersion' do
-    expect(response.balance).to eq(balance)
-    expect(response.float).to eq(float)
+  describe '::Hashie::Extensions::MethodAccess methods with coercion' do
+    it '#blanace' do
+      expect(response.balance).to eq(balance)
+    end
+
+    it '#float' do
+      expect(response.float).to eq(float)
+    end
   end
 end

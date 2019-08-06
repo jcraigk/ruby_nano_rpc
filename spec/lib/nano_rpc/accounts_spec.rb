@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe NanoRpc::Accounts do
@@ -16,8 +17,11 @@ RSpec.describe NanoRpc::Accounts do
   end
   let(:expected_proxy_params) { { accounts: :addresses } }
 
-  it 'declares expected proxy params and methods' do
+  it 'declares proxy params' do
     expect(accounts.proxy_params).to eq(expected_proxy_params)
+  end
+
+  it 'declares proxy methods' do
     expect(accounts.proxy_methods.keys).to eq(expected_proxy_methods)
   end
 
