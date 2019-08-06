@@ -13,9 +13,4 @@ Metrics/BlockLength:
     - spec/**/*
 RSpec/SubjectStub:
   Exclude:
-    - spec/lib/nano_rpc/account_spec.rb
-    - spec/lib/nano_rpc/helpers/account_helper_spec.rb
-    - spec/lib/nano_rpc/helpers/accounts_helper_spec.rb
-    - spec/lib/nano_rpc/helpers/node_helper_spec.rb
-    - spec/lib/nano_rpc/helpers/wallet_helper_spec.rb
-    - spec/lib/nano_rpc/node_spec.rb
+    - spec/**/*
